@@ -64,6 +64,7 @@
    (<name-of-your-environment>)$ python manage.py runserver
    ```
    You should be able to access the page on your web browser at http://127.0.0.1:8000. You may stop serving it using `Ctrl + C`.
+   
    <br>
 
 # Setup .env file for environmental variables
