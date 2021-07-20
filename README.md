@@ -49,12 +49,12 @@
    ```
    twitter-clone/
    |__ twitter-clone/
-   |     |__ __pycache__/
-   |     |__ __init__.py
-   |     |__ asgi.py
-   |     |__ settings.py
-   |     |__ urls.py
-   |     |__ wsgi.py
+   |   |__ __pycache__/
+   |   |__ __init__.py
+   |   |__ asgi.py
+   |   |__ settings.py
+   |   |__ urls.py
+   |   |__ wsgi.py
    |__ db.sqlite3
    |__ manage.py
    ```
@@ -116,13 +116,13 @@
    ```
    twitter-clone/
    |__ twitter-clone/
-   |     |__ __pycache__/
-   |     |__ __init__.py
-   |     |__ .env
-   |     |__ asgi.py
-   |     |__ settings.py
-   |     |__ urls.py
-   |     |__ wsgi.py
+   |   |__ __pycache__/
+   |   |__ __init__.py
+   |   |__ .env
+   |   |__ asgi.py
+   |   |__ settings.py
+   |   |__ urls.py
+   |   |__ wsgi.py
    |__ db.sqlite3
    |__ manage.py
    ```
@@ -176,13 +176,13 @@
    ```
    twitter-clone/
    |__ twitter-clone/
-   |     |__ __pycache__/
-   |     |__ __init__.py
-   |     |__ .env
-   |     |__ asgi.py
-   |     |__ settings.py
-   |     |__ urls.py
-   |     |__ wsgi.py
+   |   |__ __pycache__/
+   |   |__ __init__.py
+   |   |__ .env
+   |   |__ asgi.py
+   |   |__ settings.py
+   |   |__ urls.py
+   |   |__ wsgi.py
    |__ .gitignore
    |__ db.sqlite3
    |__ manage.py
