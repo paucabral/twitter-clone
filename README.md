@@ -63,8 +63,8 @@
    ```bash
    (<name-of-your-environment>)$ python manage.py runserver
    ```
-
    You should be able to access the page on your web browser at http://127.0.0.1:8000. You may stop serving it using `Ctrl + C`.
+   <br>
 
 # Setup .env file for environmental variables
 1. To properly integrate environmental variables in a **Django** project, additional dependency must be installed. Using `pip`, install `python-decouple`.
@@ -140,26 +140,7 @@
    ```bash
    $ git init
    ```
-4. Track the files and do an an intial commit.
-   ```bash
-   $ git add .
-   $ git commit -m "Intialized repository with Django project."
-   ```
-5. Configure remote origin as the **Github** repository your created.
-   ```bash
-   $ git branch -M main
-   $ git remote add origin https://github.com/<your-github-user>/<your-repository>.git
-   ```
-6. Push the project the `main` branch for now. You should see the files in your `master` branch except those declared inside `.gitignore`.
-   ```bash
-   $ git push -u origin main
-   ```
-7. Create a new branch named `development` and checkout to it. This will be your dedicated branch during active development. You may add, commit, and push to this branch during the course of development.
-   ```bash
-   $ git branch development
-   $ git checkout development
-   ```
-8. Before proceeding with the development, setup a `.gitignore` file on the root directory of the project (same directory as the `manage.py` file) with the following lines inside:
+4. Before proceeding with the development, setup a `.gitignore` file on the root directory of the project (same directory as the `manage.py` file) with the following lines inside:
    ```
    .env
    *.log
@@ -187,7 +168,20 @@
    |__ db.sqlite3
    |__ manage.py
    ```
-
+5. Track the files and do an an intial commit.
+   ```bash
+   $ git add .
+   $ git commit -m "Intialized repository with Django project."
+   ```
+6. Configure remote origin as the **Github** repository your created.
+   ```bash
+   $ git branch -M main
+   $ git remote add origin https://github.com/<your-github-user>/<your-repository>.git
+   ```
+6. Push the project the `main` branch for now. You should see the files in your `master` branch except those declared inside `.gitignore`.
+   ```bash
+   $ git push -u origin main
+   ```
    However, since some files are included in `.gitignore`, the updated path your remote project repository should look similar to one below instead:
    ```
    twitter-clone/
@@ -199,5 +193,10 @@
    |   |__ wsgi.py
    |__ .gitignore
    |__ manage.py
+   ```
+7. Create a new branch named `development` and checkout to it. This will be your dedicated branch during active development. You may add, commit, and push to this branch during the course of the development.
+   ```bash
+   $ git branch development
+   $ git checkout development
    ```
    <br>
