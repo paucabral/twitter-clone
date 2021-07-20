@@ -172,7 +172,7 @@
    media
    ```
 
-   The updated path of your project should look similar to one below:
+   The updated path of your project locally should look similar to one below:
    ```
    twitter-clone/
    |__ twitter-clone/
@@ -185,6 +185,19 @@
    |   |__ wsgi.py
    |__ .gitignore
    |__ db.sqlite3
+   |__ manage.py
+   ```
+
+   However, since some files are included in `.gitignore`, the updated path your remote project repository should look similar to one below instead:
+   ```
+   twitter-clone/
+   |__ twitter-clone/
+   |   |__ __init__.py
+   |   |__ asgi.py
+   |   |__ settings.py
+   |   |__ urls.py
+   |   |__ wsgi.py
+   |__ .gitignore
    |__ manage.py
    ```
    <br>
