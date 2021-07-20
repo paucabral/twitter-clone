@@ -105,7 +105,7 @@
    ```
    DEBUG=True
    ```
-   *Note: During development, always set `DEBUG` to `True` to see debug messages. Set it only to false when testing or deploying for production.*
+   *Note: During development, always set `DEBUG` to `True` to see debug messages. Set it only to `False` when testing or deploying for production.*
 8. Try to run the server again. You should not experience any problem.
 
    ```bash
