@@ -78,10 +78,8 @@
 3. Open `settings.py` from inside the project subdirectory.
 4. Just below the `from from pathlib import Path` line, import `config` from the `decouple` library.
    ```python
-   ...
    from pathlib import Path
-   from decouple import config
-   ...
+   from decouple import config # Insert the code here. 
    ```
 5. Copy the value of the variable `SECRET_KEY`.
    ```python
