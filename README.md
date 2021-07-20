@@ -5,7 +5,7 @@
    ```bash
    $ pip --version
    ```
-   Note: For Windows users, you may need to add `pip` into your PATH from the environmental variables.
+   *Note: For Windows users, you may need to add `pip` into your PATH from the environmental variables.*
 3. Install the virtualenvwrapper using `pip`. This would allow us to create a virtual environment for our project.<br>
    _For Windows_:
    ```bash
