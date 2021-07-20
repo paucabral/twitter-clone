@@ -36,10 +36,9 @@
    (<name-of-your-environment>)$ pip install django
    ```
 4. Once installed you issue the `django-admin` command to check. You should see a list of commands that can be issued.
-   ````
-   (<name-of-your-environment>)$ django-admin
    ```bash
-   ````
+   (<name-of-your-environment>)$ django-admin
+   ```
 5. Create your project using the following command.
    ```bash
    (<name-of-your-environment>)$ django-admin startproject twitterclone
@@ -140,20 +139,27 @@
 3. Initalize the repository from your local machine.
    ```bash
    $ git init
-   $ git branch -M main
-   $ git remote add origin https://github.com/<your-github-user>/<your-repository>.git
    ```
 4. Track the files and do an an intial commit.
    ```bash
    $ git add .
    $ git commit -m "Intialized repository with Django project."
    ```
-5. Create a new branch named `development` and checkout to it. This will be your dedicated branch during active development. You may add, commit, and push to this branch during the course of development.
+5. Configure remote origin as the **Github** repository your created.
+   ```bash
+   $ git branch -M main
+   $ git remote add origin https://github.com/<your-github-user>/<your-repository>.git
+   ```
+6. Push the project the `main` branch for now. You should see the files in your `master` branch except those declared inside `.gitignore`.
+   ```bash
+   $ git push -u origin main
+   ```
+7. Create a new branch named `development` and checkout to it. This will be your dedicated branch during active development. You may add, commit, and push to this branch during the course of development.
    ```bash
    $ git branch development
    $ git checkout development
    ```
-6. Before proceeding with the development, setup a `.gitignore` file on the root directory of the project (same directory as the `manage.py` file) with the following lines inside:
+8. Before proceeding with the development, setup a `.gitignore` file on the root directory of the project (same directory as the `manage.py` file) with the following lines inside:
    ```
    .env
    *.log
