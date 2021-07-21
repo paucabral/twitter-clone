@@ -377,6 +377,7 @@ URL patterns set the paths to which each _app_ or specific functionality can be 
    (twtclone)$ python manage.py runserver
    ```
 7. Proceed on doing the same steps for the _tweets_ app. This time however, the tweet app views and all its URL is meant to be accessible in `/tweets` directory. For now create a view dedicated to view all tweets with a class named `AllTweets`. Proceed on creating a `urls.py` for it as well.<br>
+
    _twitterclone/tweets/views.py_.
 
    ```python
