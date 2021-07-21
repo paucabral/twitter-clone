@@ -647,7 +647,15 @@ Templates are basically the frontend component of a basic **Django** project. It
    ]
    ```
 
-7. Import the `index.css` file in the `base.html` file by adding the `{% load static %}` invocation and referencing it with the `<link>` tag. You may follow the updated `base.html` code below:
+7. Open the base `urls.py` as well and add the necessary import to serve static files. Your updated `urls.py` and add the following line.
+
+   _twitterclone/twitterclone/urls.py_
+
+   ```python
+   from django.conf.urls.static import static
+   ```
+
+8. Import the `index.css` file in the `base.html` file by adding the `{% load static %}` invocation and referencing it with the `<link>` tag. You may follow the updated `base.html` code below:
    ```html
    {% load static %}
    <!-- Initiate loading of static files -->
@@ -664,7 +672,7 @@ Templates are basically the frontend component of a basic **Django** project. It
        <link
          rel="stylesheet"
          type="text/css"
-         src="{% static 'css/index.css' %}"
+         href="{% static 'css/index.css' %}"
        />
        <!-- Import the created CSS file -->
      </head>
@@ -673,7 +681,7 @@ Templates are basically the frontend component of a basic **Django** project. It
      </body>
    </html>
    ```
-8. This time, let's create a dedicated HTML file which we will bind for the _Login_ view. We will be extending the contents of `base.html` to this file so that the we do not have to rewrite the code we have written inside the `base.html`. Create `login.html` inside the accounts template directory (`twitterclone/accounts/templates/accounts/`).<br>
+9. This time, let's create a dedicated HTML file which we will bind for the _Login_ view. We will be extending the contents of `base.html` to this file so that the we do not have to rewrite the code we have written inside the `base.html`. Create `login.html` inside the accounts template directory (`twitterclone/accounts/templates/accounts/`).<br>
 
    _twitterclone/accounts/templates/accounts/login.html_
 
@@ -688,23 +696,23 @@ Templates are basically the frontend component of a basic **Django** project. It
 
    _Note: The document title is placed in between the block title blocks and the content which was initialized at the `<body>` tag is placed in between the block content blocks._
 
-9. We will now connect this HTML file to the _Login_ view inside the `views.py` of our _accounts_ app. Modify the `get` function and return a render instead. You may simply follow the code below.
+10. We will now connect this HTML file to the _Login_ view inside the `views.py` of our _accounts_ app. Modify the `get` function and return a render instead. You may simply follow the code below.
 
-   ```python
-   from django.shortcuts import render
-   from django.views import View
-   from django.http import HttpResponse
+```python
+from django.shortcuts import render
+from django.views import View
+from django.http import HttpResponse
 
-   # Create your views here.
+# Create your views here.
 
 
-   class Login(View):
-      def get(self, request, *args, **kwargs):
-         return render(request, template_name='accounts/login.html', context={})
+class Login(View):
+   def get(self, request, *args, **kwargs):
+      return render(request, template_name='accounts/login.html', context={})
 
-      def post(self, request, *args, **kwargs):
-         pass
-   ```
+   def post(self, request, *args, **kwargs):
+      pass
+```
 
 10. Try running the project again and visit the _Login_ page at http://127.0.0.1:8000/. We will update this page and other views for the _accounts_ app towards the latter part of the project.
 
