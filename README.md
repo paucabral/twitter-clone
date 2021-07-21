@@ -698,23 +698,23 @@ Templates are basically the frontend component of a basic **Django** project. It
 
 10. We will now connect this HTML file to the _Login_ view inside the `views.py` of our _accounts_ app. Modify the `get` function and return a render instead. You may simply follow the code below.
 
-```python
-from django.shortcuts import render
-from django.views import View
-from django.http import HttpResponse
+    ```python
+    from django.shortcuts import render
+    from django.views import View
+    from django.http import HttpResponse
 
-# Create your views here.
+    # Create your views here.
 
 
-class Login(View):
-   def get(self, request, *args, **kwargs):
-      return render(request, template_name='accounts/login.html', context={})
+    class Login(View):
+       def get(self, request, *args, **kwargs):
+          return render(request, template_name='accounts/login.html', context={})
 
-   def post(self, request, *args, **kwargs):
-      pass
-```
+       def post(self, request, *args, **kwargs):
+          pass
+    ```
 
-10. Try running the project again and visit the _Login_ page at http://127.0.0.1:8000/. We will update this page and other views for the _accounts_ app towards the latter part of the project.
+11. Try running the project again and visit the _Login_ page at http://127.0.0.1:8000/. We will update this page and other views for the _accounts_ app towards the latter part of the project.
 
     ```bash
     (twtclone)$ python manage.py runserver
