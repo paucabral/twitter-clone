@@ -462,3 +462,252 @@ URL patterns set the paths to which each _app_ or specific functionality can be 
    |__ db.sqlite3
    |__ manage.py
    ```
+
+   <br>
+
+# Templates, inheritance, and static files
+
+Templates are basically the frontend component of a basic **Django** project. It is where the corresponding HTML files are placed and referenced by the views.
+
+1. Create a templates directory inside an _app_ subdirectory. In this case, a new directory `templates` is created inside the _accounts_ app (`twitterclone/accounts`).
+2. Inside the `templates` directory, create another directory with the same name as the corresponding _app_. In this case, create an `accounts` directory inside the newly created `templates` directory.
+
+   Your updated local directory structure should look similar to this.
+
+   ```
+   twitter-clone/
+   |__ accounts/
+   |   |__ __pycache__/
+   |   |__ migrations/
+   |   |__ accounts/
+   |       |__ templates/
+   |   |__ __init__.py
+   |   |__ admin.py
+   |   |__ apps.py
+   |   |__ models.py
+   |   |__ tests.py
+   |   |__ urls.py
+   |   |__ views.py
+   |__ tweets/
+   |   |__ __pycache__/
+   |   |__ migrations/
+   |   |__ __init__.py
+   |   |__ admin.py
+   |   |__ apps.py
+   |   |__ models.py
+   |   |__ tests.py
+   |   |__ urls.py
+   |   |__ views.py
+   |__ twitter-clone/
+   |   |__ __pycache__/
+   |   |__ __init__.py
+   |   |__ .env
+   |   |__ asgi.py
+   |   |__ settings.py
+   |   |__ urls.py
+   |   |__ wsgi.py
+   |__ .gitignore
+   |__ db.sqlite3
+   |__ manage.py
+   ```
+
+3. One great feature of **Django** is the ability to set a base template which can be inherited by other inherited HTML files. This way, particular HTML code can be reused (i.e. for headers, navbar, footers, etc.). For now, we will create a `base.html` as template all the HTML files in our _accounts_ app. Create a `base.html` file inside the `twitterclone/accounts/templates/accounts` directory. We may import within it an external CSS library as well like bootstrap. In the mean time, add the following contents inside:
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+     <head>
+       <title>{% block title %}{% endblock %}</title>
+       <link
+         href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+         rel="stylesheet"
+         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+         crossorigin="anonymous"
+       />
+     </head>
+     <body>
+       <div class="container">{% block content %} {% endblock %}</div>
+     </body>
+   </html>
+   ```
+
+4. Along with the external CSS refrences, we can also setup our local CSS on a dedicated stylesheet/s and serving them as static files. In the root project directory (`twitterclone/`) create `static` directory and place another set of directories for `css`, `img`, and `js`. This is where we will serve our CSS, static images, and separate Javascript files.
+
+   Your updated local directory structure should look similar to this.
+
+   ```
+   twitter-clone/
+   |__ accounts/
+   |   |__ __pycache__/
+   |   |__ migrations/
+   |   |__ accounts/
+   |       |__ templates/
+   |   |__ __init__.py
+   |   |__ admin.py
+   |   |__ apps.py
+   |   |__ models.py
+   |   |__ tests.py
+   |   |__ urls.py
+   |   |__ views.py
+   |__ static/
+   |   |__ css/
+   |   |__ img/
+   |   |__ js/
+   |__ tweets/
+   |   |__ __pycache__/
+   |   |__ migrations/
+   |   |__ __init__.py
+   |   |__ admin.py
+   |   |__ apps.py
+   |   |__ models.py
+   |   |__ tests.py
+   |   |__ urls.py
+   |   |__ views.py
+   |__ twitter-clone/
+   |   |__ __pycache__/
+   |   |__ __init__.py
+   |   |__ .env
+   |   |__ asgi.py
+   |   |__ settings.py
+   |   |__ urls.py
+   |   |__ wsgi.py
+   |__ .gitignore
+   |__ db.sqlite3
+   |__ manage.py
+   ```
+
+5. For now add `index.css` file inside the `css` directory and add the following contents below. This will be our dedicated stylesheet for the project.
+
+   ```css
+   h1 {
+     font-weight: 1000;
+   }
+   ```
+
+   Your updated local directory structure should look similar to this.
+
+   ```
+   twitter-clone/
+   |__ accounts/
+   |   |__ __pycache__/
+   |   |__ migrations/
+   |   |__ accounts/
+   |       |__ templates/
+   |   |__ __init__.py
+   |   |__ admin.py
+   |   |__ apps.py
+   |   |__ models.py
+   |   |__ tests.py
+   |   |__ urls.py
+   |   |__ views.py
+   |__ static/
+   |   |__ css/
+   |       |__ index.css
+   |   |__ img/
+   |   |__ js/
+   |__ tweets/
+   |   |__ __pycache__/
+   |   |__ migrations/
+   |   |__ __init__.py
+   |   |__ admin.py
+   |   |__ apps.py
+   |   |__ models.py
+   |   |__ tests.py
+   |   |__ urls.py
+   |   |__ views.py
+   |__ twitter-clone/
+   |   |__ __pycache__/
+   |   |__ __init__.py
+   |   |__ .env
+   |   |__ asgi.py
+   |   |__ settings.py
+   |   |__ urls.py
+   |   |__ wsgi.py
+   |__ .gitignore
+   |__ db.sqlite3
+   |__ manage.py
+   ```
+
+6. To be able to serve static files however, there are lines of code to be added to `settings.py`. Import the `os` module and add the following lines of code to define the location of CSS files.<br>
+
+   _twitterclone/twitterclone/settings.py_
+
+   ```python
+   import os # put at the top just above "from pathlib import Path"
+
+   ...
+
+   STATIC_DIR = os.path.join(BASE_DIR, "static")
+
+   STATIC_URL = '/static/' # This variable already exists, just add the remaining lines of code.
+   STATIC_ROOT = 'staticfiles'
+
+   STATICFILES_DIRS = [
+      STATIC_DIR,
+   ]
+   ```
+
+7. Import the `index.css` file in the `base.html` file by adding the `{% load static %}` invocation and referencing it with the `<link>` tag. You may follow the updated `base.html` code below:
+   ```html
+   {% load static %}
+   <!-- Initiate loading of static files -->
+   <!DOCTYPE html>
+   <html lang="en">
+     <head>
+       <title>{% block title %}{% endblock %}</title>
+       <link
+         href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+         rel="stylesheet"
+         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+         crossorigin="anonymous"
+       />
+       <link
+         rel="stylesheet"
+         type="text/css"
+         src="{% static 'css/index.css' %}"
+       />
+       <!-- Import the created CSS file -->
+     </head>
+     <body>
+       <div class="container">{% block content %} {% endblock %}</div>
+     </body>
+   </html>
+   ```
+8. This time, let's create a dedicated HTML file which we will bind for the _Login_ view. We will be extending the contents of `base.html` to this file so that the we do not have to rewrite the code we have written inside the `base.html`. Create `login.html` inside the accounts template directory (`twitterclone/accounts/templates/accounts/`).<br>
+
+   _twitterclone/accounts/templates/accounts/login.html_
+
+   ```html
+   {% extends 'accounts/base.html' %} {% load static %} {% block title %}
+   Twitter Clone | Login {% endblock %} {% block content %}
+   <div>
+     <h1>Welcome to the login page!</h1>
+   </div>
+   {% endblock %}
+   ```
+
+   _Note: The document title is placed in between the block title blocks and the content which was initialized at the `<body>` tag is placed in between the block content blocks._
+
+9. We will now connect this HTML file to the _Login_ view inside the `views.py` of our _accounts_ app. Modify the `get` function and return a render instead. You may simply follow the code below.
+
+   ```python
+   from django.shortcuts import render
+   from django.views import View
+   from django.http import HttpResponse
+
+   # Create your views here.
+
+
+   class Login(View):
+      def get(self, request, *args, **kwargs):
+         return render(request, template_name='accounts/login.html', context={})
+
+      def post(self, request, *args, **kwargs):
+         pass
+   ```
+
+10. Try running the project again and visit the _Login_ page at http://127.0.0.1:8000/. We will update this page and other views for the _accounts_ app towards the latter part of the project.
+
+    ```bash
+    (twtclone)$ python manage.py runserver
+    ```

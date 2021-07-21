@@ -7,7 +7,7 @@ from django.http import HttpResponse
 
 class Login(View):
     def get(self, request, *args, **kwargs):
-        return HttpResponse('login')
+        return render(request, template_name='accounts/login.html', context={})
 
     def post(self, request, *args, **kwargs):
         pass
