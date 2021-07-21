@@ -7,7 +7,7 @@ from django.http import HttpResponse
 
 class AllTweets(View):
     def get(self, request, *args, **kwargs):
-        return HttpResponse('This is page dedicated to view all tweets.')
+        return render(request, template_name='tweets/all-tweets.html', context={})
 
     def post(self, request, *args, **kwargs):
         pass

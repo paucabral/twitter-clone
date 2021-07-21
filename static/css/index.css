@@ -1,3 +1,41 @@
 .brand {
   font-weight: 1000;
 }
+
+.navigationHeader {
+  font-weight: 500;
+}
+
+.navBrand {
+  font-size: 1.5rem;
+}
+
+.menuItem {
+  font-size: 1rem;
+  color: rgb(198, 223, 226) !important;
+}
+
+.menuItem:hover {
+  color: white !important;
+}
+
+.allTweets {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tweet-profile-img {
+  width: 2.5rem;
+  border-radius: 50%;
+}
+
+.card-body p {
+  margin: 1rem;
+}
+
+textarea {
+  height: 8rem;
+  min-height: 8rem;
+  max-height: 8rem;
+  resize: none;
+}

@@ -1,0 +1,62 @@
+{% extends 'tweets/base.html' %}
+{% load static %}
+
+{% block title %}
+Twitter Clone | Tweets
+{% endblock %}
+
+{% block content %}
+<div class="container allTweets">
+  <div>
+    <div class="card shadow mb-5 rounded border-0">
+      <div class="card-header">
+        <h2 class="card-title">Post a tweet</h2>
+      </div>
+      <div class="card-body">
+        <form>
+          <div class="form-group">
+            <textarea class="form-control" id="createTweet" rows="3"></textarea>
+          </div>
+          <br>
+          <div class="pull-right">
+            <a href="#" class="btn text-white btn-info"><i class="fa fa-pencil-square fa-3" aria-hidden="true"></i> Tweet</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div>
+    <h1>Checkout the latest Tweets!</h1>
+    <div class="container">
+
+      <div class="card shadow mb-5 rounded border-0">
+        <div class="card-header bg-info text-white border-0">
+          <div class="row row-cols-auto">
+            <div class="col my-auto">
+              <img class="tweet-profile-img my-auto" alt="john-doe" src="https://abansfinance.lk/wp-content/uploads/2017/08/dummy-user.jpg" />
+            </div>
+            <div class="col my-auto">
+              <h4 class="my-auto">John Doe</h4>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-text text-wrap">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+            aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+            occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+          
+          <div class="pull-right">
+            <a href="#" class="btn text-white btn-primary"><i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i></a>
+            <a href="#" class="btn text-white btn-danger"><i class="fa fa-trash-o fa-3" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

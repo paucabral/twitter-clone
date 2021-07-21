@@ -517,6 +517,9 @@ Templates are basically the frontend component of a basic **Django** project. It
    <!DOCTYPE html>
    <html lang="en">
      <head>
+       <meta charset="utf-8" />
+       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+       <meta name="viewport" content="width=device-width, initial-scale=1" />
        <title>{% block title %}{% endblock %}</title>
        <link
          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -662,6 +665,9 @@ Templates are basically the frontend component of a basic **Django** project. It
    <!DOCTYPE html>
    <html lang="en">
      <head>
+       <meta charset="utf-8" />
+       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+       <meta name="viewport" content="width=device-width, initial-scale=1" />
        <title>{% block title %}{% endblock %}</title>
        <link
          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -709,7 +715,7 @@ Templates are basically the frontend component of a basic **Django** project. It
 
     class Login(View):
        def get(self, request, *args, **kwargs):
-          return render(request, template_name='accounts/login.html', context={})
+          return render(request, template_name='accounts/login.html', context={}) # This is the updated line.
 
        def post(self, request, *args, **kwargs):
           pass
@@ -720,3 +726,264 @@ Templates are basically the frontend component of a basic **Django** project. It
     ```bash
     (twtclone)$ python manage.py runserver
     ```
+
+    <br>
+
+# The _tweets_ app
+
+This app is dedicated for viewing and posting tweets. Throughout this section, we will be creating a basic Create, Read, Update, and Delete (CRUD) functionality, and discuss the creation of _models_.
+
+1. Start by creating a templates directory and adding a `base.html` file with the following content below. We will be placing a basic navbar in the base template as well. Placing the navbar on the base template will allow it to appear on the rest of _tweets_ app templates as long as the _extends_ block is indicated. Update the contents of `index.css` as well to correspond with the changes.<br>
+
+   _twitterclone/tweets/templates/tweets/base.html_
+
+   ```html
+   {% load static %}
+   <!DOCTYPE html>
+   <html lang="en">
+     <head>
+       <meta charset="utf-8" />
+       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+       <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+       <title>{% block title %}{% endblock %}</title>
+
+       <link
+         href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+         rel="stylesheet"
+         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+         crossorigin="anonymous"
+       />
+       <link
+         rel="stylesheet"
+         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+       />
+       <link
+         rel="stylesheet"
+         type="text/css"
+         href="{% static 'css/index.css' %}"
+       />
+     </head>
+
+     <body>
+       <header class="navigationHeader sticky-top">
+         <nav
+           class="navbar navbar-expand-lg navbar-dark bg-primary container-fluid"
+         >
+           <div class="container">
+             <a class="navbar-brand navBrand" href="#"
+               >Twitter<span class="brand">CLONE</span></a
+             >
+             <button
+               class="navbar-toggler"
+               type="button"
+               data-toggle="collapse"
+               data-target="#navbarTogglerDemo02"
+               aria-controls="navbarTogglerDemo02"
+               aria-expanded="false"
+               aria-label="Toggle navigation"
+             >
+               <span class="navbar-toggler-icon"></span>
+             </button>
+
+             <div
+               class="collapse navbar-collapse align-items-center"
+               id="navbarTogglerDemo02"
+             >
+               <ul class="nav navbar-nav ms-auto align-items-center">
+                 <li class="nav-item">
+                   <a class="nav-link menuItem" href="#">
+                     <i class="fa fa-home fa-3" aria-hidden="true"></i> Home
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a class="nav-link menuItem" href="#">
+                     <i class="fa fa-newspaper-o fa-3" aria-hidden="true"></i>
+                     Timeline
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a class="nav-link menuItem" href="#">
+                     <i class="fa fa-user fa-3" aria-hidden="true"></i>
+                     Profile
+                   </a>
+                 </li>
+                 <li class="nav-item">
+                   <a class="nav-link menuItem" href="#">
+                     <i class="fa fa-sign-out fa-3" aria-hidden="true"></i>
+                     Logout
+                   </a>
+                 </li>
+               </ul>
+             </div>
+           </div>
+         </nav>
+       </header>
+
+       <div class="container">{% block content %} {% endblock %}</div>
+     </body>
+
+     <script
+       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+       crossorigin="anonymous"
+     ></script>
+     <script
+       src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+       integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+       crossorigin="anonymous"
+     ></script>
+     <script
+       src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+       crossorigin="anonymous"
+     ></script>
+   </html>
+   ```
+
+   _twitterclone/static/css/index.css_
+
+   ```css
+   .brand {
+     font-weight: 1000;
+   }
+
+   .navigationHeader {
+     font-weight: 500;
+   }
+
+   .navBrand {
+     font-size: 1.5rem;
+   }
+
+   .menuItem {
+     font-size: 1rem;
+     color: rgb(198, 223, 226) !important;
+   }
+
+   .menuItem:hover {
+     color: white !important;
+   }
+   ```
+
+2. Create another HTML named `all-tweets.html`. Add the following content below for now. This will be binded to the _AllTweets_ view.<br>
+
+   _twitterclone/tweets/templates/tweets/all-tweets.html_
+
+   ```html
+   {% extends 'tweets/base.html' %} {% load static %} {% block title %} Twitter
+   Clone | Tweets {% endblock %} {% block content %}
+   <div class="container allTweets">
+     <div>
+       <div class="card shadow mb-5 rounded border-0">
+         <div class="card-header">
+           <h2 class="card-title">Post a tweet</h2>
+         </div>
+         <div class="card-body">
+           <form>
+             <div class="form-group">
+               <textarea class="form-control" id="createTweet" rows="3">
+               </textarea>
+             </div>
+             <br />
+             <div class="pull-right">
+               <a href="#" class="btn text-white btn-info">
+                 <i class="fa fa-pencil-square fa-3" aria-hidden="true"></i>
+                 Tweet
+               </a>
+             </div>
+           </form>
+         </div>
+       </div>
+     </div>
+     <br />
+     <div>
+       <h1>Checkout the latest Tweets!</h1>
+       <div class="container">
+         <div class="card shadow mb-5 rounded border-0">
+           <div class="card-header bg-info text-white border-0">
+             <div class="row row-cols-auto">
+               <div class="col my-auto">
+                 <img
+                   class="tweet-profile-img my-auto"
+                   alt="john-doe"
+                   src="https://abansfinance.lk/wp-content/uploads/2017/08/dummy-user.jpg"
+                 />
+               </div>
+               <div class="col my-auto">
+                 <h4 class="my-auto">John Doe</h4>
+               </div>
+             </div>
+           </div>
+           <div class="card-body">
+             <p class="card-text text-wrap">
+               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+               enim ad minim veniam, quis nostrud exercitation ullamco laboris
+               nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+               reprehenderit in voluptate velit esse cillum dolore eu fugiat
+               nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+               sunt in culpa qui officia deserunt mollit anim id est laborum.
+             </p>
+
+             <div class="pull-right">
+               <a href="#" class="btn text-white btn-primary">
+                 <i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i>
+               </a>
+               <a href="#" class="btn text-white btn-danger">
+                 <i class="fa fa-trash-o fa-3" aria-hidden="true"></i>
+               </a>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+   {% endblock %}
+   ```
+
+   _twitterclone/static/css/index.css_
+
+   ```css
+   .allTweets {
+     margin-top: 1rem;
+     margin-bottom: 1rem;
+   }
+
+   .tweet-profile-img {
+     width: 2.5rem;
+     border-radius: 50%;
+   }
+
+   .card-body p {
+     margin: 1rem;
+   }
+
+   textarea {
+     height: 8rem;
+     min-height: 8rem;
+     max-height: 8rem;
+     resize: none;
+   }
+   ```
+
+3. Bind the `all-tweets.html` template to the _AllTweets_ view by updating the `get` function. Follow the code below:
+
+   _twitterclone/tweets/views.py_
+
+   ```python
+   from django.shortcuts import render
+   from django.views import View
+   from django.http import HttpResponse
+
+   # Create your views here.
+
+
+   class AllTweets(View):
+      def get(self, request, *args, **kwargs):
+         return render(request, template_name='tweets/all-tweets.html', context={}) # This is the updated line.
+
+      def post(self, request, *args, **kwargs):
+         pass
+
+   ```
