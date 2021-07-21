@@ -579,7 +579,7 @@ Templates are basically the frontend component of a basic **Django** project. It
 5. For now add `index.css` file inside the `css` directory and add the following contents below. This will be our dedicated stylesheet for the project.
 
    ```css
-   h1 {
+   .brand {
      font-weight: 1000;
    }
    ```
@@ -689,7 +689,8 @@ Templates are basically the frontend component of a basic **Django** project. It
    {% extends 'accounts/base.html' %} {% load static %} {% block title %}
    Twitter Clone | Login {% endblock %} {% block content %}
    <div>
-     <h1>Welcome to the login page!</h1>
+     <h1 class="brand">Twitter Clone</h1>
+     <h1>Login</h1>
    </div>
    {% endblock %}
    ```
