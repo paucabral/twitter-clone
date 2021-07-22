@@ -1001,7 +1001,9 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
            <div class="card-body">
              <p class="card-text text-wrap">
                <!-- Date Created -->
-               <span class="text-muted">Posted at 2017-09-01 18:39:43</span>
+               <span class="text-muted timestamp">
+                 Posted at 2017-09-01 18:39:43
+               </span>
                <!-- End Date Created -->
                <br />
                <!-- Message -->
@@ -1064,6 +1066,10 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
      min-height: 8rem;
      max-height: 8rem;
      resize: none;
+   }
+
+   .timestamp {
+     font-size: small;
    }
    ```
 
@@ -1205,7 +1211,9 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
             <div class="card-body">
               <p class="card-text text-wrap">
                 <!-- Date Created -->
-                <span class="text-muted">{{ tweet.date_created }}</span>
+                <span class="text-muted timestamp"
+                  >{{ tweet.date_created }}</span
+                >
                 <!-- End Date Created -->
                 <br />
                 <!-- Message -->
@@ -1745,11 +1753,11 @@ In **Django**, we have the option to manually handle theregistration of accounts
     |   |__ __pycache__/
     |   |__ migrations/
     |   |__ accounts/
-    |       |__ templates/
-    |           |__ base.html
-    |           |__ login.html
-    |           |__ register.html
-    |           |__ registration-success.html
+    |   |   |__ templates/
+    |   |       |__ base.html
+    |   |       |__ login.html
+    |   |       |__ register.html
+    |   |       |__ registration-success.html
     |   |__ __init__.py
     |   |__ admin.py
     |   |__ apps.py
