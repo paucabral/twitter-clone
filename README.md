@@ -290,6 +290,26 @@ In **Django**, _apps_ can be used to manage multiple pages with specific feature
 
    <br>
 
+# Creating a super user account and exploring the Admin Panel
+
+Django lets us create a super user account which has direct access to the built-in Admin Panel. It can be used to check and modify the entries in a database, as well as other features such modifying accounts.
+
+1. To start, we need to do an initial migration. Inside the root project directory, run the following command:
+   ```bash
+   (twtclone)$ python manage.py migrate
+   ```
+2. After the built-in Django models are migrated, you may now proceed on creating a supersuser using the command below. Simply follow each prompt and provide the necessary information.
+
+   ```bash
+   (twtclone)$ python manage.py createsuperuser
+   ```
+
+3. Run your project and you may now explore the admin panel at http://127.0.0.1:8000/admin using the account you just created.
+   ```bash
+   (twtclone)$ python manage.py runserver
+   ```
+   <br>
+
 # Creating preliminary views and associating each app with specific URL patterns
 
 URL patterns set the paths to which each _app_ or specific functionality can be accessed as a webpage.
@@ -465,6 +485,49 @@ URL patterns set the paths to which each _app_ or specific functionality can be 
 
    <br>
 
+# Creating models
+
+_Models_ are basically the representation of databases in Django. Models can be used to create a table and add, delete, or modify entries of a database. In this example, we will be creating a model for the profile information of users.
+
+1. Inside the _accounts_ app directory (`twitterclone/accounts`), open the file `models.py`.
+2. Simply add the following lines of code after the `# Create your models here.` comment. This will create a new table dedicated for the Profile of the users.
+
+   ```python
+   class Profile(models.Model):
+     name = models.CharField(max_length=200, null=True)
+     email = models.CharField(max_length=200, null=True)
+     date_created = models.DateTimeField(auto_now_add=True, null=True)
+
+     def __str__(self):
+       return self.email
+   ```
+
+3. To fully create the model, it needs to be migrated to the database. Run the command below to make the migration.
+   ```bash
+   (twtclone)$ python manage.py makemigrations
+   ```
+4. Afterwards, run the migrate command again to fully construct the changes to the database.
+
+   ```bash
+   (twtclone)$ python manage.py migrate
+   ```
+
+5. To manage the newly created table from the Admin Panel, open the `admin.py` file of the _accounts_ app and add the following lines of code after the comment `#Register your models here`:
+
+   ```python
+   from .models import * # imports all models
+
+   admin.site.register(Profile)
+   ```
+
+6. You may now check that a new table was added by visiting the Admin Panel at http://127.0.0.1:8000/admin.
+
+   ```bash
+   (twtclone)$ python manage.py runserver
+   ```
+
+   <br>
+
 # Templates, inheritance, and static files
 
 Templates are basically the frontend component of a basic **Django** project. It is where the corresponding HTML files are placed and referenced by the views.
@@ -582,6 +645,10 @@ Templates are basically the frontend component of a basic **Django** project. It
 5. For now add `index.css` file inside the `css` directory and add the following contents below. This will be our dedicated stylesheet for the project.
 
    ```css
+   body {
+     background-color: rgb(223, 243, 243);
+   }
+
    .brand {
      font-weight: 1000;
    }
@@ -731,7 +798,7 @@ Templates are basically the frontend component of a basic **Django** project. It
 
 # The _tweets_ app
 
-This app is dedicated for viewing and posting tweets. Throughout this section, we will be creating a basic Create, Read, Update, and Delete (CRUD) functionality, and discuss the creation of _models_.
+This app is dedicated for viewing and posting tweets. Throughout this section, we will be creating a basic Create, Read, Update, and Delete (CRUD) functionality, and discuss the creation of _forms_.
 
 1. Start by creating a templates directory and adding a `base.html` file with the following content below. We will be placing a basic navbar in the base template as well. Placing the navbar on the base template will allow it to appear on the rest of _tweets_ app templates as long as the _extends_ block is indicated. Update the contents of `index.css` as well to correspond with the changes.<br>
 
@@ -844,6 +911,10 @@ This app is dedicated for viewing and posting tweets. Throughout this section, w
    _twitterclone/static/css/index.css_
 
    ```css
+   body {
+     background-color: rgb(223, 243, 243);
+   }
+
    .brand {
      font-weight: 1000;
    }
@@ -900,6 +971,7 @@ This app is dedicated for viewing and posting tweets. Throughout this section, w
      <div>
        <h1>Checkout the latest Tweets!</h1>
        <div class="container">
+         <!-- Cards -->
          <div class="card shadow mb-5 rounded border-0">
            <div class="card-header bg-info text-white border-0">
              <div class="row row-cols-auto">
@@ -907,7 +979,7 @@ This app is dedicated for viewing and posting tweets. Throughout this section, w
                  <img
                    class="tweet-profile-img my-auto"
                    alt="john-doe"
-                   src="https://abansfinance.lk/wp-content/uploads/2017/08/dummy-user.jpg"
+                   src="https://icon-library.com/images/generic-user-icon/generic-user-icon-19.jpg"
                  />
                </div>
                <div class="col my-auto">
@@ -917,6 +989,8 @@ This app is dedicated for viewing and posting tweets. Throughout this section, w
            </div>
            <div class="card-body">
              <p class="card-text text-wrap">
+               <span class="text-muted">Posted at 2017-09-01 18:39:43</span>
+               <br />
                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
                enim ad minim veniam, quis nostrud exercitation ullamco laboris
@@ -925,17 +999,24 @@ This app is dedicated for viewing and posting tweets. Throughout this section, w
                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
                sunt in culpa qui officia deserunt mollit anim id est laborum.
              </p>
-
-             <div class="pull-right">
-               <a href="#" class="btn text-white btn-primary">
-                 <i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i>
-               </a>
-               <a href="#" class="btn text-white btn-danger">
-                 <i class="fa fa-trash-o fa-3" aria-hidden="true"></i>
-               </a>
+             <br />
+             <div class="pull-right row row-cols-auto">
+               <div class="col">
+                 <a href="#" class="btn text-white btn-primary">
+                   <i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i>
+                 </a>
+               </div>
+               <div class="col">
+                 <form>
+                   <button type="submit" class="btn text-white btn-danger">
+                     <i class="fa fa-trash-o fa-3" aria-hidden="true"></i>
+                   </button>
+                 </form>
+               </div>
              </div>
            </div>
          </div>
+         <!-- End Cards -->
        </div>
      </div>
    </div>
