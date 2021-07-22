@@ -494,12 +494,14 @@ _Models_ are basically the representation of databases in Django. Models can be 
 
    ```python
    class Profile(models.Model):
-     name = models.CharField(max_length=200, null=True)
+     first_name = models.CharField(max_length=200, null=True)
+     last_name = models.CharField(max_length=200, null=True)
+     username = models.CharField(max_length=200, null=True)
      email = models.CharField(max_length=200, null=True)
      date_created = models.DateTimeField(auto_now_add=True, null=True)
 
      def __str__(self):
-       return self.email
+       return self.username
    ```
 
 3. To fully create the model, it needs to be migrated to the database. Run the command below to make the migration.
@@ -515,7 +517,7 @@ _Models_ are basically the representation of databases in Django. Models can be 
 5. To manage the newly created table from the Admin Panel, open the `admin.py` file of the _accounts_ app and add the following lines of code after the comment `#Register your models here`:
 
    ```python
-   from .models import * # imports all models
+   from .models import * # imports all models in accounts app
 
    admin.site.register(Profile)
    ```
@@ -796,9 +798,11 @@ Templates are basically the frontend component of a basic **Django** project. It
 
     <br>
 
-# The _tweets_ app
+# Displaying "tweets" in the _tweets_ app
 
-This app is dedicated for viewing and posting tweets. Throughout this section, we will be creating a basic Create, Read, Update, and Delete (CRUD) functionality, and discuss the creation of _forms_.
+<!-- This app is dedicated for viewing and posting tweets. Throughout this section, we will be creating a basic Create, Read, Update, and Delete (CRUD) functionality, and discuss the creation of _forms_. -->
+
+This app is dedicated for viewing and posting tweets. For now, we will be adding the functionality to dynamically view the latest "tweets" based on the entry from the database.
 
 1. Start by creating a templates directory and adding a `base.html` file with the following content below. We will be placing a basic navbar in the base template as well. Placing the navbar on the base template will allow it to appear on the rest of _tweets_ app templates as long as the _extends_ block is indicated. Update the contents of `index.css` as well to correspond with the changes.<br>
 
@@ -948,7 +952,9 @@ This app is dedicated for viewing and posting tweets. Throughout this section, w
      <div>
        <div class="card shadow mb-5 rounded border-0">
          <div class="card-header">
-           <h2 class="card-title">Post a tweet</h2>
+           <!-- Name Header -->
+           <h2 class="card-title">Good day John Doe, post a tweet!</h2>
+           <!-- End Name Header -->
          </div>
          <div class="card-body">
            <form>
@@ -983,14 +989,22 @@ This app is dedicated for viewing and posting tweets. Throughout this section, w
                  />
                </div>
                <div class="col my-auto">
+                 <!-- Name -->
                  <h4 class="my-auto">John Doe</h4>
+                 <!-- End Name -->
+                 <!-- Username -->
+                 <span>@johnDoe</span>
+                 <!-- End Username -->
                </div>
              </div>
            </div>
            <div class="card-body">
              <p class="card-text text-wrap">
+               <!-- Date Created -->
                <span class="text-muted">Posted at 2017-09-01 18:39:43</span>
+               <!-- End Date Created -->
                <br />
+               <!-- Message -->
                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
                enim ad minim veniam, quis nostrud exercitation ullamco laboris
@@ -998,20 +1012,25 @@ This app is dedicated for viewing and posting tweets. Throughout this section, w
                reprehenderit in voluptate velit esse cillum dolore eu fugiat
                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
                sunt in culpa qui officia deserunt mollit anim id est laborum.
+               <!-- End Message -->
              </p>
              <br />
              <div class="pull-right row row-cols-auto">
                <div class="col">
+                 <!-- Edit -->
                  <a href="#" class="btn text-white btn-primary">
                    <i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i>
                  </a>
+                 <!-- End Edit -->
                </div>
                <div class="col">
+                 <!-- Delete -->
                  <form>
                    <button type="submit" class="btn text-white btn-danger">
                      <i class="fa fa-trash-o fa-3" aria-hidden="true"></i>
                    </button>
                  </form>
+                 <!-- End Delete -->
                </div>
              </div>
            </div>
@@ -1048,7 +1067,7 @@ This app is dedicated for viewing and posting tweets. Throughout this section, w
    }
    ```
 
-3. Bind the `all-tweets.html` template to the _AllTweets_ view by updating the `get` function. Follow the code below:
+3. Bind the `all-tweets.html` template to the _AllTweets_ view by updating the `get` function. This will be a static page for now. Simply follow the code below:
 
    _twitterclone/tweets/views.py_
 
@@ -1068,3 +1087,563 @@ This app is dedicated for viewing and posting tweets. Throughout this section, w
          pass
 
    ```
+
+4. To save the "tweets", a dedicated tweets table must be created in the database. This table needs a foreign key coming from the profile table to identify which profile created each tweet. Create the Tweet model by following the code below:<br>
+   _twitterclone/tweets/models.py_
+
+   ```python
+   from django.db import models
+   from accounts.models import Profile
+
+   # Create your models here.
+
+   class Tweet(models.Model):
+     user = models.ForeignKey(Profile, null=True, on_delete=models.SET_NULL)
+     msg = models.TextField()
+     date_created = models.DateTimeField(auto_now_add=True, null=True)
+
+     def __str__(self):
+       return self.msg
+   ```
+
+5. To fully create the model, run the command below to make the migration.
+   ```bash
+   (twtclone)$ python manage.py makemigrations
+   ```
+6. Afterwards, run the migrate command again to fully construct the changes to the database.
+
+   ```bash
+   (twtclone)$ python manage.py migrate
+   ```
+
+7. Open the `admin.py` file of the _tweets_ app and add the following lines of code:
+
+   ```python
+   from .models import * # imports all models in tweets app
+
+   admin.site.register(Tweet)
+   ```
+
+8. You may now check that a new table was added by visiting the Admin Panel at http://127.0.0.1:8000/admin.
+
+   ```bash
+   (twtclone)$ python manage.py runserver
+   ```
+
+9. Inside the admin panel, for now, add some entries on profiles and tweets. This will be our test entries for displaying database entries in our _AllTweets_ view.
+
+10. Modify the `get` method for the _AllTweets_ view and add the following lines to issue a query on the database acquring all entries in the tweets table sorted by latest to oldest.
+
+    ```python
+    def get(self, request, *args, **kwargs):
+      tweets = Tweet.objects.all().order_by('-date_created')
+      return render(request, template_name='tweets/all-tweets.html', context={'tweets':tweets})
+    ```
+
+11. To make our template dynamic we will have to modify its content. This can be done using **Jinja** templates to render the output of our _Python_ code inside the HTML file. Using a for loop, all entries from the _tweets_ object will be displayed. You may update the contents of your `all-tweets.html` to the one below ().
+
+    ```html
+    {% extends 'tweets/base.html' %} {% load static %} {% block title %} Twitter
+    Clone | Tweets {% endblock %} {% block content %}
+    <div class="container allTweets">
+      <div>
+        <div class="card shadow mb-5 rounded border-0">
+          <div class="card-header">
+            <!-- Name Header -->
+            <h2 class="card-title">Good day John Doe, post a tweet!</h2>
+            <!-- End Name Header -->
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="form-group">
+                <textarea
+                  placeholder="What's on your mind?"
+                  class="form-control"
+                  id="createTweet"
+                  rows="3"
+                ></textarea>
+              </div>
+              <br />
+              <div class="pull-right">
+                <a href="#" class="btn text-white btn-info"
+                  ><i class="fa fa-pencil-square fa-3" aria-hidden="true"></i>
+                  Tweet</a
+                >
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div>
+        <h1>Checkout the latest Tweets!</h1>
+        <div class="container">
+          <!-- Cards -->
+          {% for tweet in tweets %}
+          <div class="card shadow mb-5 rounded border-0">
+            <div class="card-header bg-info text-white border-0">
+              <div class="row row-cols-auto">
+                <div class="col my-auto">
+                  <img
+                    class="tweet-profile-img my-auto"
+                    alt="john-doe"
+                    src="https://icon-library.com/images/generic-user-icon/generic-user-icon-19.jpg"
+                  />
+                </div>
+                <div class="col my-auto">
+                  <!-- Name -->
+                  <h4 class="my-auto">
+                    {{ tweet.user.first_name }} {{ tweet.user.last_name }}
+                  </h4>
+                  <!-- End Name -->
+                  <!-- Username -->
+                  <span>@{{ tweet.user.username }}</span>
+                  <!-- End Username -->
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <p class="card-text text-wrap">
+                <!-- Date Created -->
+                <span class="text-muted">{{ tweet.date_created }}</span>
+                <!-- End Date Created -->
+                <br />
+                <!-- Message -->
+                {{ tweet.msg }}
+                <!-- End Message -->
+              </p>
+              <br />
+              <div class="pull-right row row-cols-auto">
+                <div class="col">
+                  <!-- Edit -->
+                  <a href="#" class="btn text-white btn-primary">
+                    <i
+                      class="fa fa-pencil-square-o fa-3"
+                      aria-hidden="true"
+                    ></i>
+                  </a>
+                  <!-- End Edit -->
+                </div>
+                <div class="col">
+                  <!-- Delete -->
+                  <form>
+                    <button type="submit" class="btn text-white btn-danger">
+                      <i class="fa fa-trash-o fa-3" aria-hidden="true"></i>
+                    </button>
+                  </form>
+                  <!-- End Delete -->
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          <!-- End Cards -->
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+    ```
+
+12. You may view the updated page at http://127.0.0.1:8000/all-tweets. We will leave this for now as we will create the other functionalities to make the page fully useable.
+
+    ```bash
+    (twtclone)$ python manage.py runserver
+    ```
+
+# Creating an account registration page
+
+In **Django**, we have the option to manually handle theregistration of accounts in our database or integrate them via forms. In this section, we will be using the combination of both to register a user with an account in the built in **Django** user data base and integrate it with manual entries to a dedicated profile table.
+
+1.  In the _accounts_ app, create a preliminary view for the registration page with a post and get method and bind it to a specific URL pattern. Add an HTML template as well. You may simply follow the code for each file below.<br>
+
+    _twitterclone/accounts/views.py_
+
+    ```python
+    class Register(View):
+      def get(self, request, *args, **kwargs):
+        return render(request, template_name='accounts/register.html')
+
+      def post(self, request, *args, **kwargs):
+        pass
+    ```
+
+    _twitterclone/accounts/urls.py_
+
+    ```python
+    urlpatterns = [
+     path('', views.Login.as_view(), name='login'),
+     path('register/', views.Register.as_view(), name='register'),
+    ]
+    ```
+
+    _twitterclone/accounts/templates/accounts/register.html_
+
+    ```html
+    {% extends 'accounts/base.html' %} {% load static %} {% block title %}
+    Twitter Clone | Register {% endblock %} {% block content %}
+    <div>
+      <h1>Register</h1>
+    </div>
+    {% endblock %}
+    ```
+
+2.  Proceed on creating a `forms.py` inside the _accounts_ app directory (`twitterclone/accounts/`). This will create a form that we can use as inputs for our frontend. You may simply copy the code below.<br>
+
+    ```python
+     from django.forms import ModelForm
+     from django.contrib.auth.forms import UserCreationForm
+     from django.contrib.auth.models import User
+
+
+     class CreateUserForm(UserCreationForm):
+         class Meta:
+             model = User
+             fields = ['first_name', 'last_name', 'username',
+                       'email', 'password1', 'password2']
+
+         def __init__(self, *args, **kwargs):
+             super(CreateUserForm, self).__init__(*args, **kwargs)
+             self.fields['first_name'].widget.attrs.update(
+                 {'class': 'form-control', 'placeholder': 'First Name'})
+             self.fields['last_name'].widget.attrs.update(
+                 {'class': 'form-control', 'placeholder': 'Last Name'})
+             self.fields['username'].widget.attrs.update(
+                 {'class': 'form-control', 'placeholder': 'Username'})
+             self.fields['email'].widget.attrs.update(
+                 {'class': 'form-control', 'placeholder': 'Email'})
+             self.fields['password1'].widget.attrs.update(
+                 {'class': 'form-control', 'placeholder': 'Password'})
+             self.fields['password2'].widget.attrs.update(
+                 {'class': 'form-control', 'placeholder': 'Confirm Password'})
+
+    ```
+
+    Your updated local directory structure should look similar to this.
+
+    ```
+    twitter-clone/
+    |__ accounts/
+    |   |__ __pycache__/
+    |   |__ migrations/
+    |   |__ accounts/
+    |       |__ templates/
+    |   |__ __init__.py
+    |   |__ admin.py
+    |   |__ apps.py
+    |   |__ forms.py
+    |   |__ models.py
+    |   |__ tests.py
+    |   |__ urls.py
+    |   |__ views.py
+    |__ static/
+    |   |__ css/
+    |       |__ index.css
+    |   |__ img/
+    |   |__ js/
+    |__ tweets/
+    |   |__ __pycache__/
+    |   |__ migrations/
+    |   |__ __init__.py
+    |   |__ admin.py
+    |   |__ apps.py
+    |   |__ models.py
+    |   |__ tests.py
+    |   |__ urls.py
+    |   |__ views.py
+    |__ twitter-clone/
+    |   |__ __pycache__/
+    |   |__ __init__.py
+    |   |__ .env
+    |   |__ asgi.py
+    |   |__ settings.py
+    |   |__ urls.py
+    |   |__ wsgi.py
+    |__ .gitignore
+    |__ db.sqlite3
+    |__ manage.py
+    ```
+
+3.  Import `forms.py` inside `views.py` and update the get and post method of the _Register_ view to reference the created form. <br>
+
+    ```python
+    from .forms import CreateUserForm
+    from .models import *
+    from django.contrib import messages
+
+    ...
+
+    class Register(View):
+       def get(self, request, *args, **kwargs):
+          form = CreateUserForm()
+          return render(request, template_name='accounts/register.html', context={'form': form})
+
+       def post(self, request, *args, **kwargs):
+          form = CreateUserForm(request.POST)
+
+          if form.is_valid():
+              user = form.save()
+              first_name = form.cleaned_data['first_name']
+              last_name = form.cleaned_data['last_name']
+              email = form.cleaned_data['email']
+
+              profile = Profile(user=user, first_name=first_name,
+                                last_name=last_name, email=email)
+              profile.save()
+              return redirect('/registration-success/') # Notice that this path, nor its template is still not created. This will be craeted later on.
+          else:
+              messages.error(request, 'There was an error.')
+          return render(request, template_name='accounts/register.html', context={'form': form})
+    ```
+
+4.  This time as well, update the `register.html` file to integrate the form in the frontend. You may copy the updated content of the file below. Update the `base.html` as well, along with the `index.css` file to fully incorporate the updated design.<br>
+
+    _twitterclone/accounts/templates/base.html_
+
+    ```html
+
+    ```
+
+    _twitterclone/accounts/templates/register.html_
+
+    ```html
+    {% extends 'accounts/base.html' %} {% load static %} {% block title %}
+    Twitter Clone | Register {% endblock %} {% block content %}
+    <div>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <h3 class="text-center">Sign up an account</h3>
+                <br />
+
+                <form class="form-signin" method="POST">
+                  {% csrf_token %}
+
+                  <div class="form-label-group">
+                    <div class="row">
+                      <div class="col form-label-group">
+                        {{ form.first_name }}
+                        <label for="id_first_name">First Name</label>
+                      </div>
+                      <div class="col form-label-group">
+                        {{ form.last_name }}
+                        <label for="id_last_name">Last Name</label>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-label-group">
+                        {{ form.email }}
+                        <label for="id_email">Email</label>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-label-group">
+                        {{ form.username }}
+                        <label for="id_username">Username</label>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-label-group">
+                        {{ form.password1 }}
+                        <label for="id_password1">Password</label>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-label-group">
+                        {{ form.password2 }}
+                        <label for="id_password2">Confirm Password</label>
+                      </div>
+                    </div>
+
+                    <script>
+                      var password = document.getElementById("id_password1"),
+                        confirm_password =
+                          document.getElementById("id_password2");
+
+                      function validatePassword() {
+                        if (password.value != confirm_password.value) {
+                          confirm_password.setCustomValidity(
+                            "Passwords Don't Match"
+                          );
+                        } else {
+                          confirm_password.setCustomValidity("");
+                        }
+                      }
+
+                      password.onchange = validatePassword;
+                      confirm_password.onkeyup = validatePassword;
+                    </script>
+                  </div>
+
+                  <button
+                    name="Create User"
+                    class="btn text-uppercase"
+                    type="submit"
+                    style="width: 100%;"
+                  >
+                    Sign Up
+                  </button>
+                  <hr class="my-4" />
+                  <p class="text-center">
+                    Already have an account?
+                    <a href="{% url 'login' %}" style="text-decoration: none;"
+                      >Login</a
+                    >
+                  </p>
+                  {% for message in messages %} {% if form.errors %} {% for
+                  field in form %} {% for error in field.errors %}
+                  <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                  </div>
+                  {% endfor %} {% endfor %} {% for error in
+                  form.non_field_errors %}
+                  <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                  </div>
+                  {% endfor %} {% endif %} {% endfor %}
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+    ```
+
+    _twitterclone/static/css/index.css_
+
+    ```css
+    :root {
+      --input-padding-x: 1.5rem;
+      --input-padding-y: 0.75rem;
+    }
+
+    .card-signin {
+      border: 0;
+      border-radius: 0rem;
+      box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .card-signin .card-title {
+      margin-bottom: 2rem;
+      font-weight: 300;
+      font-size: 1.5rem;
+    }
+
+    .card-signin .card-body {
+      padding: 2rem;
+    }
+
+    .form-signin {
+      width: 100%;
+    }
+
+    .form-signin .btn {
+      font-size: 80%;
+      border-radius: 5rem;
+      letter-spacing: 0.1rem;
+      font-weight: bold;
+      padding: 1rem;
+      transition: all 0.2s;
+      background-color: #2f98d4;
+      color: white;
+    }
+
+    .form-signin .btn:hover {
+      background-color: #2473a0;
+    }
+
+    .form-label-group {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .form-label-group input {
+      height: auto;
+      border-radius: 0.5rem;
+    }
+
+    .form-label-group > input,
+    .form-label-group > label {
+      padding: var(--input-padding-y) var(--input-padding-x);
+    }
+
+    .form-label-group > label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      margin-bottom: 0;
+      /* Override default `<label>` margin */
+      line-height: 1.5;
+      color: #495057;
+      border: 1px solid transparent;
+      border-radius: 0.25rem;
+      transition: all 0.1s ease-in-out;
+    }
+
+    .form-label-group input::-webkit-input-placeholder {
+      color: transparent;
+    }
+
+    .form-label-group input:-ms-input-placeholder {
+      color: transparent;
+    }
+
+    .form-label-group input::-ms-input-placeholder {
+      color: transparent;
+    }
+
+    .form-label-group input::-moz-placeholder {
+      color: transparent;
+    }
+
+    .form-label-group input::placeholder {
+      color: transparent;
+    }
+
+    .form-label-group input:not(:placeholder-shown) {
+      padding-top: calc(
+        var(--input-padding-y) + var(--input-padding-y) * (2 / 3)
+      );
+      padding-bottom: calc(var(--input-padding-y) / 3);
+    }
+
+    .form-label-group input:not(:placeholder-shown) ~ label {
+      padding-top: calc(var(--input-padding-y) / 3);
+      padding-bottom: calc(var(--input-padding-y) / 3);
+      font-size: 12px;
+      color: #777;
+    }
+
+    /* Fallback for Edge
+                -------------------------------------------------- */
+
+    @supports (-ms-ime-align: auto) {
+      .form-label-group > label {
+        display: none;
+      }
+      .form-label-group input::-ms-input-placeholder {
+        color: #777;
+      }
+    }
+
+    /* Fallback for IE
+                -------------------------------------------------- */
+
+    @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+      .form-label-group > label {
+        display: none;
+      }
+      .form-label-group input:-ms-input-placeholder {
+        color: #777;
+      }
+    }
+    ```
