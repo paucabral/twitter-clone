@@ -1326,7 +1326,10 @@ In **Django**, we have the option to manually handle theregistration of accounts
     |   |__ __pycache__/
     |   |__ migrations/
     |   |__ accounts/
-    |       |__ templates/
+    |   |   |__ templates/
+    |   |       |__ base.html
+    |   |       |__ login.html
+    |   |       |__ register.html
     |   |__ __init__.py
     |   |__ admin.py
     |   |__ apps.py
@@ -1337,12 +1340,16 @@ In **Django**, we have the option to manually handle theregistration of accounts
     |   |__ views.py
     |__ static/
     |   |__ css/
-    |       |__ index.css
+    |   |   |__ index.css
     |   |__ img/
     |   |__ js/
     |__ tweets/
     |   |__ __pycache__/
     |   |__ migrations/
+    |   |__ tweets/
+    |   |   |__ templates/
+    |   |       |__ all-tweets.html
+    |   |       |__ base.html
     |   |__ __init__.py
     |   |__ admin.py
     |   |__ apps.py
@@ -1730,6 +1737,57 @@ In **Django**, we have the option to manually handle theregistration of accounts
       </div>
     </div>
     {% endblock %}
+    ```
+
+    ```
+    twitter-clone/
+    |__ accounts/
+    |   |__ __pycache__/
+    |   |__ migrations/
+    |   |__ accounts/
+    |       |__ templates/
+    |           |__ base.html
+    |           |__ login.html
+    |           |__ register.html
+    |           |__ registration-success.html
+    |   |__ __init__.py
+    |   |__ admin.py
+    |   |__ apps.py
+    |   |__ forms.py
+    |   |__ models.py
+    |   |__ tests.py
+    |   |__ urls.py
+    |   |__ views.py
+    |__ static/
+    |   |__ css/
+    |       |__ index.css
+    |   |__ img/
+    |   |__ js/
+    |__ tweets/
+    |   |__ __pycache__/
+    |   |__ migrations/
+    |   |__ tweets/
+    |   |   |__ templates/
+    |   |       |__ all-tweets.html
+    |   |       |__ base.html
+    |   |__ __init__.py
+    |   |__ admin.py
+    |   |__ apps.py
+    |   |__ models.py
+    |   |__ tests.py
+    |   |__ urls.py
+    |   |__ views.py
+    |__ twitter-clone/
+    |   |__ __pycache__/
+    |   |__ __init__.py
+    |   |__ .env
+    |   |__ asgi.py
+    |   |__ settings.py
+    |   |__ urls.py
+    |   |__ wsgi.py
+    |__ .gitignore
+    |__ db.sqlite3
+    |__ manage.py
     ```
 
 8.  You may now check if the registration is working properly by monitoring the entries in the profile and users table from the Admin Panel.
