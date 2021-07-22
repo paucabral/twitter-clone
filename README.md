@@ -1363,9 +1363,42 @@ In **Django**, we have the option to manually handle theregistration of accounts
     |__ manage.py
     ```
 
-3.  Import `forms.py` inside `views.py` and update the get and post method of the _Register_ view to reference the created form. <br>
+3.  Update the _Profile_ model as well to create a one is to one connection with the profile and user. You may follow the updated code below: <br>
+
+    _twitterclone/accounts/models.py_
 
     ```python
+    from django.db import models
+    from django.contrib.auth.models import User
+
+    # Create your models here.
+
+
+    class Profile(models.Model):
+        user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+        first_name = models.CharField(max_length=200, null=True)
+        last_name = models.CharField(max_length=200, null=True)
+        username = models.CharField(max_length=200, null=True)
+        email = models.CharField(max_length=200, null=True)
+        date_created = models.DateTimeField(auto_now_add=True, null=True)
+
+        def __str__(self):
+            return self.email
+
+    ```
+
+4.  Proceed on running the migrations to update the database information.
+
+    ```bash
+    (twtclone)$ python manage.py makemigrations
+    (twtclone)$ python manage.py migrate
+    ```
+
+5.  Import `forms.py` inside `views.py` and update the get and post method of the _Register_ view to reference the created form. <br>
+
+    ```python
+    from django.shortcuts import render, redirect # Add redirect to the imports
+    ...
     from .forms import CreateUserForm
     from .models import *
     from django.contrib import messages
@@ -1384,10 +1417,11 @@ In **Django**, we have the option to manually handle theregistration of accounts
               user = form.save()
               first_name = form.cleaned_data['first_name']
               last_name = form.cleaned_data['last_name']
+              username = form.cleaned_data['username']
               email = form.cleaned_data['email']
 
               profile = Profile(user=user, first_name=first_name,
-                                last_name=last_name, email=email)
+                                last_name=last_name, email=email, username=username)
               profile.save()
               return redirect('/registration-success/') # Notice that this path, nor its template is still not created. This will be craeted later on.
           else:
@@ -1395,13 +1429,7 @@ In **Django**, we have the option to manually handle theregistration of accounts
           return render(request, template_name='accounts/register.html', context={'form': form})
     ```
 
-4.  This time as well, update the `register.html` file to integrate the form in the frontend. You may copy the updated content of the file below. Update the `base.html` as well, along with the `index.css` file to fully incorporate the updated design.<br>
-
-    _twitterclone/accounts/templates/base.html_
-
-    ```html
-
-    ```
+6.  This time as well, update the `register.html` file to integrate the form in the frontend. You may copy the updated content of the file below. Update the `index.css` file as well to fully incorporate the updated design.<br>
 
     _twitterclone/accounts/templates/register.html_
 
@@ -1416,9 +1444,10 @@ In **Django**, we have the option to manually handle theregistration of accounts
               <div class="card-body">
                 <h3 class="text-center">Sign up an account</h3>
                 <br />
-
+                <!-- This form is assigned with a method of post request since it is meant to send a data/payload to the backend  -->
                 <form class="form-signin" method="POST">
                   {% csrf_token %}
+                  <!-- Declaring a CSRF Token is required for post requests in Django forms -->
 
                   <div class="form-label-group">
                     <div class="row">
@@ -1647,3 +1676,66 @@ In **Django**, we have the option to manually handle theregistration of accounts
       }
     }
     ```
+
+7.  This time, we will create a dedicated page for to confirm successful registration. Proceed on adding a view, URL path, and creating template for this page named `registration-success.html` by following the code below.<br>
+
+    _twitterclone/accounts/views.py_
+
+    ```python
+    class RegistrationSuccess(View):
+      def get(self, request, *args, **kwargs):
+          return render(request, template_name='accounts/registration-success.html', context={})
+    ```
+
+    _twitterclone/accounts/urls.py_
+
+    ```python
+    urlpatterns = [
+        path('', views.Login.as_view(), name='login'),
+        path('register/', views.Register.as_view(), name='register'),
+        path('registration-success/', views.RegistrationSuccess.as_view(), name='registration-success'),
+    ]
+    ```
+
+    _twitterclone/accounts/templates/accounts/registration-success.html_
+
+    ```html
+    {% extends 'accounts/base.html' %} {% load static %} {% block title %}
+    Twitter Clone | Registration Successful {% endblock %} {% block content %}
+    <div>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <h3 class="text-center">Registration Successful!</h3>
+                <br />
+
+                <p class="text-center">
+                  You have successfully registered an account. You may now
+                  proceed on logging in.
+                </p>
+
+                <a
+                  name="Create User"
+                  class="btn text-uppercase text-white bg-info"
+                  href="{% url 'login' %}"
+                  style="width: 100%;"
+                  ><b>LOGIN</b></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+    ```
+
+8.  You may now check if the registration is working properly by monitoring the entries in the profile and users table from the Admin Panel.
+
+    ```bash
+    (twtclone)$ python manage.py runserver
+    ```
+
+    <br>
