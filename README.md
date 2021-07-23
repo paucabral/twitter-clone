@@ -588,7 +588,7 @@ Templates are basically the frontend component of a basic **Django** project. It
    |__ manage.py
    ```
 
-3. One great feature of **Django** is the ability to set a base template which can be inherited by other HTML files. This way, particular HTML code can be reused (i.e. for headers, navbar, footers, etc.). For now, we will create a `base.html` as template all the HTML files in our _accounts_ app. Create a `base.html` file inside the `twitterclone/accounts/templates/accounts` directory. We may import within it an external CSS library as well like bootstrap. In the mean time, add the following contents inside:
+3. One great feature of **Django** is the ability to set a base template which can be inherited by other HTML files. This way, particular HTML code can be reused (i.e. for headers, navbar, footers, etc.). For now, we will create a `base.html` as template for all the HTML files in our _accounts_ app. Create a `base.html` file inside the `twitterclone/accounts/templates/accounts` directory. We may import within it an external CSS library as well like bootstrap. In the mean time, add the following contents inside:
 
    ```html
    <!DOCTYPE html>
