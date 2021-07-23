@@ -13,8 +13,8 @@ Twitter Clone | Tweets
   letter-spacing: 0.1rem;
   font-weight: bold;
   padding: 0.5rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
   transition: all 0.2s;
   background-color: #2f98d4;
   color: white;
@@ -53,7 +53,7 @@ Twitter Clone | Tweets
           </div>
           <br>
           <div class="pull-right">
-            <button type=submit class="btn text-white tweetBtn"><i class="fa fa-pencil-square fa-3" aria-hidden="true"></i> Tweet</button>
+            <button type=submit class="btn text-white tweetBtn">Tweet</button>
           </div>
         </form>
       </div>
@@ -93,6 +93,8 @@ Twitter Clone | Tweets
             <!-- End Message -->
           </p>
           <br>
+          <!-- User only -->
+          {% if tweet.user.id == user.profile.user.id %}
           <div class="pull-right row row-cols-auto">
             <div class="col">
               <!-- Edit -->
@@ -103,14 +105,19 @@ Twitter Clone | Tweets
             </div>
             <div class="col">
               <!-- Delete -->
-              <form>
-                <button type="submit" style="background: none; border: none;">
+              <form onsubmit="return confirm('Are you sure you want to delete the tweet: {{ tweet.msg }} ?');" method="POST" action="{% url 'delete-tweet' tweet.id  %}">
+                {% csrf_token %}
+                <button name="deletetweet" value="{{ tweet.id }}" type="submit" style="background: none; border: none;">
                   <i class="iconBtn fa fa-trash-o fa-3" aria-hidden="true"></i>
                   </button>
               </form>
               <!-- End Delete -->
             </div>
           </div>
+          {% else %}
+          <br>
+          {% endif %}
+          <!-- End User only -->
         </div>
       </div>
       {% endfor %}

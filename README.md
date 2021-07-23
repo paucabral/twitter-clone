@@ -967,8 +967,8 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
        letter-spacing: 0.1rem;
        font-weight: bold;
        padding: 0.5rem;
-       padding-left: 1rem;
-       padding-right: 1rem;
+       padding-left: 2rem;
+       padding-right: 2rem;
        transition: all 0.2s;
        background-color: #2f98d4;
        color: white;
@@ -1013,7 +1013,6 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
              <br />
              <div class="pull-right">
                <button type="submit" class="btn text-white tweetBtn">
-                 <i class="fa fa-pencil-square fa-3" aria-hidden="true"></i>
                  Tweet
                </button>
              </div>
@@ -1068,6 +1067,7 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
                <!-- End Message -->
              </p>
              <br />
+             <!-- User only -->
              <div class="pull-right row row-cols-auto">
                <div class="col">
                  <!-- Edit -->
@@ -1095,6 +1095,7 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
                  <!-- End Delete -->
                </div>
              </div>
+             <!-- End User only -->
            </div>
          </div>
          <!-- End Cards -->
@@ -1218,8 +1219,8 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
         letter-spacing: 0.1rem;
         font-weight: bold;
         padding: 0.5rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
         transition: all 0.2s;
         background-color: #2f98d4;
         color: white;
@@ -1264,7 +1265,6 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
               <br />
               <div class="pull-right">
                 <button type="submit" class="btn text-white tweetBtn">
-                  <i class="fa fa-pencil-square fa-3" aria-hidden="true"></i>
                   Tweet
                 </button>
               </div>
@@ -1316,6 +1316,7 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
                 <!-- End Message -->
               </p>
               <br />
+              <!-- User only -->
               <div class="pull-right row row-cols-auto">
                 <div class="col">
                   <!-- Edit -->
@@ -1343,6 +1344,7 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
                   <!-- End Delete -->
                 </div>
               </div>
+              <!-- End User only -->
             </div>
           </div>
           {% endfor %}
@@ -2278,11 +2280,104 @@ In this section, we will go back on building the functionalities of the _AllTwee
      </div>
      <br />
      <div class="pull-right">
-       <button type="submit" class="btn text-white tweetBtn">
-         <i class="fa fa-pencil-square fa-3" aria-hidden="true"></i> Tweet
-       </button>
+       <button type="submit" class="btn text-white tweetBtn">Tweet</button>
      </div>
    </form>
    ```
 
-2. Next is setting up when the edit and delete button should appear in the page. The user must only be able to edit and delete the tweet he/she created. As such, we have to modify the
+2. Next is setting up when the edit and delete button should appear in the page. The user must only be able to edit and delete the tweet he/she created. As such, we have to modify the part of the code in `all-tweets.html` template (check the part with a comment indicating `User only`) with a condition that checks if the assigned user profile to the tweet is the same user that is currently logged in. Do this by simply adding the conditions via _Jinja_ tempaltes. You may simply follow the code below. <br>
+
+   ```html
+   <!-- User only -->
+   {% if tweet.user.id == user.profile.user.id %}
+   <div class="pull-right row row-cols-auto">
+     <div class="col">
+       <!-- Edit -->
+       <a href="#" style="background: none; border: none;">
+         <i class="iconBtn fa fa-pencil-square-o fa-3" aria-hidden="true"></i>
+       </a>
+       <!-- End Edit -->
+     </div>
+     <div class="col">
+       <!-- Delete -->
+       <form>
+         <button type="submit" style="background: none; border: none;">
+           <i class="iconBtn fa fa-trash-o fa-3" aria-hidden="true"></i>
+         </button>
+       </form>
+       <!-- End Delete -->
+     </div>
+   </div>
+   {% else %}
+   <br />
+   {% endif %}
+   <!-- End User only -->
+   ```
+
+3. To delete a 'tweet', each delete button must be assigned with a unique value that is equal to the ID of the 'tweet'. This way, a query to delete that entry would be possible. A new view with a dynamic URL path have to be created as well that will handle the specified endpoint with the form of the delete button to avoid conflict with the the previous form. You may follow the updated code for the files below.<br>
+
+   _twitterclone/tweets/views.py_
+
+   ```python
+   @login_required(login_url='/')
+   def deleteTweet(request, id): # The view expects to receive parameter of 'id' with the request
+       if request.method == "POST":
+           tweet = id # The paramater from the request is stored
+           tweet_instance = Tweet.objects.filter(id=tweet) # The parameter was used to locate the entry from the database
+           tweet_instance.delete() # The entry was deleted
+       return redirect('/tweets/all-tweets')
+   ```
+
+   _Note: This view does is not part of any class. This is a simple functional view._<br>
+
+   _twitterclone/tweets/views.py_
+
+   ```python
+    urlpatterns = [
+        path('all-tweets', views.AllTweets.as_view(), name='all-tweets'),
+        path('delete-tweet/<id>', views.deleteTweet, name='delete-tweet'), # Added this new URL path. Enclose in tags is 'id' which is a dynamic element. This is to specify to the delete endpoint a specific id as parameter.
+    ]
+   ```
+
+   _twitterclone/tweets/templates/all-tweets.html_
+
+   ```html
+   <!-- Delete -->
+   <!-- Specified method as POST with a defined endpoint with action attribute. This leads to the delete-tweet URL (/tweets/delete-tweet/<id>) with a specified parameter of tweet.id -->
+   <form method="POST" action="{% url 'delete-tweet' tweet.id  %}">
+     <!-- Like the previous forms, do not forget to include the CSRF Token declaration-->
+     {% csrf_token %}
+     <button
+       name="deletetweet"
+       value="{{ tweet.id }}"
+       type="submit"
+       style="background: none; border: none;"
+     >
+       <i class="iconBtn fa fa-trash-o fa-3" aria-hidden="true"></i>
+     </button>
+   </form>
+   <!-- End Delete -->
+   ```
+
+4. While the delete functionality is working properly now, it is not ideal to allow users do such operations with any warning. We can use the `onsubmit` attribute of forms to display a simple alert message using an inline _Javascript_. To do this, simply update the opening tag of the form for delete button, the same as the code below.<br>
+
+   _twitterclone/tweets/templates/all-tweets.html_
+
+   ```html
+   <!-- Notice the onsubmit attribute invokes an alert dialouge to confirm if the action is to be continued. -->
+   <form
+     onsubmit="return confirm('Are you sure you want to delete the tweet: {{ tweet.msg }} ?');"
+     method="POST"
+     action="{% url 'delete-tweet' tweet.id  %}"
+   >
+     {% csrf_token %}
+     <button
+       name="deletetweet"
+       value="{{ tweet.id }}"
+       type="submit"
+       style="background: none; border: none;"
+     >
+       <i class="iconBtn fa fa-trash-o fa-3" aria-hidden="true"></i>
+     </button>
+   </form>
+   ```

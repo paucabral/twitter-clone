@@ -21,3 +21,12 @@ class AllTweets(View):
         tweet = Tweet(user=user, msg=msg)
         tweet.save()
         return redirect('/tweets/all-tweets')
+
+
+@login_required(login_url='/')
+def deleteTweet(request, id):
+    if request.method == "POST":
+        tweet = id
+        tweet_instance = Tweet.objects.filter(id=tweet)
+        tweet_instance.delete()
+    return redirect('/tweets/all-tweets')
