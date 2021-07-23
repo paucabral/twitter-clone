@@ -1852,6 +1852,8 @@ In **Django**, we have the option to manually handle theregistration of accounts
     {% endblock %}
     ```
 
+    Your updated local directory should look similar to this:
+
     ```
     twitter-clone/
     |__ accounts/
@@ -2223,7 +2225,156 @@ Now that user registration has been created, it is time to discuss how these use
    _Note: Class based views require an additional import of method decorator. Refer to the implementation in the AllTweets view._
    <br>
 
-6. The functionalities should now be properly applied. Going directly to http://127.0.0.1:8000/tweets/all-tweets should result to automatic redirection to the login page if the user is not authenticated.<br>
+6. One remaining problem with our project is even if a user has been authenticated already, the user is still able to access the login page. This may confuse them to login again even if their session is still active as they have not actually logged out yet. To fix this we will create a custom decorator for our _Login_ and _Register_ views. Start by creating a file named `decorators.py` in the _accounts_ app directory (`twitterclone/accounts/`) and add the following code inside: <br>
+
+   _twitterclone/accounts/decorators.py_
+
+   ```python
+    from django.shortcuts import redirect
+
+
+    def unauthenticated_user(view_func):
+      def wrapper_func(request, *args, **kwargs):
+
+        if request.user.is_authenticated:
+            return redirect('/tweets/all-tweets')
+        else:
+            return view_func(request, *args, **kwargs)
+
+    return wrapper_func
+   ```
+
+   Your updated local directory should look similar to this:
+
+   ```
+   twitter-clone/
+   |__ accounts/
+   |   |__ __pycache__/
+   |   |__ migrations/
+   |   |__ accounts/
+   |   |   |__ templates/
+   |   |       |__ base.html
+   |   |       |__ login.html
+   |   |       |__ register.html
+   |   |       |__ registration-success.html
+   |   |__ __init__.py
+   |   |__ admin.py
+   |   |__ apps.py
+   |   |__ decorators.py
+   |   |__ forms.py
+   |   |__ models.py
+   |   |__ tests.py
+   |   |__ urls.py
+   |   |__ views.py
+   |__ static/
+   |   |__ css/
+   |       |__ index.css
+   |   |__ img/
+   |   |__ js/
+   |__ tweets/
+   |   |__ __pycache__/
+   |   |__ migrations/
+   |   |__ tweets/
+   |   |   |__ templates/
+   |   |       |__ all-tweets.html
+   |   |       |__ base.html
+   |   |__ __init__.py
+   |   |__ admin.py
+   |   |__ apps.py
+   |   |__ models.py
+   |   |__ tests.py
+   |   |__ urls.py
+   |   |__ views.py
+   |__ twitter-clone/
+   |   |__ __pycache__/
+   |   |__ __init__.py
+   |   |__ .env
+   |   |__ asgi.py
+   |   |__ settings.py
+   |   |__ urls.py
+   |   |__ wsgi.py
+   |__ .gitignore
+   |__ db.sqlite3
+   |__ manage.py
+   ```
+
+7. After creating the custom decorator, apply it to the methods of _Login_ and _Register_ view. Follow the code below for implementation.<br>
+
+   _tweetclone/accounts/views.py_
+
+   ```python
+   ...
+
+   from .decorators import * # import the contents of decorators.py
+   from django.utils.decorators import method_decorator # import method_decorator to apply decorator in methods inside a class
+
+   ...
+
+   class Login(View):
+    # Apply the custom decorator here.
+    @method_decorator(unauthenticated_user)
+    def get(self, request, *args, **kwargs):
+        return render(request, template_name='accounts/login.html', context={})
+
+    # Apply the custom decorator here.
+    @method_decorator(unauthenticated_user)
+    def post(self, request, *args, **kwargs):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            if user.is_superuser:
+                return redirect('/admin')
+            else:
+                return redirect('/tweets/all-tweets')
+        else:
+            messages.info(request, 'Username or Password is incorrect.')
+        return render(request, template_name='accounts/login.html', context={})
+
+
+    @login_required(login_url='/')
+    def logoutUser(request):
+        logout(request)
+        return redirect('/')
+
+
+    class Register(View):
+        # Apply the custom decorator here.
+        @method_decorator(unauthenticated_user)
+        def get(self, request, *args, **kwargs):
+            form = CreateUserForm()
+            return render(request, template_name='accounts/register.html', context={'form': form})
+
+        # Apply the custom decorator here.
+        @method_decorator(unauthenticated_user)
+        def post(self, request, *args, **kwargs):
+            form = CreateUserForm(request.POST)
+
+            if form.is_valid():
+                user = form.save()
+                first_name = form.cleaned_data['first_name']
+                last_name = form.cleaned_data['last_name']
+                username = form.cleaned_data['username']
+                email = form.cleaned_data['email']
+
+                profile = Profile(user=user, first_name=first_name,
+                                  last_name=last_name, email=email, username=username)
+                profile.save()
+                return redirect('/registration-success/')
+            else:
+                messages.error(request, 'There was an error.')
+            return render(request, template_name='accounts/register.html', context={'form': form})
+
+
+    class RegistrationSuccess(View):
+        # Apply the custom decorator here.
+        @method_decorator(unauthenticated_user)
+        def get(self, request, *args, **kwargs):
+            return render(request, template_name='accounts/registration-success.html', context={})
+   ```
+
+8. The functionalities should now be properly applied. Going directly to http://127.0.0.1:8000/tweets/all-tweets should result to automatic redirection to the login page if the user is not authenticated.<br>
 
    ```bash
    (twtclone)$ python manage.py runserver
@@ -2381,3 +2532,196 @@ In this section, we will go back on building the functionalities of the _AllTwee
      </button>
    </form>
    ```
+
+5. Next is the creation of a page to update user owned tweets. Start by creating a new view with a dynamic URL pattern. This is because, each tweet will have its own instance as an entry, hence it will be accessed on a unique URL. You may follow the code below:<br>
+
+   _twitterclone/tweets/views.py_
+
+   ```python
+    class EditTweet(View):
+    @method_decorator(login_required(login_url='/'))
+    def get(self, request, *args, **kwargs):
+        tweet_id = self.kwargs['id'] # Get the ID from the 'id' parameter in the URL
+        tweet = Tweet.objects.get(id=tweet_id) # Get the instance of from the database using the parameter
+        tweet_id = tweet.user.id # Extract the ID of the user assigned to the tweet
+        tweet_msg = tweet.msg # Extract the message (msg) from the entry
+        return render(request, template_name='tweets/update-tweet.html', context={'tweet_id': tweet_id, 'tweet_msg': tweet_msg}) # Pass the variables to the template through context
+
+    @method_decorator(login_required(login_url='/'))
+    def post(self, request, *args, **kwargs):
+        tweet_id = self.kwargs['id'] # Get the ID from the 'id' parameter in the URL
+        tweet = Tweet.objects.get(id=tweet_id) # Get the instance of from the database using the parameter
+        user = request.user.profile # Get the instance of user profile assigned to the authenticated logged in user
+        tweet_user = tweet.user.id # Extract the ID of the user assigned to the tweet
+        msg = request.POST.get('tweet_msg') # Get the updated tweet message
+
+        if user.id == tweet_user: # Allow the request only if the user profile matches the assigned user to the tweet
+            tweet.msg = msg # Replace the tweet message (msg fielf) with the updated message
+            tweet.save() # Save the changes
+            return redirect('/tweets/all-tweets')
+   ```
+
+   _twitterclone/tweets/urls.py_
+
+   ```python
+    urlpatterns = [
+      path('all-tweets', views.AllTweets.as_view(), name='all-tweets'),
+      path('delete-tweet/<id>', views.deleteTweet, name='delete-tweet'),
+      path('edit-tweet/<id>', views.EditTweet.as_view(), name='edit-tweet'),
+    ]
+   ```
+
+6. We can now create our `update-tweet.html` template and bind it to our previously created view. In this template we will specify the name of the `<textarea>` according to the context we have assigned. We will also utilize the _Jinja_ templates to display an error message in case non-tweet owner users try to access the unique page. You may simply copy the code below:<br>
+
+   _twitterclone/tweets/templates/tweets/update-tweet.html_
+
+   ```html
+   {% extends 'tweets/base.html' %} {% load static %} {% block title %} Twitter
+   Clone | Update Tweet {% endblock %} {% block content %}
+   <style>
+     .tweetBtn {
+       font-size: 80%;
+       border-radius: 5rem;
+       letter-spacing: 0.1rem;
+       font-weight: bold;
+       padding: 0.5rem;
+       padding-left: 2rem;
+       padding-right: 2rem;
+       transition: all 0.2s;
+       background-color: #2f98d4;
+       color: white;
+     }
+
+     .tweetBtn:hover {
+       background-color: #2473a0;
+     }
+
+     .iconBtn {
+       color: rgb(81, 91, 102);
+       font-size: large;
+       font-weight: 1000;
+     }
+
+     .iconBtn:hover {
+       color: #2f98d4;
+     }
+   </style>
+   <!-- Display this functionality only if the user owns the tweet-->
+   {% if user.profile.id == tweet_id %}
+   <div>
+     <div class="card shadow mb-5 my-4 rounded border-0">
+       <div class="card-header">
+         <!-- Name Header -->
+         <h2 class="card-title">Edit this tweet</h2>
+         <!-- End Name Header -->
+       </div>
+       <div class="card-body">
+         <form method="POST">
+           {% csrf_token %}
+           <div class="form-group">
+             <!-- Tweet -->
+             <!-- Notice the name is specified as text_msg, the same as how it was specified in the context for rendering the template -->
+             <textarea
+               required
+               name="tweet_msg"
+               placeholder="What's on your mind?"
+               class="form-control"
+               id="createTweet"
+               rows="3"
+             >
+             <!-- The value read from the database entry will be the intial value of the field upon rendering -->
+            {{ tweet_msg }}
+            </textarea
+             >
+             <!-- End Tweet -->
+           </div>
+           <br />
+           <div class="pull-right">
+             <button type="submit" class="btn text-white tweetBtn">
+               Update Tweet
+             </button>
+           </div>
+         </form>
+       </div>
+     </div>
+   </div>
+   {% else %}
+   <!-- Return an error message if a non-tweet owner tries to access the page -->
+   <div>
+     <div class="card shadow my-5 mb-5 rounded border-0 p-5">
+       <h1><b>Error 404:</b> Page not found</h1>
+     </div>
+     {% endif %} {% endblock %}
+   </div>
+   ```
+
+   Your updated local directory should look similar to this:
+
+   ```
+   twitter-clone/
+   |__ accounts/
+   |   |__ __pycache__/
+   |   |__ migrations/
+   |   |__ accounts/
+   |   |   |__ templates/
+   |   |       |__ base.html
+   |   |       |__ login.html
+   |   |       |__ register.html
+   |   |       |__ registration-success.html
+   |   |__ __init__.py
+   |   |__ admin.py
+   |   |__ apps.py
+   |   |__ decorators.py
+   |   |__ forms.py
+   |   |__ models.py
+   |   |__ tests.py
+   |   |__ urls.py
+   |   |__ views.py
+   |__ static/
+   |   |__ css/
+   |       |__ index.css
+   |   |__ img/
+   |   |__ js/
+   |__ tweets/
+   |   |__ __pycache__/
+   |   |__ migrations/
+   |   |__ tweets/
+   |   |   |__ templates/
+   |   |       |__ all-tweets.html
+   |   |       |__ base.html
+   |   |       |__ update-tweet.html
+   |   |__ __init__.py
+   |   |__ admin.py
+   |   |__ apps.py
+   |   |__ models.py
+   |   |__ tests.py
+   |   |__ urls.py
+   |   |__ views.py
+   |__ twitter-clone/
+   |   |__ __pycache__/
+   |   |__ __init__.py
+   |   |__ .env
+   |   |__ asgi.py
+   |   |__ settings.py
+   |   |__ urls.py
+   |   |__ wsgi.py
+   |__ .gitignore
+   |__ db.sqlite3
+   |__ manage.py
+   ```
+
+7. All we have to do now is to update our `all-tweets.html` template to assign the corresponding `href` value for the edit links. Find the link tag assigned for edit redirection (The `a` tag inside the comment `Edit`) and follow the updated code below:<br>
+
+   ```html
+   <!-- Edit -->
+   <!-- href is now assigned with a dynamic link entry -->
+   <a
+     href="/tweets/edit-tweet/{{ tweet.id }}"
+     style="background: none; border: none;"
+   >
+     <i class="iconBtn fa fa-pencil-square-o fa-3" aria-hidden="true"></i>
+   </a>
+   <!-- End Edit -->
+   ```
+
+   <br>

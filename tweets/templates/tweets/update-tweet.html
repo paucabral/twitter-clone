@@ -1,0 +1,69 @@
+{% extends 'tweets/base.html' %}
+{% load static %}
+
+{% block title %}
+Twitter Clone | Update Tweet
+{% endblock %}
+
+{% block content %}
+<style>
+  .tweetBtn {
+    font-size: 80%;
+    border-radius: 5rem;
+    letter-spacing: 0.1rem;
+    font-weight: bold;
+    padding: 0.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    transition: all 0.2s;
+    background-color: #2f98d4;
+    color: white;
+  }
+
+  .tweetBtn:hover {
+    background-color: #2473a0;
+  }
+
+  .iconBtn {
+    color: rgb(81, 91, 102);
+    font-size: large;
+    font-weight: 1000;
+  }
+
+  .iconBtn:hover {
+    color: #2f98d4
+  }
+</style>
+
+{% if user.profile.id == tweet_id %}
+<div>
+  <div class="card shadow mb-5 my-4 rounded border-0">
+    <div class="card-header">
+      <!-- Name Header -->
+      <h2 class="card-title">Edit this tweet</h2>
+      <!-- End Name Header -->
+    </div>
+    <div class="card-body">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <!-- Tweet -->
+          <textarea required name="tweet_msg" placeholder="What's on your mind?"
+            class="form-control" id="createTweet" rows="3">{{ tweet_msg }}</textarea>
+          <!-- End Tweet -->
+        </div>
+        <br>
+        <div class="pull-right">
+          <button type=submit class="btn text-white tweetBtn">Update Tweet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% else %}
+<div>
+  <div class="card shadow my-5 mb-5 rounded border-0 p-5">
+    <h1><b>Error 404:</b> Page not found</h1>
+</div>
+{% endif %}
+{% endblock %}

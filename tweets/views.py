@@ -30,3 +30,26 @@ def deleteTweet(request, id):
         tweet_instance = Tweet.objects.filter(id=tweet)
         tweet_instance.delete()
     return redirect('/tweets/all-tweets')
+
+
+class EditTweet(View):
+    @method_decorator(login_required(login_url='/'))
+    def get(self, request, *args, **kwargs):
+        tweet_id = self.kwargs['id']
+        tweet = Tweet.objects.get(id=tweet_id)
+        tweet_id = tweet.user.id
+        tweet_msg = tweet.msg
+        return render(request, template_name='tweets/update-tweet.html', context={'tweet_id': tweet_id, 'tweet_msg': tweet_msg})
+
+    @method_decorator(login_required(login_url='/'))
+    def post(self, request, *args, **kwargs):
+        tweet_id = self.kwargs['id']
+        tweet = Tweet.objects.get(id=tweet_id)
+        user = request.user.profile
+        tweet_user = tweet.user.id
+        msg = request.POST.get('tweet_msg')
+
+        if user.id == tweet_user:
+            tweet.msg = msg
+            tweet.save()
+            return redirect('/tweets/all-tweets')
