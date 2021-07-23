@@ -2710,7 +2710,7 @@ In this section, we will go back on building the functionalities of the _AllTwee
    |__ manage.py
    ```
 
-7. All we have to do now is to update our `all-tweets.html` template to assign the corresponding `href` value for the edit links. Find the link tag assigned for edit redirection (The `a` tag inside the comment `Edit`) and follow the updated code below:<br>
+7. All we have to do now is to update our `all-tweets.html` template to assign the corresponding `href` value for the edit links. Find the link tag assigned for edit redirection (the `a` tag inside the comment `Edit`) and follow the updated code below:<br>
 
    ```html
    <!-- Edit -->
