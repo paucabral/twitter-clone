@@ -1,3 +1,15 @@
+# Twitter<b>Clone</b>
+
+### **Author**: Pau Cabral<br>
+
+<br>
+
+This is TwitterCLONE, a simple Twitter clone made using Django framework in Python.
+
+This tutorial tackles the development of a Django web application up to its deployment to Heroku.
+
+<br>
+
 # Setting up the local machine
 
 1. Install the latest version of **Python** and **Git**.
@@ -2119,3 +2131,9 @@ Now that user registration has been created, it is time to discuss how these use
 
    _Note: Class based views require an additional import of method decorator. Refer to the implementation in the AllTweets view._
    <br>
+
+6. The functionalities should now be properly applied. Going directly to http://127.0.0.1:8000/tweets/all-tweets should result to automatic redirection to the login page if the user is not authenticated.<br>
+
+   ```bash
+   (twtclone)$ python manage.py runserver
+   ```
