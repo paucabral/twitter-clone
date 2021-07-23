@@ -6,27 +6,55 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-  <div class="row p-5">
-    <h1>Welcome to Twitter<span class="brand">CLONE</span></h1>
+<style>
+.nounderline {
+  color:rgb(105, 199, 236);
+  text-decoration: none;
+}
+
+.nounderline:hover {
+  color:rgb(117, 235, 235);
+  text-decoration: underline;
+}
+
+.signin {
+    display: block;
+  }
+
+@media (max-width:480px) {
+  .signin {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+</style>
+
+<div class="container-fluid mb-5">
+  <div class="row p-3 mt-5 justify-content-md-center">
+    <h2 class="text-white">Welcome to Twitter<span class="brand">CLONE</span>!</h2>
   </div>
-  <div class="row container">
+  <div class="row container-fluid mb-0 justify-content-md-center">
     
-    <div class="col col-md-7 container">
-      <div class="my-5">
-        <p>This is Twitter<span class="brand">CLONE</span>, a simple Twitter clone made using <i>Django</i> framework in <i>Python</i>.</p>
-        <p>This web application is part of a tutorial made by <a href="http://paucabral.github.io">Pau Cabral</a> on development of a <i>Django</i> web application, to its deployment to <i>Heroku</i>.</p>
-        <p>You may visit this project's repository at <a href="https://github.com/paucabral/twitter-clone">Github</a></p>
+    <div class="col col-lg-7 container-fluid">
+      <div class="my-5 p-4">
+        <p class="text-white">This is Twitter<span class="brand">CLONE</span>, a simple Twitter clone made using <i>Django</i> framework in <i>Python</i>.</p>
+        <p class="text-white">This web application is part of a tutorial made by <a class="nounderline" href="http://paucabral.github.io">Pau Cabral</a> on the development of a <i>Django</i> web application, to its deployment to <i>Heroku</i>.</p>
+        <br>
+        <br>
+        <p class="text-white">You may visit this project's repository at <a style="font-weight: bold;" class="nounderline" href="https://github.com/paucabral/twitter-clone/">Github</a>.</p>
       </div>
     </div>
 
-    <div class="col container">
-      <div class="row">
-        <div class="col mx-auto">
+    <div class="col container-fluid ms-auto signin">
+      <div class="row justify-content-md-center">
+        <div class="col my-auto">
           <div class="card card-signin">
             <div class="card-body">
-              <h5 class="card-title text-center">Sign In</h5>
-      
+              <h3 class="text-center">Sign In</h3>
+              <br>
               <form class="form-signin" method="POST">
                 {% csrf_token %}
                 <div class="form-label-group">
@@ -50,7 +78,7 @@
                   </div>
                 {% endfor %}
       
-                <p class="text-center">Don't have an account? <a href="/register" style="text-decoration: none;">Sign Up</a>
+                <p class="text-center">Don't have an account? <a href="{% url 'register' %}" style="text-decoration: none;">Sign Up</a>
                 </p>
               </form>
       

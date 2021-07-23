@@ -11,7 +11,7 @@ Twitter Clone | Tweets
     <div class="card shadow mb-5 rounded border-0">
       <div class="card-header">
         <!-- Name Header -->
-        <h2 class="card-title">Good day John Doe, post a tweet!</h2>
+        <h2 class="card-title">Good day {% if user.profile.first_name|length > 0 %} {{ user.profile.first_name }} {{ user.profile.last_name }}, {% else %} {{ user.username }}, {% endif %}post a tweet!</h2>
         <!-- End Name Header -->
       </div>
       <div class="card-body">

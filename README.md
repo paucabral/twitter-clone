@@ -1258,6 +1258,8 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
     (twtclone)$ python manage.py runserver
     ```
 
+    <br>
+
 # Creating an account registration page
 
 In **Django**, we have the option to manually handle theregistration of accounts in our database or integrate them via forms. In this section, we will be using the combination of both to register a user with an account in the built in **Django** user data base and integrate it with manual entries to a dedicated profile table.
@@ -1806,7 +1808,7 @@ In **Django**, we have the option to manually handle theregistration of accounts
 
     <br>
 
-# Creating a functional login page with proper redirection and serializers.
+# Creating a functional login page with proper redirection and decorators.
 
 Now that user registration has been created, it is time to discuss how these users will be able to access the pages of the application through login. In this section, we will implement the use of serializers as well to restrict access to certain pages inline with the the use of _Jinja_ templates to dynamically make changes to the page based on user authentication.
 
@@ -1838,10 +1840,282 @@ Now that user registration has been created, it is time to discuss how these use
           return render(request, template_name='accounts/login.html', context={})
    ```
 
-2. We will now proceed on binding functionalities set in this view to the login template. To do so, you may follow the updated code below. This login page shares the same _CSS_ code with the register page. Hence all you need is to update the `login.html` file from the _accounts_ app templates.<br>
+2. We will now proceed on binding functionalities set in this view to the login template. To do so, you may follow the updated code below. This login page shares the same _CSS_ code with the register page along with a couple of intext and inline styling. Hence all you need is to update the `login.html` file and the `base/html` file from the _accounts_ app templates .<br>
 
-   _twitterclone/accounts/templates/accounts/registration-success.html_
+   _twitterclone/accounts/templates/accounts/login.html_
 
    ```html
+   {% extends 'accounts/base.html' %} {% load static %} {% block title %}
+   Twitter Clone | Login {% endblock %} {% block content %}
+   <style>
+     .nounderline {
+       color: rgb(105, 199, 236);
+       text-decoration: none;
+     }
+
+     .nounderline:hover {
+       color: rgb(117, 235, 235);
+       text-decoration: underline;
+     }
+
+     .signin {
+       display: block;
+     }
+
+     @media (max-width: 480px) {
+       .signin {
+         margin: 0;
+         display: flex;
+         justify-content: center;
+         width: 100%;
+       }
+     }
+   </style>
+
+   <div class="container-fluid mb-5">
+     <div class="row p-3 mt-5 justify-content-md-center">
+       <h2 class="text-white">
+         Welcome to Twitter<span class="brand">CLONE</span>!
+       </h2>
+     </div>
+     <div class="row container-fluid mb-0 justify-content-md-center">
+       <div class="col col-lg-7 container-fluid">
+         <div class="my-5 p-4">
+           <p class="text-white">
+             This is Twitter<span class="brand">CLONE</span>, a simple Twitter
+             clone made using <i>Django</i> framework in <i>Python</i>.
+           </p>
+           <p class="text-white">
+             This web application is part of a tutorial made by
+             <a class="nounderline" href="http://paucabral.github.io"
+               >Pau Cabral</a
+             >
+             on the development of a <i>Django</i> web application, to its
+             deployment to <i>Heroku</i>.
+           </p>
+           <br />
+           <br />
+           <p class="text-white">
+             You may visit this project's repository at
+             <a
+               style="font-weight: bold;"
+               class="nounderline"
+               href="https://github.com/paucabral/twitter-clone/"
+               >Github</a
+             >.
+           </p>
+         </div>
+       </div>
+
+       <div class="col container-fluid ms-auto signin">
+         <div class="row justify-content-md-center">
+           <div class="col my-auto">
+             <div class="card card-signin">
+               <div class="card-body">
+                 <h3 class="text-center">Sign In</h3>
+                 <br />
+                 <form class="form-signin" method="POST">
+                   {% csrf_token %}
+                   <div class="form-label-group">
+                     <input
+                       type="text"
+                       id="username"
+                       class="form-control"
+                       name="username"
+                       placeholder="Username"
+                       required
+                       autofocus
+                     />
+                     <label for="username">Username</label>
+                   </div>
+
+                   <div class="form-label-group">
+                     <input
+                       type="password"
+                       minlength="8"
+                       id="password"
+                       class="form-control"
+                       name="password"
+                       placeholder="Password"
+                       required
+                     />
+                     <label for="password">Password</label>
+                   </div>
+                   <br />
+                   <button
+                     class="btn text-uppercase"
+                     type="submit"
+                     style="width: 100%;"
+                   >
+                     Sign in
+                   </button>
+                   <hr class="my-4" />
+
+                   {% for message in messages %}
+                   <div class="alert alert-danger">
+                     <b class="text-center">{{ message }}</b>
+                   </div>
+                   {% endfor %}
+
+                   <p class="text-center">
+                     Don't have an account?
+                     <a
+                       href="{% url 'register' %}"
+                       style="text-decoration: none;"
+                       >Sign Up</a
+                     >
+                   </p>
+                 </form>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+   {% endblock %}
+   ```
+
+   _twitterclone/accounts/templates/accounts/base.html_
+
+   ```html
+   {% load static %}
+   <!DOCTYPE html>
+   <html lang="en">
+     <head>
+       <meta charset="utf-8" />
+       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+       <meta name="viewport" content="width=device-width, initial-scale=1" />
+       <title>{% block title %}{% endblock %}</title>
+       <link
+         href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+         rel="stylesheet"
+         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+         crossorigin="anonymous"
+       />
+       <link
+         rel="stylesheet"
+         type="text/css"
+         href="{% static 'css/index.css' %}"
+       />
+       <style>
+         .bg {
+           background-image: linear-gradient(
+               rgba(0, 0, 0, 0.5),
+               rgba(0, 0, 0, 0.5)
+             ),
+             url("https://media.gettyimages.com/photos/blurred-crowd-of-unrecognizable-at-the-street-picture-id1179844008?b=1&k=6&m=1179844008&s=170667a&w=0&h=TgItFSgBEqiSJcjF34G_0ho8936PL_HR0pfC-CuI_jQ=");
+           background-repeat: no-repeat;
+           background-attachment: fixed;
+           background-size: cover;
+         }
+       </style>
+     </head>
+     <body class="bg">
+       <div class="container">{% block content %} {% endblock %}</div>
+     </body>
+   </html>
+   ```
+
+3. To fully enhance the user experience on the landing page after login (`/tweets/all-tweets`), edit the boilerplate code, `all-tweets.html` in the section that is meant to display name of the user (commented as `<!-- Name Header -->`). This will be done through _Django_'s built-in user identification with login authentication. To do so, simply follow the code below.<br>
+
+   ```html
+   ...
+
+   <!-- Name Header -->
+   <h2 class="card-title">
+     Good day {% if user.profile.first_name|length > 0 %} {{
+     user.profile.first_name }} {{ user.profile.last_name }}, {% else %} {{
+     user.username }}, {% endif %}post a tweet!
+   </h2>
+   <!-- End Name Header -->
+
+   ...
+   ```
+
+4. We can now proceed on creating a simple view for logging out users. This will be done by ending their session through _Django_'s built-in `logout` function from its _authentication_ library. Proceed on adding the view in the _accounts_ app, creating a corresponding URL path for it, and binding the dedicated logout button from the navigation bar, found in the `base.html` template in the _tweets_ app.<br>
+
+   _twitterclone/accounts/views.py_
+
+   ```python
+    ...
+
+    from django.contrib.auth import authenticate, login, logout # Add logout to the updated imports
+
+    ...
+
+    # Note: This function is not part of any class. This is a sole function view.
+    def logoutUser(request):
+      logout(request)
+      return redirect('/')
 
    ```
+
+   _twitterclone/accounts/urls.py_
+
+   ```python
+   from django.urls import path
+   from . import views
+
+   urlpatterns = [
+     path('', views.Login.as_view(), name='login'),
+     path('register/', views.Register.as_view(), name='register'),
+     path('registration-success/', views.RegistrationSuccess.as_view(), name='registration-success'),
+     path('logout/', views.logoutUser, name='logout'), # Since the view is not a class, it is not invoked with the .as_view() method.
+   ]
+   ```
+
+   _twitterclone/tweets/templates/tweets/base.html_
+
+   ```html
+   ...
+   <li class="nav-item">
+     <a class="nav-link menuItem" href="/logout">
+       <!-- The href is set to the absolute path for logout view -->
+       <i class="fa fa-sign-out fa-3" aria-hidden="true"></i> Logout
+     </a>
+   </li>
+   ...
+   ```
+
+5. While the application can now identify which user is logged in, all pages are still exposed simply by typing the exact URL. For instance, you should notice that you are still able to access `/tweets/all-tweets` despite being logged out just by going directly to http://127.0.0.1:8000/tweets/all-tweets. We can use _Django_'s built-in decorator to impose login as a requirement in order to view or send requests to certain pages. Moreover, we can also implement our own by creating a custom decorator if needed. This will be applied on each view where login is required. Proceed on importing the `login_required` decorator and add it to the methods of the _AllTweets_ view in the _tweets_ app, and the _logoutUser_ view in the _accounts_ app, with the login path (`/`) as the parameter for redirection in case the user is not logged in. You may follow the code below.<br>
+
+   _twitterclone/tweets/views.py_
+
+   ```python
+    ...
+
+    from django.contrib.auth.decorators import login_required
+    from django.utils.decorators import method_decorator
+
+    ...
+
+    class AllTweets(View):
+    @method_decorator(login_required(login_url='/'))
+    def get(self, request, *args, **kwargs):
+        tweets = Tweet.objects.all().order_by('-date_created')
+        return render(request, template_name='tweets/all-tweets.html', context={'tweets': tweets})
+
+    @method_decorator(login_required(login_url='/'))
+    def post(self, request, *args, **kwargs):
+        pass
+   ```
+
+   _twitterclone/accounts/views.py_
+
+   ```python
+   ...
+
+   from django.contrib.auth.decorators import login_required
+
+   ...
+
+   @login_required(login_url='/') # Add it just above the view.
+   def logoutUser(request):
+       logout(request)
+      return redirect('/')
+
+   ```
+
+   _Note: Class based views require an additional import of method decorator. Refer to the implementation in the AllTweets view._
+   <br>

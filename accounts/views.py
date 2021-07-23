@@ -4,7 +4,8 @@ from django.http import HttpResponse
 from .forms import CreateUserForm
 from .models import *
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -26,6 +27,12 @@ class Login(View):
         else:
             messages.info(request, 'Username or Password is incorrect.')
         return render(request, template_name='accounts/login.html', context={})
+
+
+@login_required(login_url='/')
+def logoutUser(request):
+    logout(request)
+    return redirect('/')
 
 
 class Register(View):
