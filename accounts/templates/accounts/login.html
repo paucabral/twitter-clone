@@ -6,8 +6,60 @@
 {% endblock %}
 
 {% block content %}
-<div>
-  <h1 class="brand">Twitter Clone</h1>
-  <h1>Login</h1>
+<div class="container">
+  <div class="row p-5">
+    <h1>Welcome to Twitter<span class="brand">CLONE</span></h1>
+  </div>
+  <div class="row container">
+    
+    <div class="col col-md-7 container">
+      <div class="my-5">
+        <p>This is Twitter<span class="brand">CLONE</span>, a simple Twitter clone made using <i>Django</i> framework in <i>Python</i>.</p>
+        <p>This web application is part of a tutorial made by <a href="http://paucabral.github.io">Pau Cabral</a> on development of a <i>Django</i> web application, to its deployment to <i>Heroku</i>.</p>
+        <p>You may visit this project's repository at <a href="https://github.com/paucabral/twitter-clone">Github</a></p>
+      </div>
+    </div>
+
+    <div class="col container">
+      <div class="row">
+        <div class="col mx-auto">
+          <div class="card card-signin">
+            <div class="card-body">
+              <h5 class="card-title text-center">Sign In</h5>
+      
+              <form class="form-signin" method="POST">
+                {% csrf_token %}
+                <div class="form-label-group">
+                  <input type="text" id="username" class="form-control" name="username" placeholder="Username" required
+                    autofocus>
+                  <label for="username">Username</label>
+                </div>
+      
+                <div class="form-label-group">
+                  <input type="password" minlength="8" id="password" class="form-control" name="password"
+                    placeholder="Password" required>
+                  <label for="password">Password</label>
+                </div>
+                <br>
+                <button class="btn text-uppercase" type="submit" style="width: 100%;">Sign in</button>
+                <hr class="my-4">
+      
+                {% for message in messages %}
+                  <div class="alert alert-danger">
+                    <b class="text-center">{{ message }}</b>
+                  </div>
+                {% endfor %}
+      
+                <p class="text-center">Don't have an account? <a href="/register" style="text-decoration: none;">Sign Up</a>
+                </p>
+              </form>
+      
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 {% endblock %}

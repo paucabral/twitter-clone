@@ -1805,3 +1805,43 @@ In **Django**, we have the option to manually handle theregistration of accounts
     ```
 
     <br>
+
+# Creating a functional login page with proper redirection and serializers.
+
+Now that user registration has been created, it is time to discuss how these users will be able to access the pages of the application through login. In this section, we will implement the use of serializers as well to restrict access to certain pages inline with the the use of _Jinja_ templates to dynamically make changes to the page based on user authentication.
+
+1. Proceed on modifying the post method of the _Login_ view from the _accounts_ app. Firstly, import the **Django** authentication library and import the built in `login` function. We will create the view in such a way that if the user that login is a superuser, he/she will be redirected to the page of the admin panel (`/admin`). Otherwise, regular users will be redirected to the all tweets page (`tweets/all-tweets`). You may follow the updated code below. <br>
+
+   _twitterclone/accounts/views.py_
+
+   ```python
+   from django.contrib.auth import authenticate, login
+
+   ...
+
+   class Login(View):
+      def get(self, request, *args, **kwargs):
+          return render(request, template_name='accounts/login.html', context={})
+
+      def post(self, request, *args, **kwargs):
+          username = request.POST.get('username')
+          password = request.POST.get('password')
+          user = authenticate(request, username=username, password=password)
+          if user is not None:
+              login(request, user)
+              if user.is_superuser:
+                  return redirect('/admin')
+              else:
+                  return redirect('/tweets/all-tweets')
+          else:
+              messages.info(request, 'Username or Password is incorrect.')
+          return render(request, template_name='accounts/login.html', context={})
+   ```
+
+2. We will now proceed on binding functionalities set in this view to the login template. To do so, you may follow the updated code below. This login page shares the same _CSS_ code with the register page. Hence all you need is to update the `login.html` file from the _accounts_ app templates.<br>
+
+   _twitterclone/accounts/templates/accounts/registration-success.html_
+
+   ```html
+
+   ```
