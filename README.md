@@ -2257,4 +2257,32 @@ In this section, we will go back on building the functionalities of the _AllTwee
         return redirect('/tweets/all-tweets')
    ```
 
-2. Next is setting up when the edit and delete button should appear in the page.
+   _twitterclone/tweets/templates/tweets/all-tweets.py_
+
+   ```html
+   <!-- Add method attribute as "POST" -->
+   <form method="POST">
+     <!-- Make sure to define CSRF Token -->
+     {% csrf_token %}
+     <div class="form-group">
+       <!-- Tweet -->
+       <textarea
+         required
+         name="tweet"
+         placeholder="What's on your mind?"
+         class="form-control"
+         id="createTweet"
+         rows="3"
+       ></textarea>
+       <!-- End Tweet -->
+     </div>
+     <br />
+     <div class="pull-right">
+       <button type="submit" class="btn text-white tweetBtn">
+         <i class="fa fa-pencil-square fa-3" aria-hidden="true"></i> Tweet
+       </button>
+     </div>
+   </form>
+   ```
+
+2. Next is setting up when the edit and delete button should appear in the page. The user must only be able to edit and delete the tweet he/she created. As such, we have to modify the
