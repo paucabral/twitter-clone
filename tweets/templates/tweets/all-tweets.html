@@ -6,6 +6,35 @@ Twitter Clone | Tweets
 {% endblock %}
 
 {% block content %}
+<style>
+.tweetBtn {
+  font-size: 80%;
+  border-radius: 5rem;
+  letter-spacing: 0.1rem;
+  font-weight: bold;
+  padding: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  transition: all 0.2s;
+  background-color: #2f98d4;
+  color: white;
+}
+
+.tweetBtn:hover {
+  background-color: #2473a0;
+}
+
+.iconBtn {
+  color:rgb(81, 91, 102);
+  font-size: large;
+  font-weight: 1000;
+}
+
+.iconBtn:hover {
+  color:#2f98d4
+}
+</style>
+
 <div class="container allTweets">
   <div>
     <div class="card shadow mb-5 rounded border-0">
@@ -15,13 +44,16 @@ Twitter Clone | Tweets
         <!-- End Name Header -->
       </div>
       <div class="card-body">
-        <form>
+        <form method="POST">
+          {% csrf_token %}
           <div class="form-group">
-            <textarea placeholder="What's on your mind?" class="form-control" id="createTweet" rows="3"></textarea>
+            <!-- Tweet -->
+            <textarea required name="tweet" placeholder="What's on your mind?" class="form-control" id="createTweet" rows="3"></textarea>
+            <!-- End Tweet -->
           </div>
           <br>
           <div class="pull-right">
-            <a href="#" class="btn text-white btn-info"><i class="fa fa-pencil-square fa-3" aria-hidden="true"></i> Tweet</a>
+            <button type=submit class="btn text-white tweetBtn"><i class="fa fa-pencil-square fa-3" aria-hidden="true"></i> Tweet</button>
           </div>
         </form>
       </div>
@@ -34,7 +66,7 @@ Twitter Clone | Tweets
       <!-- Cards -->
       {% for tweet in tweets %}
       <div class="card shadow mb-5 rounded border-0">
-        <div class="card-header bg-info text-white border-0">
+        <div class="card-header text-white border-0" style="background-color: #2f98d4;">
           <div class="row row-cols-auto">
             <div class="col my-auto">
               <img class="tweet-profile-img my-auto" alt="john-doe"
@@ -64,17 +96,16 @@ Twitter Clone | Tweets
           <div class="pull-right row row-cols-auto">
             <div class="col">
               <!-- Edit -->
-              <a href="#" class="btn text-white btn-primary">
-                <i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i>
+              <a href="#" style="background: none; border: none;">
+                <i class="iconBtn fa fa-pencil-square-o fa-3" aria-hidden="true"></i>
               </a>
               <!-- End Edit -->
             </div>
             <div class="col">
               <!-- Delete -->
               <form>
-                <button type="submit" class="btn text-white btn-danger">
-                  <i class="fa fa-trash-o fa-3"
-                    aria-hidden="true"></i>
+                <button type="submit" style="background: none; border: none;">
+                  <i class="iconBtn fa fa-trash-o fa-3" aria-hidden="true"></i>
                   </button>
               </form>
               <!-- End Delete -->

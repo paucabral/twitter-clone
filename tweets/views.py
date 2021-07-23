@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
 from .models import *
@@ -16,4 +16,8 @@ class AllTweets(View):
 
     @method_decorator(login_required(login_url='/'))
     def post(self, request, *args, **kwargs):
-        pass
+        user = request.user.profile
+        msg = request.POST.get('tweet')
+        tweet = Tweet(user=user, msg=msg)
+        tweet.save()
+        return redirect('/tweets/all-tweets')

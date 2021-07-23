@@ -960,6 +960,34 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
    ```html
    {% extends 'tweets/base.html' %} {% load static %} {% block title %} Twitter
    Clone | Tweets {% endblock %} {% block content %}
+   <style>
+     .tweetBtn {
+       font-size: 80%;
+       border-radius: 5rem;
+       letter-spacing: 0.1rem;
+       font-weight: bold;
+       padding: 0.5rem;
+       padding-left: 1rem;
+       padding-right: 1rem;
+       transition: all 0.2s;
+       background-color: #2f98d4;
+       color: white;
+     }
+
+     .tweetBtn:hover {
+       background-color: #2473a0;
+     }
+
+     .iconBtn {
+       color: rgb(81, 91, 102);
+       font-size: large;
+       font-weight: 1000;
+     }
+
+     .iconBtn:hover {
+       color: #2f98d4;
+     }
+   </style>
    <div class="container allTweets">
      <div>
        <div class="card shadow mb-5 rounded border-0">
@@ -971,15 +999,23 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
          <div class="card-body">
            <form>
              <div class="form-group">
-               <textarea class="form-control" id="createTweet" rows="3">
+               <!-- Tweet -->
+               <textarea
+                 required
+                 name="tweet"
+                 class="form-control"
+                 id="createTweet"
+                 rows="3"
+               >
                </textarea>
+               <!-- End Tweet -->
              </div>
              <br />
              <div class="pull-right">
-               <a href="#" class="btn text-white btn-info">
+               <button type="submit" class="btn text-white tweetBtn">
                  <i class="fa fa-pencil-square fa-3" aria-hidden="true"></i>
                  Tweet
-               </a>
+               </button>
              </div>
            </form>
          </div>
@@ -991,7 +1027,10 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
        <div class="container">
          <!-- Cards -->
          <div class="card shadow mb-5 rounded border-0">
-           <div class="card-header bg-info text-white border-0">
+           <div
+             class="card-header text-white border-0"
+             style="background-color: #2f98d4;"
+           >
              <div class="row row-cols-auto">
                <div class="col my-auto">
                  <img
@@ -1032,16 +1071,25 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
              <div class="pull-right row row-cols-auto">
                <div class="col">
                  <!-- Edit -->
-                 <a href="#" class="btn text-white btn-primary">
-                   <i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i>
+                 <a href="#" style="background: none; border: none;">
+                   <i
+                     class="iconBtn fa fa-pencil-square-o fa-3"
+                     aria-hidden="true"
+                   ></i>
                  </a>
                  <!-- End Edit -->
                </div>
                <div class="col">
                  <!-- Delete -->
                  <form>
-                   <button type="submit" class="btn text-white btn-danger">
-                     <i class="fa fa-trash-o fa-3" aria-hidden="true"></i>
+                   <button
+                     type="submit"
+                     style="background: none; border: none;"
+                   >
+                     <i
+                       class="iconBtn fa fa-trash-o fa-3"
+                       aria-hidden="true"
+                     ></i>
                    </button>
                  </form>
                  <!-- End Delete -->
@@ -1163,6 +1211,34 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
     ```html
     {% extends 'tweets/base.html' %} {% load static %} {% block title %} Twitter
     Clone | Tweets {% endblock %} {% block content %}
+    <style>
+      .tweetBtn {
+        font-size: 80%;
+        border-radius: 5rem;
+        letter-spacing: 0.1rem;
+        font-weight: bold;
+        padding: 0.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        transition: all 0.2s;
+        background-color: #2f98d4;
+        color: white;
+      }
+
+      .tweetBtn:hover {
+        background-color: #2473a0;
+      }
+
+      .iconBtn {
+        color: rgb(81, 91, 102);
+        font-size: large;
+        font-weight: 1000;
+      }
+
+      .iconBtn:hover {
+        color: #2f98d4;
+      }
+    </style>
     <div class="container allTweets">
       <div>
         <div class="card shadow mb-5 rounded border-0">
@@ -1174,19 +1250,23 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
           <div class="card-body">
             <form>
               <div class="form-group">
+                <!-- Tweet -->
                 <textarea
+                  required
+                  name="tweet"
                   placeholder="What's on your mind?"
                   class="form-control"
                   id="createTweet"
                   rows="3"
                 ></textarea>
+                <!-- End Tweet -->
               </div>
               <br />
               <div class="pull-right">
-                <a href="#" class="btn text-white btn-info"
-                  ><i class="fa fa-pencil-square fa-3" aria-hidden="true"></i>
-                  Tweet</a
-                >
+                <button type="submit" class="btn text-white tweetBtn">
+                  <i class="fa fa-pencil-square fa-3" aria-hidden="true"></i>
+                  Tweet
+                </button>
               </div>
             </form>
           </div>
@@ -1199,7 +1279,10 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
           <!-- Cards -->
           {% for tweet in tweets %}
           <div class="card shadow mb-5 rounded border-0">
-            <div class="card-header bg-info text-white border-0">
+            <div
+              class="card-header text-white border-0"
+              style="background-color: #2f98d4;"
+            >
               <div class="row row-cols-auto">
                 <div class="col my-auto">
                   <img
@@ -1236,9 +1319,9 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
               <div class="pull-right row row-cols-auto">
                 <div class="col">
                   <!-- Edit -->
-                  <a href="#" class="btn text-white btn-primary">
+                  <a href="#" style="background: none; border: none;">
                     <i
-                      class="fa fa-pencil-square-o fa-3"
+                      class="iconBtn fa fa-pencil-square-o fa-3"
                       aria-hidden="true"
                     ></i>
                   </a>
@@ -1247,8 +1330,14 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
                 <div class="col">
                   <!-- Delete -->
                   <form>
-                    <button type="submit" class="btn text-white btn-danger">
-                      <i class="fa fa-trash-o fa-3" aria-hidden="true"></i>
+                    <button
+                      type="submit"
+                      style="background: none; border: none;"
+                    >
+                      <i
+                        class="iconBtn fa fa-trash-o fa-3"
+                        aria-hidden="true"
+                      ></i>
                     </button>
                   </form>
                   <!-- End Delete -->
@@ -2137,3 +2226,35 @@ Now that user registration has been created, it is time to discuss how these use
    ```bash
    (twtclone)$ python manage.py runserver
    ```
+
+   <br>
+
+# Fully functional _AllTweets_ view
+
+In this section, we will go back on building the functionalities of the _AllTweets_ view. We are now going to implement proper form submission to "post a tweet" and add the other functionalities as well such as the option to edit or delete a user-owned 'tweet'. This will now be a fully functional (create, read, update, delete) CRUD page.
+
+1. Start by updating the _AllTweets_ view. This time around, we will be grabbing the information from the post request without the aid of using forms. We are going to get the current user profile associated to the tweet by extracting it with the request from the currently logged in user. Moreover, the field for the tweet will be added by capturing the field specified by its `name` attribute after submit (notice the `<textarea>` has an attribute `name` with a value of `tweet` in `all-tweets.html`). You may simply copy the code below. You may run the project and check the functionality afterwards.<br>
+
+   _twitterclone/tweets/views.py_
+
+   ```python
+    from django.shortcuts import render, redirect # Add redirect among the list of imports
+
+    ...
+
+    class AllTweets(View):
+    @method_decorator(login_required(login_url='/'))
+    def get(self, request, *args, **kwargs):
+        tweets = Tweet.objects.all().order_by('-date_created')
+        return render(request, template_name='tweets/all-tweets.html', context={'tweets': tweets})
+
+    @method_decorator(login_required(login_url='/'))
+    def post(self, request, *args, **kwargs): # Update the post method with the following lines of code
+        user = request.user.profile # Checks the user from the request and associate the profile as defined in the model
+        msg = request.POST.get('tweet') # Gets the form from the request and extracts the data from an input with an attribute "name" which value is "tweet"
+        tweet = Tweet(user=user, msg=msg) # Set the parameters for new entry in the Tweet model
+        tweet.save() # Save the tweet
+        return redirect('/tweets/all-tweets')
+   ```
+
+2. Next is setting up when the edit and delete button should appear in the page.
