@@ -2311,7 +2311,7 @@ Now that user registration has been created, it is time to discuss how these use
    ...
 
    class Login(View):
-    # Apply the custom decorator here.
+      # Apply the custom decorator here.
       @method_decorator(unauthenticated_user)
       def get(self, request, *args, **kwargs):
           return render(request, template_name='accounts/login.html', context={})
