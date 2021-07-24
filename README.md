@@ -48,7 +48,7 @@ This tutorial tackles the development of a Django web application up to its depl
    ```bash
    (twtclone)$ pip install django
    ```
-4. Once installed you issue the `django-admin` command to check. You should see a list of commands that can be issued.
+4. Once installed, you may issue the `django-admin` command to check. You should see a list of commands that can be issued.
    ```bash
    (twtclone)$ django-admin
    ```
