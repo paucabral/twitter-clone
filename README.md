@@ -2312,25 +2312,25 @@ Now that user registration has been created, it is time to discuss how these use
 
    class Login(View):
     # Apply the custom decorator here.
-    @method_decorator(unauthenticated_user)
-    def get(self, request, *args, **kwargs):
-        return render(request, template_name='accounts/login.html', context={})
+      @method_decorator(unauthenticated_user)
+      def get(self, request, *args, **kwargs):
+          return render(request, template_name='accounts/login.html', context={})
 
-    # Apply the custom decorator here.
-    @method_decorator(unauthenticated_user)
-    def post(self, request, *args, **kwargs):
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            if user.is_superuser:
-                return redirect('/admin')
-            else:
-                return redirect('/tweets/all-tweets')
-        else:
-            messages.info(request, 'Username or Password is incorrect.')
-        return render(request, template_name='accounts/login.html', context={})
+      # Apply the custom decorator here.
+      @method_decorator(unauthenticated_user)
+      def post(self, request, *args, **kwargs):
+          username = request.POST.get('username')
+          password = request.POST.get('password')
+          user = authenticate(request, username=username, password=password)
+          if user is not None:
+              login(request, user)
+              if user.is_superuser:
+                  return redirect('/admin')
+              else:
+                  return redirect('/tweets/all-tweets')
+          else:
+              messages.info(request, 'Username or Password is incorrect.')
+          return render(request, template_name='accounts/login.html', context={})
 
 
     @login_required(login_url='/')
