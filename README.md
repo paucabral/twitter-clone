@@ -2063,7 +2063,7 @@ Now that user registration has been created, it is time to discuss how these use
                    {% endfor %}
 
                    <p class="text-center">
-                     Don't have an account?
+                     Don't have an account yet?
                      <a
                        href="{% url 'register' %}"
                        style="text-decoration: none;"
@@ -2725,3 +2725,391 @@ In this section, we will go back on building the functionalities of the _AllTwee
    ```
 
    <br>
+
+# Password reset via email
+
+Now that the main features of our project has been taken care of, we can now proceed on doing some additional features that will better enhance the overall functionality of the project and the user experience. In this section, we will discuss how to implement a password reset functionality, in case a user forgot the credentials to his/her account. We will be discussing how to connect an SMTP server such as _Gmail_ to send an email containing instructions and unique password reset links.
+
+1. For this functionality, we will be using the built-in password reset views from _Django_'s authentication library. All we need to do later on is to configure the settings and prepare the templates, as well as the assignment of URL paths to each of the view. For now, import the _Django_ authentication library and add the necessary views with specific paths in `urls.py` of the _accounts_ app. You may follow the code below:<br>
+
+   _twitterclone/accounts/urls.py_
+
+   ```python
+    ...
+
+    from django.contrib.auth import views as auth_views
+
+    ...
+
+    urlpatterns = [
+      path('', views.Login.as_view(), name='login'),
+      path('register/', views.Register.as_view(), name='register'),
+      path('registration-success/', views.RegistrationSuccess.as_view(), name='registration-success'),
+      path('logout/', views.logoutUser, name='logout'),
+      path('reset-password/', auth_views.PasswordResetView.as_view(), name="reset_password"), # Dedicated view for users to input their email
+      path('reset-password-sent/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"), # View indicating that the email containing instructions has been sent
+      path('reset-password-confirm/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(), name="password_reset_confirm"), # A unique URL for the user with a unique token that takes the updated password
+      path('reset-password-complete/', auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"), # Dedicated view for confirming that the password reset was completed successfully
+    ]
+   ```
+
+2. The next thing to do is to configure `settings.py` with SMTP configuration. To accomplish this functionality, we are going to need a dedicated _Gmail_ account with _Less secured apps_ enabled. For now, we will add the necessary configuration inside the `settings.py` file and assign the values to environmental variables (since this will be containing credentials). Open the `settings.py` file and add the following lines of code at the bottom part.
+
+   _twitterclone/twitterclone/settings.py_
+
+   ```python
+    # SMTP Configuration
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = config('EMAIL_HOST')
+    EMAIL_PORT = config('EMAIL_PORT')
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+   ```
+
+3. Open your `.env` file and add the variables with their corresponding values.
+
+   _twitterclone/twitterclone/.env_
+
+   ```
+   EMAIL_HOST=smtp.gmail.com
+   EMAIL_PORT=587
+   EMAIL_USE_TLS=True
+   EMAIL_HOST_USER=your@email.com
+   EMAIL_HOST_PASSWORD=yourpassword
+   ```
+
+   _Note: Make sure that there are no spaces in between the equal signs of each variable and value._
+
+4. This feature will not work unless you allow access from secure apps in the _Gmail_ you have used. Login to the gmail account you have configured to `settings.py` and head over to enable "Less secure app access". This setting can be found in this [link](https://myaccount.google.com/lesssecureapps).<br>
+
+   _Note: If you are using multiple Gmail accounts in your computer, be sure that your are configuring the Gmail account you use for this project. The ideal way is to log in your account in a private tab (incognito) to ensure that it is the only account logged in in the browser's instance._
+
+5. You may now check if the functionality is working by heading over to http://127.0.0.1:8000/reset-password to try and reset an account password with valid email. The email sent should contain the account username and a link to change password.<br>
+
+   _Note: Be sure to check the spam folder for email as the email might be recognized as a spam._
+
+6. The password reset feature is now functional but there are still alot to improve. For instance, the _login_ link at the end password reset success page does not link properly to our set login URL path (`/`). Furthermore, its design is very generic to _Django_'s styling and does not look like the style of our web application. To solve this issue, we will be creating our own templates, and bind each of them to the views. Create an HTML file for each view inside the _accounts_ app templates directory (`twitterclone/accounts/templates/accounts/`). You may follow the code below for each HTML file and their respective content.<br>
+
+   _twitterclone/accounts/templates/accounts/reset-password.html_
+
+   ```html
+   {% extends 'accounts/base.html' %} {% load static %} {% block title %}
+   Twitter Clone | Reset Password {% endblock %} {% block content %}
+   <div>
+     <div class="container">
+       <div class="row">
+         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+           <div class="card card-signin my-5">
+             <div class="card-body">
+               <h3 class="text-center">Reset Password</h3>
+               <br />
+
+               <form class="form-signin" method="POST">
+                 {% csrf_token %}
+
+                 <div class="row">
+                   <div class="form-label-group">
+                     {{ form.email }}
+                     <label for="id_email">Email</label>
+                   </div>
+                 </div>
+
+                 <button
+                   name="Reset Password"
+                   class="btn text-uppercase"
+                   type="submit"
+                   style="width: 100%;"
+                 >
+                   Reset Password
+                 </button>
+                 <br />
+                 {% if form.errors %} {% for field in form %} {% for error in
+                 field.errors %}
+                 <div class="alert alert-danger my-3">
+                   <strong>{{ error|escape }}</strong>
+                 </div>
+                 {% endfor %} {% endfor %} {% else %}
+                 <br />
+                 {% endif %}
+                 <hr class="my-4" />
+                 <p class="text-center">
+                   Remember your account?
+                   <a href="{% url 'login' %}" style="text-decoration: none;"
+                     >Login</a
+                   >
+                 </p>
+               </form>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+
+   <script>
+     const email = document.querySelector('input[name="email"');
+     email.classList.add("form-control");
+   </script>
+
+   {% endblock %}
+   ```
+
+   _twitterclone/accounts/templates/accounts/reset-password-sent.html_
+
+   ```html
+   {% extends 'accounts/base.html' %} {% load static %} {% block title %}
+   Twitter Clone | Password Reset Instructions Sent {% endblock %} {% block
+   content %}
+   <div>
+     <div class="container">
+       <div class="row">
+         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+           <div class="card card-signin my-5">
+             <div class="card-body">
+               <h3 class="text-center">Password Reset Instructions Sent!</h3>
+               <br />
+
+               <form class="form-signin">
+                 <div class="row">
+                   <div class="form-label-group" style="text-align: center">
+                     <p>
+                       You may now check your email for instructions on how to
+                       properly reset your password.
+                     </p>
+                   </div>
+                 </div>
+
+                 <a
+                   name="Go home"
+                   class="btn text-uppercase"
+                   href="{% url 'login' %}"
+                   style="width: 100%;"
+                   >Return to Login</a
+                 >
+                 <hr class="my-4" />
+               </form>
+
+               <p class="text-center">
+                 Remember your account?
+                 <a href="{% url 'login' %}" style="text-decoration: none;"
+                   >Login</a
+                 >
+               </p>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+
+   {% endblock %}
+   ```
+
+   _twitterclone/accounts/templates/accounts/reset-password-confirm.html_
+
+   ```html
+   {% extends 'accounts/base.html' %} {% load static %} {% block title %}
+   Twitter Clone | Password Reset Form {% endblock %} {% block content %} {% if
+   validlink %}
+
+   <div>
+     <div class="container">
+       <div class="row">
+         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+           <div class="card card-signin my-5">
+             <div class="card-body">
+               <h3 class="text-center">Reset Password</h3>
+               <br />
+
+               <form class="form-signin" method="POST">
+                 {% csrf_token %}
+
+                 <div class="row">
+                   <div class="form-label-group">
+                     {{form.new_password1}}
+                     <label for="new_password">Enter your new password</label>
+                   </div>
+                 </div>
+
+                 <div class="row">
+                   <div class="form-label-group">
+                     {{form.new_password2}}
+                     <label for="new_password2"
+                       >Confirm your new password</label
+                     >
+                   </div>
+                 </div>
+
+                 <button
+                   name="Reset Password"
+                   class="btn text-uppercase"
+                   type="submit"
+                   style="width: 100%;"
+                 >
+                   Confirm Password Reset
+                 </button>
+
+                 {% if form.errors %} {% for field in form %} {% for error in
+                 field.errors %}
+                 <div class="alert alert-danger my-3">
+                   <strong>{{ error|escape }}</strong>
+                 </div>
+                 {% endfor %} {% endfor %} {% else %}
+                 <br />
+                 {% endif %}
+
+                 <hr class="my-4" />
+                 <p class="text-center">
+                   Remember your account?
+                   <a href="{% url 'login' %}" style="text-decoration: none;"
+                     >Login</a
+                   >
+                 </p>
+               </form>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+
+   <script>
+     const pass = document.querySelectorAll('input[type="password"]');
+     pass.forEach((e) => {
+       e.classList.add("form-control");
+     });
+   </script>
+
+   {% else %}
+
+   <div>
+     <div class="container">
+       <div class="row">
+         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+           <div class="card card-signin my-5">
+             <div class="card-body">
+               <h3 class="text-center">Password Reset Unsuccessful</h3>
+               <br />
+
+               <form class="form-signin">
+                 <div class="row">
+                   <div class="form-label-group" style="text-align: center">
+                     <p>
+                       This password reset link is invalid. This might be
+                       possible because the link has already been used. Please
+                       request a new password reset form.
+                     </p>
+                   </div>
+                 </div>
+
+                 <a
+                   name="Go home"
+                   class="btn text-uppercase"
+                   href="{% url 'reset_password' %}"
+                   style="width: 100%;"
+                   >Reset Password Again</a
+                 >
+                 <hr class="my-4" />
+               </form>
+
+               <p class="text-center">
+                 Remember your account?
+                 <a href="{% url 'login' %}" style="text-decoration: none;"
+                   >Login</a
+                 >
+               </p>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+
+   {% endif %} {% endblock %}
+   ```
+
+   _twitterclone/accounts/templates/accounts/reset-password-complete.html_
+
+   ```html
+   {% extends 'accounts/base.html' %} {% load static %} {% block title %}
+   Twitter Clone | Password Reset Complete {% endblock %} {% block content %}
+   <div>
+     <div class="container">
+       <div class="row">
+         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+           <div class="card card-signin my-5">
+             <div class="card-body">
+               <h3 class="text-center">Password Reset Complete!</h3>
+               <br />
+
+               <form class="form-signin">
+                 <div class="row">
+                   <div class="form-label-group" style="text-align: center">
+                     <p>
+                       You may now login to your account with your new password.
+                     </p>
+                   </div>
+                 </div>
+
+                 <a
+                   name="Go home"
+                   class="btn text-uppercase"
+                   href="{% url 'login' %}"
+                   style="width: 100%;"
+                   >Return to Login</a
+                 >
+                 <hr class="my-4" />
+               </form>
+
+               <p class="text-center">
+                 Don't have an account yet?
+                 <a href="{% url 'register' %}" style="text-decoration: none;"
+                   >Sign Up</a
+                 >
+               </p>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+
+   {% endblock %}
+   ```
+
+7. To be able to use the templates we created, we need to update our URL paths for each view by specifiying the names of the corresponding template for each using the `template_name` parameter inside the `as_view()` method:<br>
+
+   _twitterclone/accounts/urls.py_
+
+   ```python
+    urlpatterns = [
+      path('', views.Login.as_view(), name='login'),
+      path('register/', views.Register.as_view(), name='register'),
+      path('registration-success/', views.RegistrationSuccess.as_view(), name='registration-success'),
+      path('logout/', views.logoutUser, name='logout'), path('reset-password/', auth_views.PasswordResetView.as_view(template_name="accounts/reset-password.html"), name="reset_password"),
+      path('reset-password-sent/', auth_views.PasswordResetDoneView.as_view(template_name="accounts/reset-password-sent.html"), name="password_reset_done"),
+      path('reset-password-confirm/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(template_name="accounts/reset-password-confirm.html"), name="password_reset_confirm"),
+      path('reset-password-complete/', auth_views.PasswordResetCompleteView.as_view(template_name="accounts/reset-password-complete.html"), name="password_reset_complete"),
+    ]
+   ```
+
+8. In order for users to easily locate this feature, update `login.html` template and add a hyperlink that redirects to the password reset page. Add a _"Forgot you password?"_ link just above the sign up instruction.<br>
+
+   _twitterclone/accounts/templates/accounts/login.html_
+
+   ```html
+   <p class="text-center">
+     <a href="{% url 'reset_password' %}" style="text-decoration: none;"
+       >Forgot your password?</a
+     >
+   </p>
+   ```
+
+   <br>
+
+9. You may now check the password reset functionality again with the new templates have been applied.
+
+   ```bash
+   (twtclone)$ python manage.py runserver
+   ```
