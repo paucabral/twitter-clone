@@ -69,8 +69,8 @@ Twitter Clone | Tweets
         <div class="card-header text-white border-0" style="background-color: #2f98d4;">
           <div class="row row-cols-auto">
             <div class="col my-auto">
-              <img class="tweet-profile-img my-auto" alt="john-doe"
-                src="https://icon-library.com/images/generic-user-icon/generic-user-icon-19.jpg" />
+              <img class="tweet-profile-img my-auto" alt="{{ tweet.user.username }}"
+                src="{% if tweet.user.profile_pic %}{{ tweet.user.profile_pic.url }}{% else %}https://icon-library.com/images/generic-user-icon/generic-user-icon-19.jpg{% endif %}" />
             </div>
             <div class="col my-auto">
               <!-- Name -->

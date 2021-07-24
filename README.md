@@ -3115,3 +3115,342 @@ Now that the main features of our project has been taken care of, we can now pro
    ```
 
    <br>
+
+# File Upload (Image) and user profile editing
+
+For better user experience, the user profile may be modified by adding a profile image.
+
+1. Start by installing the _Pillow_ library using `pip`.
+
+   ```bash
+   (twtclone)$ pip install pillow
+   ```
+
+2. Up next is modifying the model for user profile. Head over to the _accounts_ app sub directory (`twitterclone/accounts/`) and open `models.py`. Proceed on adding a new field for profile picture. You may follow the code below. <br>
+
+   _twitterclone/accounts/models.py_
+
+   ```python
+    class Profile(models.Model):
+      user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+      first_name = models.CharField(max_length=200, null=True)
+      last_name = models.CharField(max_length=200, null=True)
+      username = models.CharField(max_length=200, null=True)
+      email = models.CharField(max_length=200, null=True)
+      date_created = models.DateTimeField(auto_now_add=True, null=True)
+      profile_pic = models.ImageField(null=True, blank=True) # Add this field to add a profile image to profile.
+
+      def __str__(self):
+          return self.email
+   ```
+
+3. Since a model has been changed again, run the commands again for migration.
+
+   ```bash
+   (twtclone)$ python manage.py makemigrations
+   (twtclone)$ python manage.py migrate
+   ```
+
+4. Running the server again, you will notice upon loging in to Admin Panel that an image upload field has been added to the _Profile_ model. This however is still not useable since we still need to configure our media folder to store the uploaded images.
+
+5. Open `settings.py` and add the following declarations at the end of the file for the root media directory and path. You may follow the code below.<br>
+
+   _twitterclone/twitterclone/settings.py_
+
+   ```python
+    # Media
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+    MEDIA_URL = '/media/'
+   ```
+
+6. Head over now to the base `urls.py` of the project and import the built-in _settings_ library. Then, proceed on appending the media URL to the `urlpatterns` array by following the code below (append the code at the end of the file).<br>
+
+   _twitterclone/twitterclone/urls.py_
+
+   ```python
+    ...
+
+    from django.conf import settings
+
+    ...
+
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+   ```
+
+7. Go to the Admin Panel and test if the image upload is working by adding profile pictures to an existing account. The image must be saved at the `/media` directory.
+
+8. To view the image in the web application, we will now modify the template for the _AllTweets_ view. Go inside the templates directory of the _tweets_ app (`twitterclone/tweets/templates/tweets`) and open the `all-tweets.html` file. Find the `<img>` tag with a class of _tweet-profile-img_. We will modify it to show the assigned user image instead. Follow the code below to check the modification on the `alt` and `src` attribute.<br>
+
+   _twitterclone/tweets/templates/tweets/all-tweets.html_
+
+   ```html
+   <!-- The src attribute is set with a conditional statement that checks if the user has a profile picture. If not, it will proceed on showing a generic image instead. -->
+   <img
+     class="tweet-profile-img my-auto"
+     alt="{{ tweet.user.username }}"
+     src="{% if tweet.user.profile_pic %}{{ tweet.user.profile_pic.url }}{% else %}https://icon-library.com/images/generic-user-icon/generic-user-icon-19.jpg{% endif %}"
+   />
+   ```
+
+9. Create a preliminary view in the _accounts_ app dedicated for profile update. Assign a dedicated URL path for it as well. <br>
+
+   _twitterclone/accounts/views.py_
+
+   ```python
+    class Profile(View):
+    @method_decorator(login_required(login_url='/'))
+    def get(self, request, *args, **kwargs):
+        pass
+
+    @method_decorator(login_required(login_url='/'))
+    def post(self, request, *args, **kwargs):
+        pass
+   ```
+
+   _twitterclone/accounts/urls.py_
+
+   ```python
+    urlpatterns = [
+      path('', views.Login.as_view(), name='login'),
+      path('register/', views.Register.as_view(), name='register'),
+      path('registration-success/', views.RegistrationSuccess.as_view(),
+          name='registration-success'),
+      path('logout/', views.logoutUser, name='logout'),
+      path('reset-password/', auth_views.PasswordResetView.as_view(template_name="accounts/reset-password.html"),
+          name="reset_password"),
+      path('reset-password-sent/', auth_views.PasswordResetDoneView.as_view(template_name="accounts/reset-password-sent.html"),
+          name="password_reset_done"),
+      path('reset-password-confirm/<uidb64>/<token>',
+          auth_views.PasswordResetConfirmView.as_view(template_name="accounts/reset-password-confirm.html"), name="password_reset_confirm"),
+      path('reset-password-complete/', auth_views.PasswordResetCompleteView.as_view(template_name="accounts/reset-password-complete.html"),
+          name="password_reset_complete"),
+      path('profile/', views.Profile.as_view(), name='profile'), # URL path for profile
+    ]
+   ```
+
+10. Next is to create a form for for our profile model. This will allow us to better handle our forms with the requests and error checking rather than manually implementing them. Open `forms.py` file from the _accounts_ app subdirectory and follow the code below:<br>
+
+    _twitterclone/accounts/forms.py_
+
+    ```python
+    ...
+
+    from .models import * # Import the contents of models.py
+
+    ...
+
+    class ProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+        exclude = ['user']
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'First Name'})
+        self.fields['last_name'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Last Name'})
+        self.fields['email'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Email'})
+        self.fields['username'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'username'})
+    ```
+
+11. Proceed now on creating a template for the profile render it through the get method of the _Profile_ view. Add the corresponding functionalities as well with the post method. You may follow the code below.
+
+    _twitterclone/accounts/views.py_
+
+    ```python
+    ...
+
+    from .forms import CreateUserForm, ProfileForm # Add Profie form among the form inputs
+    from .models import Profile as ProfileModel # To cope with the naming conflict, you may upload the Profile model with a different name or you may change the name of the view completely.
+
+    ...
+
+    class Profile(View):
+    @method_decorator(login_required(login_url='/'))
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        profile = ProfileModel.objects.get(user=user)
+
+        # Generate form from user instance
+        form = ProfileForm(instance=profile)
+
+        return render(request, template_name='accounts/profile.html', context={'form': form})
+
+    @method_decorator(login_required(login_url='/'))
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        user_instance = ProfileModel.objects.get(id=user.id)
+        account_instance = User.objects.get(id=user.id)
+
+        # accept form instance with file upload
+        form = ProfileForm(request.POST, request.FILES, instance=user_instance)
+
+        if form.is_valid():
+            form.save()
+
+            # Update the account model as well to sync both profile and account information
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+
+            account_instance.first_name = first_name
+            account_instance.last_name = last_name
+            account_instance.email = email
+            account_instance.username = username
+
+            account_instance.save()
+
+            return render(request, template_name='accounts/profile.html', context={'form': form})
+        else:
+            messages.error(request, 'There was an error.')
+        return render(request, template_name='accounts/profile.html', context={'form': form})
+
+    ```
+
+    _twitterclone/accounts/templates/accounts/profile.html_
+
+    ```html
+      {% extends 'tweets/base.html' %}
+      {% load static %}
+
+      {% block title %}
+      Twitter Clone | Tweets
+      {% endblock %}
+
+      {% block content %}
+
+      <style>
+        .nounderline {
+          color: rgb(105, 199, 236);
+          text-decoration: none;
+        }
+
+        .nounderline:hover {
+          color: rgb(117, 235, 235);
+          text-decoration: underline;
+        }
+
+        .signin {
+          display: block;
+        }
+
+        .updateprofile {
+          background-color: rgb(46, 118, 136) !important;
+        }
+
+        .updateprofile:hover {
+          background-color: rgb(60, 135, 206) !important;
+        }
+
+        @media (max-width:480px) {
+          .signin {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+          }
+        }
+      </style>
+
+      <div>
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-5">
+              <div class="card card-signin my-3">
+                <div class="card-body">
+                  <h3 class="text-center">{% if user.profile.first_name|length > 0 %}{{ user.profile.first_name }} {{ user.profile.last_name }}{% else %}{{ user.username }}{% endif %}</h3>
+                  <div class="text-muted text-center" style="text-align: center;">@{{ user.profile.username }}</div>
+                  <br>
+
+                  <div class="form-signin">
+                    <div class="form-label-group">
+                      <div class="row">
+                        <img class="profile-pic"
+                          src="{% if request.user.profile.profile_pic %}{{ request.user.profile.profile_pic.url }}{% else %}https://icon-library.com/images/generic-user-icon/generic-user-icon-19.jpg{% endif %}" />
+                      </div>
+                    </div>
+                    <a class="btn text-uppercase text-white" href="/" style="width: 100%; font-weight: bold; border-radius: 0.5em;"><i class="fa fa-home fa-3"
+                        aria-hidden="true"></i> Go Back to Home</a>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-7">
+              <div class="card card-signin my-3">
+                <div class="card-body">
+                  <h3 class="text-center">Profile Information</h3>
+                  <div>
+                    <p class="text-muted" style="text-align: center;">Account was created on: {{ user.profile.date_created }}</p>
+                  </div>
+                  <hr>
+                  <br>
+
+                  <form class="form-signin" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-label-group">
+                      <div class="row">
+                        <div class="col form-label-group">
+                          {{ form.first_name }}
+                          <label for="id_first_name">First Name</label>
+                        </div>
+                        <div class="col form-label-group">
+                          {{ form.last_name }}
+                          <label for="id_last_name">Last Name</label>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="form-label-group">
+                          {{ form.email }}
+                          <label for="id_email">Email</label>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="form-label-group">
+                          {{ form.username }}
+                          <label for="id_username">Username</label>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="form-label-group">
+                          <hr>
+                          <br>
+                          {% for i in form.profile_pic %}
+                            <div class="mb-2">
+                              {{ i }}
+                            </div>
+                          {% endfor %}
+                        </div>
+                      </div>
+
+                    <hr class="my-3">
+
+                    <button type="submit" class="btn text-uppercase updateprofile my-3" style="width: 100%;">Update Profile Information</button>
+
+                  </form>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <script>
+        const profile_pic = document.querySelector('input[name="profile_pic"');
+        profile_pic.classList.add('form-control-file');
+      </script>
+
+      {% endblock %}
+    ```
