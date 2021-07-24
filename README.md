@@ -3842,3 +3842,71 @@ Another feature to finish of the project is to assign a specific _timeline_ page
      </body>
    </html>
    ```
+
+5. The project should be fully functional by now. All that is left to do is to get it ready for production. You may now proceed on running the project and testing all the functionalities implemented.
+
+   ```bash
+   (twtclone)$ python manage.py runserver
+   ```
+
+   Your updated local directory should look similar to this:
+
+   ```
+   twitter-clone/
+   |__ accounts/
+   |   |__ __pycache__/
+   |   |__ migrations/
+   |   |__ accounts/
+   |   |   |__ templates/
+   |   |       |__ base.html
+   |   |       |__ login.html
+   |   |       |__ profile.html
+   |   |       |__ register.html
+   |   |       |__ registration-success.html
+   |   |       |__ reset-password-complete.html
+   |   |       |__ reset-password-confirm.html
+   |   |       |__ reset-password-sent.html
+   |   |       |__ reset-password.html
+   |   |__ __init__.py
+   |   |__ admin.py
+   |   |__ apps.py
+   |   |__ decorators.py
+   |   |__ forms.py
+   |   |__ models.py
+   |   |__ tests.py
+   |   |__ urls.py
+   |   |__ views.py
+   |__ media/
+   |__ static/
+   |   |__ css/
+   |       |__ index.css
+   |   |__ img/
+   |   |__ js/
+   |__ tweets/
+   |   |__ __pycache__/
+   |   |__ migrations/
+   |   |__ tweets/
+   |   |   |__ templates/
+   |   |       |__ all-tweets.html
+   |   |       |__ base.html
+   |   |       |__ update-tweet.html
+   |   |       |__ user-timeline.html
+   |   |__ __init__.py
+   |   |__ admin.py
+   |   |__ apps.py
+   |   |__ models.py
+   |   |__ tests.py
+   |   |__ urls.py
+   |   |__ views.py
+   |__ twitter-clone/
+   |   |__ __pycache__/
+   |   |__ __init__.py
+   |   |__ .env
+   |   |__ asgi.py
+   |   |__ settings.py
+   |   |__ urls.py
+   |   |__ wsgi.py
+   |__ .gitignore
+   |__ db.sqlite3
+   |__ manage.py
+   ```
