@@ -35,7 +35,7 @@ This tutorial tackles the development of a Django web application up to its depl
    ```bash
    $ mkvirtualenv twtclone
    ```
-   *Note: In this case, the name of the environment was set to *twtclone\*.
+   _Note: In this case, the name of the environment was set to "twtclone"_.
 2. You should notice that the your terminal now has a modified prompt which looks like the following:
    ```bash
    (twtclone)$
