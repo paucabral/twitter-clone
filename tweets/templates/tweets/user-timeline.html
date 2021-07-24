@@ -2,66 +2,65 @@
 {% load static %}
 
 {% block title %}
-Twitter Clone | Tweets
+Twitter Clone | {{ profile.username }}'s timeline
 {% endblock %}
 
 {% block content %}
 <style>
-.tweetBtn {
-  font-size: 80%;
-  border-radius: 5rem;
-  letter-spacing: 0.1rem;
-  font-weight: bold;
-  padding: 0.5rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  transition: all 0.2s;
-  background-color: #2f98d4;
-  color: white;
-}
+  .iconBtn {
+    color: rgb(81, 91, 102);
+    font-size: large;
+    font-weight: 1000;
+  }
 
-.tweetBtn:hover {
-  background-color: #2473a0;
-}
-
-.iconBtn {
-  color:rgb(81, 91, 102);
-  font-size: large;
-  font-weight: 1000;
-}
-
-.iconBtn:hover {
-  color:#2f98d4
-}
+  .iconBtn:hover {
+    color: #2f98d4
+  }
 </style>
 
 <div class="container allTweets">
   <div>
     <div class="card shadow mb-5 rounded border-0">
-      <div class="card-header">
-        <!-- Name Header -->
-        <h2 class="card-title">Good day {% if user.profile.first_name|length > 0 %} {{ user.profile.first_name }} {{ user.profile.last_name }}, {% else %} {{ user.username }}, {% endif %}post a tweet!</h2>
-        <!-- End Name Header -->
+      <div class="p-4">
+        <div class="container-fluid">
+          <div class="row">
+
+            <div class="col col">
+              <img class="my-auto" style="max-height: 10rem;" alt="{{ tweet.user.username }}"
+                src="{% if profile.profile_pic %}{{ profile.profile_pic.url }}{% else %}https://icon-library.com/images/generic-user-icon/generic-user-icon-19.jpg{% endif %}" />
+              <h2 class="card-title">{{ profile.first_name}} {{ profile.last_name}}</h2>
+              <p class="text-muted" style="margin-top: -1em;">@{{ profile.username }}</p>
+              </div>
+
+            <div class="col-10">
+              <h3>About</h3>
+              <hr>
+              <p>
+                <span class="text-muted" style="font-size: 0.8em;">Account was created on {{ profile.date_created }}</span><br>
+                <b>Name: </b>{{ profile.first_name}} {{ profile.last_name}}<br>
+                <b>Username: </b>{{ profile.username}}<br>
+                <b>Email: </b>{{ profile.email}}
+              </p>
+
+              <h3>Latest Tweet</h3>
+              <hr>
+              <div>
+                <p>
+                  <span class="text-muted" style="font-size: 0.8em;">{{ tweets.first.date_created }}</span><br>
+                  {{ tweets.first }}
+                </p>
+              </div>
+            </div>
+          
+          </div>
+        </div>
       </div>
       <div class="card-body">
-        <form method="POST">
-          {% csrf_token %}
-          <div class="form-group">
-            <!-- Tweet -->
-            <textarea required name="tweet" placeholder="What's on your mind?" class="form-control" id="createTweet" rows="3"></textarea>
-            <!-- End Tweet -->
-          </div>
-          <br>
-          <div class="pull-right">
-            <button type=submit class="btn text-white tweetBtn">Tweet</button>
-          </div>
-        </form>
       </div>
     </div>
   </div>
-  <br>
   <div>
-    <h1>Checkout the latest Tweets!</h1>
+    <h1>{{ profile.first_name }} {{ profile.last_name }}'s Timeline</h1>
     <div class="container">
       <!-- Cards -->
       {% for tweet in tweets %}
@@ -69,20 +68,16 @@ Twitter Clone | Tweets
         <div class="card-header text-white border-0" style="background-color: #2f98d4;">
           <div class="row row-cols-auto">
             <div class="col my-auto">
-              <a href="/tweets/user-timeline/{{ tweet.user.id }}">
               <img class="tweet-profile-img my-auto" alt="{{ tweet.user.username }}"
                 src="{% if tweet.user.profile_pic %}{{ tweet.user.profile_pic.url }}{% else %}https://icon-library.com/images/generic-user-icon/generic-user-icon-19.jpg{% endif %}" />
-              </a>
             </div>
             <div class="col my-auto">
-              <a class="text-white" href="/tweets/user-timeline/{{ tweet.user.id }}" style="text-decoration: none;">
-                <!-- Name -->
-                <h4 class="my-auto">{{ tweet.user.first_name }} {{ tweet.user.last_name }}</h4>
-                <!-- End Name -->
-                <!-- Username -->
-                <span>@{{ tweet.user.username }}</span>
-                <!-- End Username -->
-              </a>
+              <!-- Name -->
+              <h4 class="my-auto">{{ tweet.user.first_name }} {{ tweet.user.last_name }}</h4>
+              <!-- End Name -->
+              <!-- Username -->
+              <span>@{{ tweet.user.username }}</span>
+              <!-- End Username -->
             </div>
           </div>
         </div>
@@ -109,11 +104,12 @@ Twitter Clone | Tweets
             </div>
             <div class="col">
               <!-- Delete -->
-              <form onsubmit="return confirm('Are you sure you want to delete the tweet: {{ tweet.msg }} ?');" method="POST" action="{% url 'delete-tweet' tweet.id  %}">
+              <form onsubmit="return confirm('Are you sure you want to delete the tweet: {{ tweet.msg }} ?');"
+                method="POST" action="{% url 'delete-tweet' tweet.id  %}">
                 {% csrf_token %}
                 <button name="deletetweet" value="{{ tweet.id }}" type="submit" style="background: none; border: none;">
                   <i class="iconBtn fa fa-trash-o fa-3" aria-hidden="true"></i>
-                  </button>
+                </button>
               </form>
               <!-- End Delete -->
             </div>

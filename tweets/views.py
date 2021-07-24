@@ -53,3 +53,13 @@ class EditTweet(View):
             tweet.msg = msg
             tweet.save()
             return redirect('/tweets/all-tweets')
+
+
+class UserTimeline(View):
+    @method_decorator(login_required(login_url='/'))
+    def get(self, request, *args, **kwargs):
+        profile_id = self.kwargs['id']
+        profile = Profile.objects.get(id=profile_id)
+        tweets = Tweet.objects.filter(
+            user=profile_id).order_by('-date_created')
+        return render(request, template_name='tweets/user-timeline.html', context={'profile': profile, 'tweets': tweets})

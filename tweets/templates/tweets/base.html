@@ -22,7 +22,7 @@
   <header class="navigationHeader sticky-top">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary container-fluid">
       <div class="container">
-        <a class="navbar-brand navBrand" href="#">Twitter<span class="brand">CLONE</span></a>
+        <a class="navbar-brand navBrand" href="/">Twitter<span class="brand">CLONE</span></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
           aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -31,13 +31,13 @@
         <div class="collapse navbar-collapse align-items-center" id="navbarTogglerDemo02">
           <ul class="nav navbar-nav ms-auto align-items-center">
             <li class="nav-item">
-              <a class="nav-link menuItem" href="#"><i class="fa fa-home fa-3" aria-hidden="true"></i> Home</a>
+              <a class="nav-link menuItem" href="/"><i class="fa fa-home fa-3" aria-hidden="true"></i> Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link menuItem" href="#"><i class="fa fa-newspaper-o fa-3" aria-hidden="true"></i> Timeline</a>
+              <a class="nav-link menuItem" href="/tweets/user-timeline/{{ user.profile.id }}"><i class="fa fa-newspaper-o fa-3" aria-hidden="true"></i> Timeline</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link menuItem" href="#"><i class="fa fa-user fa-3" aria-hidden="true"></i> Profile</a>
+              <a class="nav-link menuItem" href="{% url 'profile' %}"><i class="fa fa-user fa-3" aria-hidden="true"></i> Profile</a>
             </li>
             <li class="nav-item">
               <a class="nav-link menuItem" href="/logout"><i class="fa fa-sign-out fa-3" aria-hidden="true"></i> Logout</a>

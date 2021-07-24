@@ -660,7 +660,7 @@ Templates are basically the frontend component of a basic **Django** project. It
 
    ```css
    body {
-     background-color: rgb(223, 243, 243);
+     background-color: rgb(194, 218, 235);
    }
 
    .brand {
@@ -928,7 +928,7 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
 
    ```css
    body {
-     background-color: rgb(223, 243, 243);
+     background-color: rgb(194, 218, 235);
    }
 
    .brand {
@@ -3454,3 +3454,391 @@ For better user experience, the user profile may be modified by adding a profile
 
       {% endblock %}
     ```
+
+12. Modify the base template from the _tweets_ app as well for quick access on the profile page by linking it properly to the dedicated link tag in the navigation bar.<br>
+
+    _twitterclone/tweets/templates/tweets/base.html_
+
+    ```html
+    <a class="nav-link menuItem" href="{% url 'profile' %}">
+      <i class="fa fa-user fa-3" aria-hidden="true"></i> Profile
+    </a>
+    ```
+
+13. You may now run the project again and check if the functionality is working properly.
+
+    ```bash
+    (twtclone)$ python manage.py runserver
+    ```
+
+    Your updated local directory should look similar to this:
+
+    ```
+    twitter-clone/
+    |__ accounts/
+    |   |__ __pycache__/
+    |   |__ migrations/
+    |   |__ accounts/
+    |   |   |__ templates/
+    |   |       |__ base.html
+    |   |       |__ login.html
+    |   |       |__ register.html
+    |   |       |__ registration-success.html
+    |   |       |__ reset-password-complete.html
+    |   |       |__ reset-password-confirm.html
+    |   |       |__ reset-password-sent.html
+    |   |       |__ reset-password.html
+    |   |__ __init__.py
+    |   |__ admin.py
+    |   |__ apps.py
+    |   |__ decorators.py
+    |   |__ forms.py
+    |   |__ models.py
+    |   |__ tests.py
+    |   |__ urls.py
+    |   |__ views.py
+    |__ media/
+    |__ static/
+    |   |__ css/
+    |       |__ index.css
+    |   |__ img/
+    |   |__ js/
+    |__ tweets/
+    |   |__ __pycache__/
+    |   |__ migrations/
+    |   |__ tweets/
+    |   |   |__ templates/
+    |   |       |__ all-tweets.html
+    |   |       |__ base.html
+    |   |       |__ update-tweet.html
+    |   |__ __init__.py
+    |   |__ admin.py
+    |   |__ apps.py
+    |   |__ models.py
+    |   |__ tests.py
+    |   |__ urls.py
+    |   |__ views.py
+    |__ twitter-clone/
+    |   |__ __pycache__/
+    |   |__ __init__.py
+    |   |__ .env
+    |   |__ asgi.py
+    |   |__ settings.py
+    |   |__ urls.py
+    |   |__ wsgi.py
+    |__ .gitignore
+    |__ db.sqlite3
+    |__ manage.py
+    ```
+
+    <br>
+
+# User _timelines_ using dynamic routing
+
+Another feature to finish of the project is to assign a specific _timeline_ pages for each user. This page will display some profile information about the user followed by his/her latest "tweets".
+
+1. In the _tweets_ app subdirectory, start by creating a preliminary view for user timeline and add a corresponding dynamic URL path which take the user ID as an argument. There is no need for a post method since this view will not be submitting anything. You may follow the code below. <br>
+
+   _twitterclone/tweets/views.py_
+
+   ```python
+    ...
+
+    class UserTimeline(View):
+    @method_decorator(login_required(login_url='/'))
+    def get(self, request, *args, **kwargs):
+        pass
+   ```
+
+   _twitterclone/tweets/urls.py_
+
+   ```python
+    urlpatterns = [
+        path('all-tweets', views.AllTweets.as_view(), name='all-tweets'),
+        path('delete-tweet/<id>', views.deleteTweet, name='delete-tweet'),
+        path('edit-tweet/<id>', views.EditTweet.as_view(), name='edit-tweet'),
+        path('user-timeline/<id>', views.UserTimeline.as_view(), name='user-timeline'), # Add a URL for the UserTimeline view
+    ]
+   ```
+
+2. Afterwards, proceed on creating a template for the view. Update the get method as well to assign the template on render and add the functionalities as well. You may follow the code below.<br>
+
+   _twitterclone/tweets/views.py_
+
+   ```python
+    ...
+
+    class UserTimeline(View):
+    @method_decorator(login_required(login_url='/'))
+    def get(self, request, *args, **kwargs):
+        profile_id = self.kwargs['id'] # Get the profile ID from the URL
+        profile = Profile.objects.get(id=profile_id) # Get the profile instance using the ID
+        tweets = Tweet.objects.filter(
+            user=profile_id).order_by('-date_created') # Get all the tweets assigned to the user with the assigned ID
+        return render(request, template_name='tweets/user-timeline.html', context={'profile': profile, 'tweets': tweets})
+
+   ```
+
+   _twitterclone/tweets/templates/tweets/user-timeline.html_
+
+   ```html
+   {% extends 'tweets/base.html' %} {% load static %} {% block title %} Twitter
+   Clone | {{ profile.username }}'s timeline {% endblock %} {% block content %}
+   <style>
+     .iconBtn {
+       color: rgb(81, 91, 102);
+       font-size: large;
+       font-weight: 1000;
+     }
+
+     .iconBtn:hover {
+       color: #2f98d4;
+     }
+   </style>
+
+   <div class="container allTweets">
+     <div>
+       <div class="card shadow mb-5 rounded border-0">
+         <div class="p-4">
+           <div class="container-fluid">
+             <div class="row">
+               <div class="col col">
+                 <img
+                   class="my-auto"
+                   style="max-height: 10rem;"
+                   alt="{{ tweet.user.username }}"
+                   src="{% if profile.profile_pic %}{{ profile.profile_pic.url }}{% else %}https://icon-library.com/images/generic-user-icon/generic-user-icon-19.jpg{% endif %}"
+                 />
+                 <h2 class="card-title">
+                   {{ profile.first_name}} {{ profile.last_name}}
+                 </h2>
+                 <p class="text-muted" style="margin-top: -1em;">
+                   @{{ profile.username }}
+                 </p>
+               </div>
+
+               <div class="col-10">
+                 <h3>About</h3>
+                 <hr />
+                 <p>
+                   <span class="text-muted" style="font-size: 0.8em;"
+                     >Account was created on {{ profile.date_created }}</span
+                   ><br />
+                   <b>Name: </b>{{ profile.first_name}} {{
+                   profile.last_name}}<br />
+                   <b>Username: </b>{{ profile.username}}<br />
+                   <b>Email: </b>{{ profile.email}}
+                 </p>
+
+                 <h3>Latest Tweet</h3>
+                 <hr />
+                 <div>
+                   <p>
+                     <span class="text-muted" style="font-size: 0.8em;"
+                       >{{ tweets.first.date_created }}</span
+                     ><br />
+                     {{ tweets.first }}
+                   </p>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="card-body"></div>
+       </div>
+     </div>
+     <div>
+       <h1>{{ profile.first_name }} {{ profile.last_name }}'s Timeline</h1>
+       <div class="container">
+         <!-- Cards -->
+         {% for tweet in tweets %}
+         <div class="card shadow mb-5 rounded border-0">
+           <div
+             class="card-header text-white border-0"
+             style="background-color: #2f98d4;"
+           >
+             <div class="row row-cols-auto">
+               <div class="col my-auto">
+                 <img
+                   class="tweet-profile-img my-auto"
+                   alt="{{ tweet.user.username }}"
+                   src="{% if tweet.user.profile_pic %}{{ tweet.user.profile_pic.url }}{% else %}https://icon-library.com/images/generic-user-icon/generic-user-icon-19.jpg{% endif %}"
+                 />
+               </div>
+               <div class="col my-auto">
+                 <!-- Name -->
+                 <h4 class="my-auto">
+                   {{ tweet.user.first_name }} {{ tweet.user.last_name }}
+                 </h4>
+                 <!-- End Name -->
+                 <!-- Username -->
+                 <span>@{{ tweet.user.username }}</span>
+                 <!-- End Username -->
+               </div>
+             </div>
+           </div>
+           <div class="card-body">
+             <p class="card-text text-wrap">
+               <!-- Date Created -->
+               <span class="text-muted timestamp"
+                 >{{ tweet.date_created }}</span
+               >
+               <!-- End Date Created -->
+               <br />
+               <!-- Message -->
+               {{ tweet.msg }}
+               <!-- End Message -->
+             </p>
+             <br />
+             <!-- User only -->
+             {% if tweet.user.id == user.profile.user.id %}
+             <div class="pull-right row row-cols-auto">
+               <div class="col">
+                 <!-- Edit -->
+                 <a
+                   href="/tweets/edit-tweet/{{ tweet.id }}"
+                   style="background: none; border: none;"
+                 >
+                   <i
+                     class="iconBtn fa fa-pencil-square-o fa-3"
+                     aria-hidden="true"
+                   ></i>
+                 </a>
+                 <!-- End Edit -->
+               </div>
+               <div class="col">
+                 <!-- Delete -->
+                 <form
+                   onsubmit="return confirm('Are you sure you want to delete the tweet: {{ tweet.msg }} ?');"
+                   method="POST"
+                   action="{% url 'delete-tweet' tweet.id  %}"
+                 >
+                   {% csrf_token %}
+                   <button
+                     name="deletetweet"
+                     value="{{ tweet.id }}"
+                     type="submit"
+                     style="background: none; border: none;"
+                   >
+                     <i
+                       class="iconBtn fa fa-trash-o fa-3"
+                       aria-hidden="true"
+                     ></i>
+                   </button>
+                 </form>
+                 <!-- End Delete -->
+               </div>
+             </div>
+             {% else %}
+             <br />
+             {% endif %}
+             <!-- End User only -->
+           </div>
+         </div>
+         {% endfor %}
+         <!-- End Cards -->
+       </div>
+     </div>
+   </div>
+   {% endblock %}
+   ```
+
+3. For better implementation, update the `all-tweets.html` template and enclose the name and username into a hyperlink that redirects to that user's timeline. You may follow the code implementation below.<br>
+
+   _twitterclone/tweets/templates/tweets/all-tweets.html_
+
+   ```html
+   ...
+
+   <a href="/tweets/user-timeline/{{ tweet.user.id }}">
+     <img
+       class="tweet-profile-img my-auto"
+       alt="{{ tweet.user.username }}"
+       src="{% if tweet.user.profile_pic %}{{ tweet.user.profile_pic.url }}{% else %}https://icon-library.com/images/generic-user-icon/generic-user-icon-19.jpg{% endif %}"
+     />
+   </a>
+
+   ...
+
+   <a
+     class="text-white"
+     href="/tweets/user-timeline/{{ tweet.user.id }}"
+     style="text-decoration: none;"
+   >
+     <!-- Name -->
+     <h4 class="my-auto">
+       {{ tweet.user.first_name }} {{ tweet.user.last_name }}
+     </h4>
+     <!-- End Name -->
+     <!-- Username -->
+     <span>@{{ tweet.user.username }}</span>
+     <!-- End Username -->
+   </a>
+   ```
+
+4. Proceed on properly modiying the `base.html` template for the _tweets_ app as well and link the brand header and the home tag to the _All Tweets_ page (this may be declared as `/` since it automatically redirects to `tweets/all-tweets` when the user is logged in as we have specified in the decorator). The timeline tag on other hand needs to be linked to the user's timeline. You may follow the update for the code below.<br>
+
+   _twitterclone/tweets/templates/tweets/all-tweets.html_
+
+   ```html
+       <header class="navigationHeader sticky-top">
+         <nav
+           class="navbar navbar-expand-lg navbar-dark bg-primary container-fluid"
+         >
+           <div class="container">
+             <!-- Link to / -->
+             <a class="navbar-brand navBrand" href="/"
+               >Twitter<span class="brand">CLONE</span></a
+             >
+             <button
+               class="navbar-toggler"
+               type="button"
+               data-toggle="collapse"
+               data-target="#navbarTogglerDemo02"
+               aria-controls="navbarTogglerDemo02"
+               aria-expanded="false"
+               aria-label="Toggle navigation"
+             >
+               <span class="navbar-toggler-icon"></span>
+             </button>
+
+             <div
+               class="collapse navbar-collapse align-items-center"
+               id="navbarTogglerDemo02"
+             >
+               <ul class="nav navbar-nav ms-auto align-items-center">
+                 <li class="nav-item">
+                   <!-- Link to / -->
+                   <a class="nav-link menuItem" href="/"
+                     ><i class="fa fa-home fa-3" aria-hidden="true"></i> Home</a
+                   >
+                 </li>
+                 <li class="nav-item">
+                   <!-- Link to user timeline -->
+                   <a
+                     class="nav-link menuItem"
+                     href="/tweets/user-timeline/{{ user.profile.id }}"
+                     ><i class="fa fa-newspaper-o fa-3" aria-hidden="true"></i>
+                     Timeline</a
+                   >
+                 </li>
+                 <li class="nav-item">
+                   <a class="nav-link menuItem" href="{% url 'profile' %}"
+                     ><i class="fa fa-user fa-3" aria-hidden="true"></i>
+                     Profile</a
+                   >
+                 </li>
+                 <li class="nav-item">
+                   <a class="nav-link menuItem" href="/logout"
+                     ><i class="fa fa-sign-out fa-3" aria-hidden="true"></i>
+                     Logout</a
+                   >
+                 </li>
+               </ul>
+             </div>
+           </div>
+         </nav>
+       </header>
+     </body>
+   </html>
+   ```
