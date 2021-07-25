@@ -138,7 +138,7 @@ USE_TZ = True
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, "livestatic", "static-root")
 
 STATICFILES_DIRS = [
     STATIC_DIR,
@@ -158,7 +158,7 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 # Media
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "live-static", "media-root")
 MEDIA_URL = '/media/'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
