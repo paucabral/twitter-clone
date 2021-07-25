@@ -3154,14 +3154,22 @@ For better user experience, the user profile may be modified by adding a profile
 
 4. Running the server again, you will notice upon loging in to Admin Panel that an image upload field has been added to the _Profile_ model. This however is still not useable since we still need to configure our media folder to store the uploaded images.
 
-5. Open `settings.py` and add the following declarations at the end of the file for the root media directory and path. You may follow the code below.<br>
+5. Open `settings.py` and add the following declarations towards the end of the file, just above the static directory configurations, for the root media directory and path. Add the `MEDIA_ROTT` as well on the list of `STATICFILES_DIRS` (this will be useful later for _Heroku_ deployment). You may follow the code below.<br>
 
    _twitterclone/twitterclone/settings.py_
 
    ```python
+   ...
+
     # Media
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     MEDIA_URL = '/media/'
+
+    ...
+
+    STATICFILES_DIRS = [
+      STATIC_DIR, MEDIA_ROOT
+    ]
    ```
 
 6. Head over now to the base `urls.py` of the project and import the built-in _settings_ library. Then, proceed on appending the media URL to the `urlpatterns` array by following the code below (append the code at the end of the file).<br>
