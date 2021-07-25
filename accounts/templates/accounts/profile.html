@@ -1,0 +1,138 @@
+{% extends 'tweets/base.html' %}
+{% load static %}
+
+{% block title %}
+Twitter Clone | Tweets
+{% endblock %}
+
+{% block content %}
+
+<style>
+  .nounderline {
+    color: rgb(105, 199, 236);
+    text-decoration: none;
+  }
+
+  .nounderline:hover {
+    color: rgb(117, 235, 235);
+    text-decoration: underline;
+  }
+
+  .signin {
+    display: block;
+  }
+
+  .updateprofile {
+    background-color: rgb(46, 118, 136) !important;
+  }
+
+  .updateprofile:hover {
+    background-color: rgb(60, 135, 206) !important;
+  }
+
+  @media (max-width:480px) {
+    .signin {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+  }
+</style>
+
+<div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="card card-signin my-3">
+          <div class="card-body">
+            <h3 class="text-center">{% if user.profile.first_name|length > 0 %}{{ user.profile.first_name }} {{ user.profile.last_name }}{% else %}{{ user.username }}{% endif %}</h3>
+            <div class="text-muted text-center" style="text-align: center;">@{{ user.profile.username }}</div>
+            <br>
+
+            <div class="form-signin">
+              <div class="form-label-group">
+                <div class="row">
+                  <img class="profile-pic"
+                    src="{% if request.user.profile.profile_pic %}{{ request.user.profile.profile_pic.url }}{% else %}https://icon-library.com/images/generic-user-icon/generic-user-icon-19.jpg{% endif %}" />
+                </div>  
+              </div>
+              <a class="btn text-uppercase text-white" href="/" style="width: 100%; font-weight: bold; border-radius: 0.5em;"><i class="fa fa-home fa-3"
+                  aria-hidden="true"></i> Go Back to Home</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="card card-signin my-3">
+          <div class="card-body">
+            <h3 class="text-center">Profile Information</h3>
+            <div>
+              <p class="text-muted" style="text-align: center;">Account was created on: {{ user.profile.date_created }}</p>
+            </div>
+            <hr>
+            <br>
+            
+            <form class="form-signin" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="form-label-group">
+                <div class="row">
+                  <div class="col form-label-group">
+                    {{ form.first_name }}
+                    <label for="id_first_name">First Name</label>
+                  </div>
+                  <div class="col form-label-group">
+                    {{ form.last_name }}
+                    <label for="id_last_name">Last Name</label>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="form-label-group">
+                    {{ form.email }}
+                    <label for="id_email">Email</label>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="form-label-group">
+                    {{ form.username }}
+                    <label for="id_username">Username</label>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="form-label-group">
+                    <hr>
+                    <br>
+                    {% for i in form.profile_pic %}
+                      <div class="mb-2">
+                        {{ i }}
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+      
+              <hr class="my-3">
+
+              <button type="submit" class="btn text-uppercase updateprofile my-3" style="width: 100%;">Update Profile Information</button>
+      
+            </form>
+      
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const profile_pic = document.querySelector('input[name="profile_pic"');
+  profile_pic.classList.add('form-control-file');
+</script>
+
+{% endblock %}
