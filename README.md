@@ -3933,3 +3933,286 @@ Another feature to finish of the project is to assign a specific _timeline_ page
    |__ db.sqlite3
    |__ manage.py
    ```
+
+   <br>
+
+# Preparing for deployment
+
+In this section, we will be discussing some of the modifications to be made inside the settings.py directory before actual the actual deployment to _Heroku_.
+
+1. By default, a _Django_ web application allows only the localhost to connect. This is a security measure against attacks from malicious headers. This means however that we may need to selectively allow what hosts to be included. This would include the localhost itself and its loopback address, as well as the domain to be taken by the application. In this case, we will store the domain to the `.env` file so that we can easily change it in our production environment if we need to. Start by opening the `settings.py` file and modify the entries in `ALLOWED_HOST`. You may follow the code below: <br>
+
+   _twitterclone/twitterclone/settings.py_
+
+   ```python
+   ALLOWED_HOSTS = ['localhost','127.0.0.1',config('DOMAIN_NAME')]
+   ```
+
+2. Next is to add the variable `DOMAIN_NAME` inside the `.env` file. For now, just the value `0.0.0.0` on it. We will change this later to our acquired project domain.
+
+   _twitterclone/twitterclone/.env_
+
+   ```
+    DOMAIN_NAME=0.0.0.0
+   ```
+
+   _Note: Make sure that there are no spaces in between the variable name, equal sign, and the value itself._
+
+3. Since we will be deploying to `Heroku`, there are a few conifgurations to be made with regards to the static and media files since _Django_ does not support serving static files in production. _Heroku_ however has a project called _Whitenoise_ which we will incorporating to allow static files serving with our _Heroku_ app. Firstly, install _whitenoise_ using `pip.
+
+   ```bash
+   (twtclone)$ pip install whitenoise
+   ```
+
+4. Next, add the declaration `'whitenoise.middleware.WhiteNoiseMiddleware'` at the top of `MIDDLEWARE_CLASSES` inside `settings.py`.<br>
+
+   _twitterclone/twitterclone/settings.py_
+
+   ```python
+   MIDDLEWARE = [
+     'django.middleware.security.SecurityMiddleware',
+     'whitenoise.middleware.WhiteNoiseMiddleware', # Add it right here just below the security middleware
+     'django.contrib.sessions.middleware.SessionMiddleware',
+     'django.middleware.common.CommonMiddleware',
+     'django.middleware.csrf.CsrfViewMiddleware',
+     'django.contrib.auth.middleware.AuthenticationMiddleware',
+     'django.contrib.messages.middleware.MessageMiddleware',
+     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+   ]
+   ```
+
+5. Finally, at the end of `settings.py`, you may now add this line of code to enable _gzip_ functionality.<br>
+
+   _twitterclone/twitterclone/settings.py_
+
+   ```python
+   STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+   ```
+
+6. Next is to modify our database. By default, we have been using _SQLite_ as our development databse. While _SQLite_ has been a great development environment for us, it is not ideal for production. Moreover, _Heroku_ does not support the use of _SQLite_ database with _Django_ applications. What we can do is to use our _SQLite_ database during development, and comment them for production. What we will be using for production instead is a _PostgreSQL_ which has a free addon in _Heroku_. In the `settings.py`, locate the dedicated variable `DATABASES` holding a dictionary containing details for declaration of database. You may comment this out when pushing for production, but use them during development.
+
+   _twitterclone/twitterclone/settings.py_
+
+   ```python
+   # Comment this out for production. Uncomment these lines in case you need to go back in development.
+   """
+   DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+    """
+   ```
+
+7. Afterwards, proceed on adding the necessary declaration for _PostgreSQL_ database. We will be setting our database credentials as environmental variables. You may connect your empty (but initialized) _PostgreSQL_ as well in your local machine, then declare the values for credentials using your `.env` file. Simply follow the code below:<br>
+
+   _twitterclone/twitterclone/settings.py_
+
+   ```python
+   # Comment this out during development. Uncomment these lines for production or if you are using a PostgreSQL database in your local machine during development. Just change the environmental variable values accordingly.
+   DATABASES = {
+      'default': {
+          'ENGINE': 'django.db.backends.backends.postgresql_psycopg2',
+          'NAME': config('DB_NAME'),
+          'USER': config('DB_USER'),
+          'PASSWORD': config('DB_PASSWORD'),
+          'HOST': config('DB_HOST'),
+          'PORT': config('DB_PORT'),
+      }
+    }
+   ```
+
+   _twitterclone/twitterclone/.env_
+
+   ```
+    DB_NAME=your_database_name
+    DB_USER=your_database_user
+    DB_PASSWORD=your_database_password
+    DB_HOST=your_database_host_or_localhost
+    DB_PORT=your_database_port_or_default_at_5432
+   ```
+
+   _Note: Make sure that there are no spaces in between the variable name, equal sign, and the value itself. You may leave these variables as blank during development if you are using SQLite._
+
+8. To allow connection to PostgreSQL however, another dependency needs to be installed. Proceed on installing _psycopg2_ via `pip`. Proceed on installing the package _gunicorn_ as well since we will be needing it during production (_gunicorn_ will allow the application to run on multiple threads).
+
+   ```bash
+   (twtclone)$ pip install psycopg2
+   (twtclone)$ pip install gunicorn
+   ```
+
+9. Next is to create text files containing our dependencies. These are the packages we have installed using `pip` for our _Django_ project. Luckily, we have been using a virtual environment. We can easily store these dependencies inside `requirements.txt` by issuing the command below.
+
+   ```bash
+   (twtclone)$ pip freeze > requirements.txt
+   ```
+
+   The contents of your `requirements.txt` file should look similar to this.
+
+   ```
+   asgiref==3.4.1
+   Django==3.2.5
+   gunicorn==20.1.0
+   Pillow==8.3.1
+   psycopg2==2.9.1
+   python-decouple==3.4
+   pytz==2021.1
+   sqlparse==0.4.1
+   whitenoise==5.3.0
+   ```
+
+10. Create a file on the root of your project directory (`twitterclone/`) as well named `runtime.txt`. This is used to specify the specific _Python_ version used for the development of the project. This is a great practice to ensure maximum compatibility with dependencies as we had during development using our local machine. In your terminal, issue the command `python --version` to check which specific version of _Python_ is installed.
+
+    ```bash
+    (twtclone)$ python --version
+    Python 3.9.0
+    ```
+
+    In my case, the version installed was _3.9.0_. Take note of this add that information inside the `runtime.txt` file. Follow the format below carefully (you may change the version number after the dash `-` to the specific _Python_ version you used).
+
+    _twitterclone/runtime.txt_
+
+    ```
+    python-3.9.0
+    ```
+
+11. Afterwards, we will be needing another file called `Procfile`. This will contain the necessary commands/instructions needed by _Heroku_ to build our application. Simply copy the contents of the file below.
+
+    _twitterclone/Procfile_
+
+    ```
+    release: python manage.py migrate --no-input
+    web: gunicorn project_name.wsgi
+    ```
+
+12. We are now ready with the necessary configurations. Your updated local directory should look similar to this:
+
+```
+twitter-clone/
+|__ accounts/
+|   |__ __pycache__/
+|   |__ migrations/
+|   |__ accounts/
+|   |   |__ templates/
+|   |       |__ base.html
+|   |       |__ login.html
+|   |       |__ profile.html
+|   |       |__ register.html
+|   |       |__ registration-success.html
+|   |       |__ reset-password-complete.html
+|   |       |__ reset-password-confirm.html
+|   |       |__ reset-password-sent.html
+|   |       |__ reset-password.html
+|   |__ __init__.py
+|   |__ admin.py
+|   |__ apps.py
+|   |__ decorators.py
+|   |__ forms.py
+|   |__ models.py
+|   |__ tests.py
+|   |__ urls.py
+|   |__ views.py
+|__ media/
+|__ static/
+|   |__ css/
+|       |__ index.css
+|   |__ img/
+|       |__ favicon.png
+|   |__ js/
+|__ tweets/
+|   |__ __pycache__/
+|   |__ migrations/
+|   |__ tweets/
+|   |   |__ templates/
+|   |       |__ all-tweets.html
+|   |       |__ base.html
+|   |       |__ update-tweet.html
+|   |       |__ user-timeline.html
+|   |__ __init__.py
+|   |__ admin.py
+|   |__ apps.py
+|   |__ models.py
+|   |__ tests.py
+|   |__ urls.py
+|   |__ views.py
+|__ twitter-clone/
+|   |__ __pycache__/
+|   |__ __init__.py
+|   |__ .env
+|   |__ asgi.py
+|   |__ settings.py
+|   |__ urls.py
+|   |__ wsgi.py
+|__ .gitignore
+|__ db.sqlite3
+|__ manage.py
+|__ Procfile
+|__ requirements.txt
+|__ runtime.txt
+```
+
+   <br>
+
+# Deploying to Heroku
+
+1. Head over to [Heroku](https://www.heroku.com) to create a new application. If you have not created an account yet, head over [here](https://signup.heroku.com/).<br>
+   ![1.png](./instructions/1.png)
+
+2. In your dashboard click on New > Create new app.<br>
+   ![2.png](./instructions/2.png)
+
+3. Specify an app name. Make sure it is not already taken.<br>
+   ![3.png](./instructions/3.png)
+
+4. You will be greeted with the _Deployment_ section after creating the app.<br>
+   ![4.png](./instructions/4.png)
+
+5. Leave the deployment section for now and head over to the _Resources_ section.<br>
+   ![5.png](./instructions/5.png)
+
+6. In the _Add-ons_ search bar, go ahead and search _Heroku Postgres_, then click it.<br>
+   ![6.png](./instructions/6.png)
+
+7. Select the _Hobby Dev - Free_ plan to get the free tier add-on. While it has its limitations, it will be good enough for our project. Proceed on clicking _Submit Order Form_ afterwards.<br>
+   ![7.png](./instructions/7.png)
+
+8. _Heroku Postgres_ should now be present in the list add-ons.<br>
+   ![8.png](./instructions/8.png)
+
+9. Click the **Heroku Postgres** link and you will be redirected to the interface for the database. You will be greeted with the _Overview_ section indicating the number of connections to the database, number of row entries, tables, and the data size it is occupying.<br>
+   ![9.png](./instructions/9.png)
+
+10. For now, head over to the the _Settings_ section to see the database credentials.<br>
+    ![10.png](./instructions/10.png)
+
+11. Click on _View Credentials..._. It will then show the credentials for the database. Take note of these values as we will be declaring them in the environmental variables for our _Heroku_ project.<br>
+    ![11.png](./instructions/11.png)
+    <br>
+    _Note: You may copy the credentials to your .env file if necessary to test remote connection from your local machine._
+
+12. Head back to the page of your _Heroku_ project then click on _Settings_.<br>
+    ![12.png](./instructions/12.png)
+
+13. Scroll down and click on \*_Reveal Config Vars_. Proceed on adding the keys and values of the environmental variables declared inside your `.env` file. This is where the values found for the database credentials will be added as well. Furthermore, do not forget to set the `DEBUG` value to `False` since this will be a production environment. For the `DOMAIN_NAME` on the other hand, set it to the domain of your project. This will be _'name-of-project'.herokuapp.com_. In this case, the name of my domain is _paucabral-twitterclone.herokuapp.com_.<br>
+    ![13.png](./instructions/13.png)
+    <br>
+    _Note: Do not delete the first entry: DATABASE_URL._
+
+14. Just below the _Config Vars_ section, you will see the _Buildpacks_ section. Click on **Add buildpack**.
+    <br>
+    ![14.png](./instructions/14.png)
+    <br>
+
+15. Select _Python_ then click **Save changes**.
+    <br>
+    ![15.png](./instructions/15.png)
+    <br>
+
+16. Finally, headback to the _Deploy_ section of you _Heroku_ application and select _Github_ as the _Deployment method_. Search and select your project repository and click on **Connect**.<br>
+    ![16.png](./instructions/16.png)
+    <br>
+
+17. Select the _main_ branch as the branch to deploy to in the _Automatic deploys_ section. Click on _Enable Automatic Deploys_ as well. This way, everytime we push our code into the _main_ branch of our **Github** repository, it will automatically trigger the deployment of changes to _Heroku_.
+
+18. Now, save make sure to check your code once more and push it to your **Github** repository.
