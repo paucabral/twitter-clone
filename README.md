@@ -3843,7 +3843,29 @@ Another feature to finish of the project is to assign a specific _timeline_ page
    </html>
    ```
 
-5. The project should be fully functional by now. All that is left to do is to get it ready for production. You may now proceed on running the project and testing all the functionalities implemented.
+5. As a finishing touch, you may proceed as well on adding a _favicon_ to your web application pages. Simply add a favicon file in the `static/img` directory (in this case, the file used was `favicon.png`), and declare it as a `shortcut icon` in the `base.html` templates in both the _accounts_ app and the _tweets_ app, inside the `<head>` tag, just above the `<title>` tag.<br>
+
+   _twitterclone/accounts/templates/accounts/base.html_
+
+   ```html
+   <link
+     rel="shortcut icon"
+     type="image/png"
+     href="{% static 'img/favicon.png' %}"
+   />
+   ```
+
+   _twitterclone/tweets/templates/tweets/base.html_
+
+   ```html
+   <link
+     rel="shortcut icon"
+     type="image/png"
+     href="{% static 'img/favicon.png' %}"
+   />
+   ```
+
+6. The project should be fully functional by now. All that is left to do is to get it ready for production. You may now proceed on running the project and testing all the functionalities implemented.
 
    ```bash
    (twtclone)$ python manage.py runserver
@@ -3881,6 +3903,7 @@ Another feature to finish of the project is to assign a specific _timeline_ page
    |   |__ css/
    |       |__ index.css
    |   |__ img/
+   |       |__ favicon.png
    |   |__ js/
    |__ tweets/
    |   |__ __pycache__/
