@@ -160,3 +160,5 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 # Media
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
