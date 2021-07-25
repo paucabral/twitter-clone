@@ -4092,9 +4092,9 @@ In this section, we will be discussing some of the modifications to be made insi
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.messages',
-        'cloudinary_storage', # Add this line here
-        'cloudinary', # Add this line here as well. Be are above the staticfiles app.
         'django.contrib.staticfiles',
+        'cloudinary_storage', # Add this line here
+        'cloudinary', # Add this line here as well. Be sure that these lines are above below the staticfiles app.
         'accounts',
         'tweets',
     ]
