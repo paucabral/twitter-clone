@@ -4116,6 +4116,7 @@ In this section, we will be discussing some of the modifications to be made insi
         'API_SECRET': config('CLOUDINARY_API_SECRET'),
     }
 
+    # Add this just above the STATICFILES_STORAGE variable
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
     ```
 
@@ -4297,7 +4298,6 @@ _Note: Make sure to specify the project name in the last line before the extensi
 
 13. Head to your _Cloudinary_ dashboard and take note of the account credentials presented. You may added them to your local `.env` file for safekeeping as well.<br>
     ![10-2.png](./instructions/10-2.PNG)<br>
-    _Note: This feature needs a billing information in the account. Nonetheless, this will not be charged since this add-on is free tier._
 
 14. Head back to the page of your _Heroku_ project then click on _Settings_.<br>
     ![12.png](./instructions/12.PNG)
