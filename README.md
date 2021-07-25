@@ -4283,7 +4283,7 @@ twitter-clone/
 ### Some of the problems you might encounter
 
 1. The free tier _Heroku Postgres_ database has a storage capacity of 1GB and a limit of 10,000 row entries across all tables. You may need to adapt to another database provider or use paid plans if you need a bigger capacity.
-2. _Heroku Whietnoise_ is not the best solution. You may notice occassionally that files are being served slow or not at all. It is not as reliable as serving your static and media files in other cloud providers' platform.
+2. _Heroku Whitenoise_ is not the best solution. You may notice occassionally that files are being served slow or not at all. **One workaround is to set the `DEBUG` as `True`**. It is not however the ideal method, as it is not as reliable as serving your static and media files in other cloud providers' platform. This will delete the previous media uploads from last commit/deployment and will show the debug and error logs in your application (hence, instead of displaying error 404 pages, the debug information will be exposed to the users).
 
 Nonetheless, this is a great step in learning which technology applies best for each use case.
 <br>
