@@ -4083,8 +4083,10 @@ In this section, we will be discussing some of the modifications to be made insi
 
     ```
     release: python manage.py migrate --no-input
-    web: gunicorn project_name.wsgi
+    web: gunicorn twitterclone.wsgi
     ```
+
+    _Note: Make sure to specify the project name in the last line before the extension .wsgi. In this case, the project name is twitter clone, hence the file is specified as twitterclone.wsgi._
 
 12. We are now ready with the necessary configurations. Your updated local directory should look similar to this:
 
@@ -4228,4 +4230,8 @@ twitter-clone/
 
     Otherwise, if your code already resides in the _main_ branch, you scroll down and select the _main_ branch and the **Deploy Branch** button.<br>
     ![19-4.png](./instructions/19-4.png)
+    <br>
+
+20. Head over to the _Activity_ section of your _Heroku_ app and check if the build has succeeded and the web application was deployed successfully.<br>
+    ![20.png](./instructions/20.png)
     <br>
