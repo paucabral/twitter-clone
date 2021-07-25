@@ -4013,7 +4013,7 @@ In this section, we will be discussing some of the modifications to be made insi
    # Comment this out during development. Uncomment these lines for production or if you are using a PostgreSQL database in your local machine during development. Just change the environmental variable values accordingly.
    DATABASES = {
       'default': {
-          'ENGINE': 'django.db.backends.backends.postgresql_psycopg2',
+          'ENGINE': 'django.db.backends.postgresql_psycopg2',
           'NAME': config('DB_NAME'),
           'USER': config('DB_USER'),
           'PASSWORD': config('DB_PASSWORD'),
@@ -4202,17 +4202,32 @@ twitter-clone/
 14. Just below the _Config Vars_ section, you will see the _Buildpacks_ section. Click on **Add buildpack**.
     <br>
     ![14.png](./instructions/14.png)
-    <br>
 
 15. Select _Python_ then click **Save changes**.
     <br>
     ![15.png](./instructions/15.png)
-    <br>
 
 16. Finally, headback to the _Deploy_ section of you _Heroku_ application and select _Github_ as the _Deployment method_. Search and select your project repository and click on **Connect**.<br>
     ![16.png](./instructions/16.png)
-    <br>
 
 17. Select the _main_ branch as the branch to deploy to in the _Automatic deploys_ section. Click on _Enable Automatic Deploys_ as well. This way, everytime we push our code into the _main_ branch of our **Github** repository, it will automatically trigger the deployment of changes to _Heroku_.
+    ![17.png](./instructions/17.png)
 
-18. Now, save make sure to check your code once more and push it to your **Github** repository.
+18. Now, save make sure to check your code once more and push it to your **Github** repository.<br>
+    ![18.png](./instructions/18.png)
+
+19. If you are using another branch (like me in the previous instruction), issue a pull request in your **Github** repository and merge the changes.
+    ![19-1.png](./instructions/19-1.png)
+    <br>
+
+    ![19-2.png](./instructions/19-2.png)
+    <br>
+
+    ![19-3.png](./instructions/19-3.png)
+    <br>
+
+    Otherwise, if your code already resides in the _main_ branch, you scroll down and select the _main_ branch and the **Deploy Branch** button.<br>
+    ![19-4.png](./instructions/19-4.png)
+    <br>
+
+20.
