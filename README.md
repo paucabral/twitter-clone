@@ -4,7 +4,7 @@
 
 <br>
 
-This is TwitterCLONE, a simple Twitter clone made using Django framework in Python.
+This is Twitter**CLONE**, a simple Twitter clone made using Django framework in Python.
 
 This tutorial tackles the development of a Django web application up to its deployment to Heroku.
 
@@ -4229,5 +4229,3 @@ twitter-clone/
     Otherwise, if your code already resides in the _main_ branch, you scroll down and select the _main_ branch and the **Deploy Branch** button.<br>
     ![19-4.png](./instructions/19-4.png)
     <br>
-
-20.
