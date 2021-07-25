@@ -85,7 +85,7 @@ class Profile(View):
     @method_decorator(login_required(login_url='/'))
     def post(self, request, *args, **kwargs):
         user = request.user
-        user_instance = ProfileModel.objects.get(id=user.id)
+        user_instance = ProfileModel.objects.get(user=user)
         account_instance = User.objects.get(id=user.id)
 
         form = ProfileForm(request.POST, request.FILES, instance=user_instance)

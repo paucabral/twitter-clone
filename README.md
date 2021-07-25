@@ -1187,7 +1187,6 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
 
    ```python
    from .models import * # imports all models in tweets app
-
    admin.site.register(Tweet)
    ```
 
@@ -1540,7 +1539,7 @@ In **Django**, we have the option to manually handle theregistration of accounts
               username = form.cleaned_data['username']
               email = form.cleaned_data['email']
 
-              profile = ProfileModel(user=user, first_name=first_name,
+              profile = Profile(user=user, first_name=first_name,
                                 last_name=last_name, email=email, username=username)
               profile.save()
               return redirect('/registration-success/') # Notice that this path, nor its template is still not created. This will be craeted later on.
@@ -3269,6 +3268,33 @@ For better user experience, the user profile may be modified by adding a profile
 
     ...
 
+    class Register(View):
+    @method_decorator(unauthenticated_user)
+    def get(self, request, *args, **kwargs):
+        form = CreateUserForm()
+        return render(request, template_name='accounts/register.html', context={'form': form})
+
+    @method_decorator(unauthenticated_user)
+    def post(self, request, *args, **kwargs):
+        form = CreateUserForm(request.POST)
+
+        if form.is_valid():
+            user = form.save()
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+
+            # Update this to profile model as well.
+            profile = ProfileModel(user=user, first_name=first_name,
+                                   last_name=last_name, email=email, username=username)
+            profile.save()
+            return redirect('/registration-success/')
+        else:
+            messages.error(request, 'There was an error.')
+        return render(request, template_name='accounts/register.html', context={'form': form})
+    ...
+
     class Profile(View):
     @method_decorator(login_required(login_url='/'))
     def get(self, request, *args, **kwargs):
@@ -3283,7 +3309,7 @@ For better user experience, the user profile may be modified by adding a profile
     @method_decorator(login_required(login_url='/'))
     def post(self, request, *args, **kwargs):
         user = request.user
-        user_instance = ProfileModel.objects.get(id=user.id)
+        user_instance = ProfileModel.objects.get(user=user)
         account_instance = User.objects.get(id=user.id)
 
         # accept form instance with file upload
@@ -4251,3 +4277,7 @@ twitter-clone/
 24. Issue the command `python manage.py createsuperuser` and follow the prompts to create your administrator account.<br>
     ![24.png](./instructions/24.PNG)
     <br>
+
+# Congratulations!
+
+You have successfully deployed your own Twitter**Clone**.
