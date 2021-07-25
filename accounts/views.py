@@ -57,8 +57,8 @@ class Register(View):
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
 
-            profile = Profile(user=user, first_name=first_name,
-                              last_name=last_name, email=email, username=username)
+            profile = ProfileModel(user=user, first_name=first_name,
+                                   last_name=last_name, email=email, username=username)
             profile.save()
             return redirect('/registration-success/')
         else:
