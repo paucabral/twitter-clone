@@ -1,10 +1,11 @@
 # Twitter<b>Clone</b>
 
-### **Author**: Pau Cabral<br>
+**Author**: Pau Cabral<br>
 
 <br>
 
-This is Twitter**CLONE**, a simple Twitter clone made using Django framework in Python.
+This is Twitter**CLONE**, a simple Twitter clone made using Django framework in Python.<br>
+![end-1.png](./instructions/end-1.PNG)
 
 This tutorial tackles the development of a Django web application up to its deployment to Heroku.
 
@@ -4275,9 +4276,18 @@ twitter-clone/
     <br>
 
 24. Issue the command `python manage.py createsuperuser` and follow the prompts to create your administrator account.<br>
-    ![24.png](./instructions/24.PNG)
+    ![24.png](./instructions/24.png)
     <br>
+
+### Some of the problems you might encounter
+
+1. The free tier _Heroku Postgres_ database has a storage capacity of 1GB and a limit of 10,000 row entries across all tables. You may need to adapt to another database provider or use paid plans if you need a bigger capacity.
+2. _Heroku Whitnoise_ is not the best solution. You may notice occassionally that files are being served slow or not at all. It is not as reliable as serving your static and media files in other cloud providers' platform.
+
+Nonetheless, this is a great step in learning which technology applies best for each use case.
+<br>
 
 # Congratulations!
 
-You have successfully deployed your own Twitter**Clone**.
+You have successfully developed and deployed your own Twitter**Clone**.<br>
+![end-1.png](./instructions/end-1.PNG) ![end-2.png](./instructions/end-2.PNG) ![end-1.png](./instructions/end-3.PNG)
