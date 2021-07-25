@@ -1540,7 +1540,7 @@ In **Django**, we have the option to manually handle theregistration of accounts
               username = form.cleaned_data['username']
               email = form.cleaned_data['email']
 
-              profile = Profile(user=user, first_name=first_name,
+              profile = ProfileModel(user=user, first_name=first_name,
                                 last_name=last_name, email=email, username=username)
               profile.save()
               return redirect('/registration-success/') # Notice that this path, nor its template is still not created. This will be craeted later on.
@@ -4159,34 +4159,34 @@ twitter-clone/
 # Deploying to Heroku
 
 1. Head over to [Heroku](https://www.heroku.com) to create a new application. If you have not created an account yet, head over [here](https://signup.heroku.com/).<br>
-   ![1.png](./instructions/1.png)
+   ![1.png](./instructions/1.PNG)
 
 2. In your dashboard click on New > Create new app.<br>
-   ![2.png](./instructions/2.png)
+   ![2.png](./instructions/2.PNG)
 
 3. Specify an app name. Make sure it is not already taken.<br>
-   ![3.png](./instructions/3.png)
+   ![3.png](./instructions/3.PNG)
 
 4. You will be greeted with the _Deployment_ section after creating the app.<br>
-   ![4.png](./instructions/4.png)
+   ![4.png](./instructions/4.PNG)
 
 5. Leave the deployment section for now and head over to the _Resources_ section.<br>
-   ![5.png](./instructions/5.png)
+   ![5.png](./instructions/5.PNG)
 
 6. In the _Add-ons_ search bar, go ahead and search _Heroku Postgres_, then click it.<br>
-   ![6.png](./instructions/6.png)
+   ![6.png](./instructions/6.PNG)
 
 7. Select the _Hobby Dev - Free_ plan to get the free tier add-on. While it has its limitations, it will be good enough for our project. Proceed on clicking _Submit Order Form_ afterwards.<br>
-   ![7.png](./instructions/7.png)
+   ![7.png](./instructions/7.PNG)
 
 8. _Heroku Postgres_ should now be present in the list add-ons.<br>
-   ![8.png](./instructions/8.png)
+   ![8.png](./instructions/8.PNG)
 
 9. Click the **Heroku Postgres** link and you will be redirected to the interface for the database. You will be greeted with the _Overview_ section indicating the number of connections to the database, number of row entries, tables, and the data size it is occupying.<br>
-   ![9.png](./instructions/9.png)
+   ![9.png](./instructions/9.PNG)
 
 10. For now, head over to the the _Settings_ section to see the database credentials.<br>
-    ![10.png](./instructions/10.png)
+    ![10.png](./instructions/10.PNG)
 
 11. Click on _View Credentials..._. It will then show the credentials for the database. Take note of these values as we will be declaring them in the environmental variables for our _Heroku_ project.<br>
     ![11.png](./instructions/11.png)
@@ -4194,7 +4194,7 @@ twitter-clone/
     _Note: You may copy the credentials to your .env file if necessary to test remote connection from your local machine._
 
 12. Head back to the page of your _Heroku_ project then click on _Settings_.<br>
-    ![12.png](./instructions/12.png)
+    ![12.png](./instructions/12.PNG)
 
 13. Scroll down and click on \*_Reveal Config Vars_. Proceed on adding the keys and values of the environmental variables declared inside your `.env` file. This is where the values found for the database credentials will be added as well. Furthermore, do not forget to set the `DEBUG` value to `False` since this will be a production environment. For the `DOMAIN_NAME` on the other hand, set it to the domain of your project. This will be _'name-of-project'.herokuapp.com_. In this case, the name of my domain is _paucabral-twitterclone.herokuapp.com_.<br>
     ![13.png](./instructions/13.png)
@@ -4207,16 +4207,16 @@ twitter-clone/
 
 15. Select _Python_ then click **Save changes**.
     <br>
-    ![15.png](./instructions/15.png)
+    ![15.png](./instructions/15.PNG)
 
 16. Finally, headback to the _Deploy_ section of you _Heroku_ application and select _Github_ as the _Deployment method_. Search and select your project repository and click on **Connect**.<br>
-    ![16.png](./instructions/16.png)
+    ![16.png](./instructions/16.PNG)
 
 17. Select the _main_ branch as the branch to deploy to in the _Automatic deploys_ section. Click on _Enable Automatic Deploys_ as well. This way, everytime we push our code into the _main_ branch of our **Github** repository, it will automatically trigger the deployment of changes to _Heroku_.
     ![17.png](./instructions/17.png)
 
 18. Now, save make sure to check your code once more and push it to your **Github** repository.<br>
-    ![18.png](./instructions/18.png)
+    ![18.png](./instructions/18.PNG)
 
 19. If you are using another branch (like me in the previous instruction), issue a pull request in your **Github** repository and merge the changes.
     ![19-1.png](./instructions/19-1.png)
@@ -4233,5 +4233,21 @@ twitter-clone/
     <br>
 
 20. Head over to the _Activity_ section of your _Heroku_ app and check if the build has succeeded and the web application was deployed successfully.<br>
-    ![20.png](./instructions/20.png)
+    ![20.png](./instructions/20.PNG)
+    <br>
+
+21. On a new tab, headover to your web application domain to check if it is working properly. If there are any errors, check the build logs to determine the issues.<br>
+    ![21.png](./instructions/21.PNG)
+    <br>
+
+22. Before we fully check the deployed application, we should proceed on creating a superuser first for our administrator management. Head over to your _Heroku_ app page and select _More > Run console_.<br>
+    ![22.png](./instructions/22.PNG)
+    <br>
+
+23. Before we fully check the deployed application, we should proceed on creating a superuser first for our administrator management. Head over to your _Heroku_ app page and select _More > Run console_. Type `bash` then click **Run**.<br>
+    ![23.png](./instructions/23.PNG)
+    <br>
+
+24. Issue the command `python manage.py createsuperuser` and follow the prompts to create your administrator account.<br>
+    ![24.png](./instructions/24.PNG)
     <br>
