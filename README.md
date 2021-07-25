@@ -4093,10 +4093,10 @@ In this section, we will be discussing some of the modifications to be made insi
         'django.contrib.sessions',
         'django.contrib.messages',
         'cloudinary_storage', # Add this line here
+        'cloudinary', # Add this line here as well. Be are above the staticfiles app.
         'django.contrib.staticfiles',
         'accounts',
         'tweets',
-        'cloudinary', # Add this line here as well
     ]
 
     ...
@@ -4116,7 +4116,6 @@ In this section, we will be discussing some of the modifications to be made insi
         'API_SECRET': config('CLOUDINARY_API_SECRET'),
     }
 
-    # Add this just above the STATICFILES_STORAGE variable
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
     ```
 
