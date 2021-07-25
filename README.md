@@ -2439,7 +2439,7 @@ In this section, we will go back on building the functionalities of the _AllTwee
 
    ```html
    <!-- User only -->
-   {% if tweet.user.id == user.profile.user.id %}
+   {% if tweet.user.id == user.profile.id %}
    <div class="pull-right row row-cols-auto">
      <div class="col">
        <!-- Edit -->
@@ -3717,7 +3717,7 @@ Another feature to finish of the project is to assign a specific _timeline_ page
              </p>
              <br />
              <!-- User only -->
-             {% if tweet.user.id == user.profile.user.id %}
+             {% if tweet.user.id == user.profile.id %}
              <div class="pull-right row row-cols-auto">
                <div class="col">
                  <!-- Edit -->
