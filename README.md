@@ -4102,7 +4102,7 @@ In this section, we will be discussing some of the modifications to be made insi
     ...
     ```
 
-11. Afterwards proceed on adding the following lines of code towards the end of the `settings.py` file. You may add the variables to your `.env` file as well.<br>
+11. Afterwards proceed on adding the following lines of code towards the end of the `settings.py` file, just above the configurations for the static directory. You may add the variables to your `.env` file as well.<br>
 
     _twitterclone/twitterclone/settings.py_
 
