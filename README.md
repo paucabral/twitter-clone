@@ -1117,7 +1117,10 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
 
    .tweet-profile-img {
      width: 2.5rem;
+     height: 2.5rem;
+     object-fit: cover;
      border-radius: 50%;
+     align-self: center;
    }
 
    .card-body p {
