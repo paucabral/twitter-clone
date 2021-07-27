@@ -2,13 +2,11 @@
 
 **Author**: Pau Cabral<br>
 
-<br>
-
-This is Twitter**CLONE**, a simple Twitter clone made using Django framework in Python.<br>
+This is Twitter**CLONE**, a simple Twitter clone made using _Django_ framework in **Python**.<br>
 
 ![end-1.png](./instructions/end-1.PNG)
 
-This tutorial tackles the development of a Django web application up to its deployment to Heroku.
+This tutorial tackles the development of a _Django_ web application up to its deployment to **Heroku**.
 
 <br>
 
@@ -42,7 +40,7 @@ This tutorial tackles the development of a Django web application up to its depl
    ```bash
    (twtclone)$
    ```
-   _Note: After exiting your terminal, the virtual environment would naturally be deactivated upon your next launch or another spawn of terminal. You do not need to recreate the virtual environment every project. To use the created virtual environment again, you may use the following command:_
+   _Note: After exiting your terminal, the virtual environment would naturally be deactivated upon your next launch or a spawn of another terminal. You do not need to recreate the virtual environment for the project everytime. Instead, you may use the created virtual environment again using the following command:_
    ```bash
    $ workon twtclone
    ```
@@ -62,7 +60,7 @@ This tutorial tackles the development of a Django web application up to its depl
 
    _Note: In this case, the name of the project was **twitterclone**. General rule for naming convention is to ensure that the name has no spaces nor non-alphanumeric characters._
 
-   The path of your project should look similar to one below:
+   The directory of your project should now look similar to one below:
 
    ```
    twitter-clone/
@@ -93,16 +91,24 @@ This tutorial tackles the development of a Django web application up to its depl
    ```bash
    (twtclone)$ pip install python-decouple
    ```
-2. Inside your project directory, enter the subdirectory and create a .env file. For now, add the following lines.
+2. Inside your project directory, enter the subdirectory (`twitterclone/twitterclone`) and create a `.env` file. For now, add the following lines.
+
+   _twitterclone/twitterclone/.env_
+
    ```
    SECRET_KEY=
    ```
+
 3. Open `settings.py` from inside the project subdirectory.
-4. Just below the `from from pathlib import Path` line, import `config` from the `decouple` library.
+4. Just below the `from from pathlib import Path` line, import `config` from the `decouple` library.<br>
+
+   _twitterclone/twitterclone/settings.py_
+
    ```python
    from pathlib import Path
    from decouple import config # Insert the code here.
    ```
+
 5. Copy the value of the variable `SECRET_KEY`.
    ```python
    SECRET_KEY = 'django-insecure-i&n$0x7e_(4jeo&!tbfq%*yk(t-486lt^nnrzqay9+2odd(y#p'
@@ -156,13 +162,13 @@ This tutorial tackles the development of a Django web application up to its depl
    _Note: Make sure to intialize an empty repository._
 2. Go inside the directory of your **Django** project.
    ```bash
-   $ cd /path/to/cloned/repository/
+   $ cd /path/to/project/repository/
    ```
 3. Initalize the repository from your local machine.
    ```bash
    $ git init
    ```
-4. Before proceeding with the development, setup a `.gitignore` file on the root directory of the project (same directory as the `manage.py` file) with the following lines inside:
+4. Before proceeding with the development, setup a `.gitignore` file on the root directory of the project (same directory as the `manage.py` file) with the following lines inside (this will keep the unecessary files, along with files containing sensitive information, from being tracked and pushed to both our local and remote repository):
 
    ```
    .env
@@ -203,11 +209,11 @@ This tutorial tackles the development of a Django web application up to its depl
    $ git branch -M main
    $ git remote add origin https://github.com/<your-github-user>/<your-repository>.git
    ```
-7. Push the project the `main` branch for now. You should see the files in your `master` branch except those declared inside `.gitignore`.
+7. Push the project the `main` branch for now. You should see the files in the `main` branch of your **Github** project repository except those declared inside `.gitignore`.
    ```bash
    $ git push -u origin main
    ```
-   However, since some files are included in `.gitignore`, the updated path your remote project repository should look similar to one below instead:
+   Since some files are included in `.gitignore`, the updated path to your remote project repository should look similar to the one below instead:
    ```
    twitter-clone/
    |__ twitter-clone/
@@ -219,7 +225,7 @@ This tutorial tackles the development of a Django web application up to its depl
    |__ .gitignore
    |__ manage.py
    ```
-8. Create a new branch named `development` and checkout to it. This will be your dedicated branch during active development. You may add, commit, and push to this branch during the course of the development.
+8. Create a new branch named `development` and switch to it using the `git checkout` command. This will be your dedicated branch during active development. You may add, commit, and push to this branch during the course of the development.
    ```bash
    $ git branch development
    $ git checkout development
@@ -230,7 +236,7 @@ This tutorial tackles the development of a Django web application up to its depl
 
 In **Django**, _apps_ can be used to manage multiple pages with specific features. In this project, we will be adding the _apps_: _accounts_ and _tweets_.
 
-1. In the root project directory, create the _accounts_ app using the following command:
+1. In the root project directory (`twitterclone/`), create the _accounts_ app using the following command:
    ```bash
    (twtclone)$ python manage.py startapp accounts
    ```
@@ -246,7 +252,7 @@ In **Django**, _apps_ can be used to manage multiple pages with specific feature
       'django.contrib.sessions',
       'django.contrib.messages',
       'django.contrib.staticfiles',
-      'accounts',
+      'accounts', # Add the accounts app on the list of installed apps
    ]
    ```
 
@@ -264,7 +270,7 @@ In **Django**, _apps_ can be used to manage multiple pages with specific feature
       'django.contrib.messages',
       'django.contrib.staticfiles',
       'accounts',
-      'tweets',
+      'tweets', # Add the tweets app on the list of installed apps
    ]
    ```
 5. Your local directory structure should now look similar to the one below:
@@ -306,7 +312,7 @@ In **Django**, _apps_ can be used to manage multiple pages with specific feature
 
 # Creating a super user account and exploring the Admin Panel
 
-Django lets us create a super user account which has direct access to the built-in Admin Panel. It can be used to check and modify the entries in a database, as well as other features such modifying accounts.
+_Django_ lets us create a super user account which has direct access to the built-in Admin Panel. It can be used to check and modify the entries in the connected database (for now, we are using the default _SQLite_ database generated by _Django_), as well as other features such modifying user accounts.
 
 1. To start, we need to do an initial migration. Inside the root project directory, run the following command:
    ```bash
@@ -328,8 +334,8 @@ Django lets us create a super user account which has direct access to the built-
 
 URL patterns set the paths to which each _app_ or specific functionality can be accessed as a webpage.
 
-1. Open your base `urls.py` (in directory as `twitterclone/twitterclone`).
-2. Open the _accounts_ subdirectory (twitterclone/accounts/) and create a file named `urls.py`.<br>
+1. Open your base `urls.py` (in the same directory as `twitterclone/twitterclone`).
+2. Open the _accounts_ subdirectory (`twitterclone/accounts/`) and create a file named `urls.py`.<br>
    Your local directory structure should now look similar to the one below:
 
    ```
@@ -366,7 +372,7 @@ URL patterns set the paths to which each _app_ or specific functionality can be 
    |__ manage.py
    ```
 
-3. Open the `views.py` inside the _accounts_ subdirectory and set the prelimnary _views_. The _views_ are basically the dedicated either classes or functions which serve as the backend of a functionalities found in a specific _Django_ webpage. In this case, we will be using class based views. For now, follow the code below. There are some commented explanations on the added lines as well.
+3. Open the `views.py` inside the _accounts_ subdirectory and set the prelimnary _views_. The _views_ are basically dedicated classes or functions which serve as the backend for the functionalities found in a specific _Django_ webpage. In this case, we will be using class based views. Simpy follow the code below for now. There are some commented explanations on the added lines as well.
 
    ```python
    from django.shortcuts import render
@@ -450,7 +456,7 @@ URL patterns set the paths to which each _app_ or specific functionality can be 
    urlpatterns = [
       path('admin/', admin.site.urls),
       path('', include('accounts.urls')),
-      path('tweets/', include('tweets.urls')),
+      path('tweets/', include('tweets.urls')), # add the urlpatterns declared from the tweets app
    ]
    ```
 
@@ -501,7 +507,7 @@ URL patterns set the paths to which each _app_ or specific functionality can be 
 
 # Creating models
 
-_Models_ are basically the representation of databases in Django. Models can be used to create a table and add, delete, or modify entries of a database. In this example, we will be creating a model for the profile information of users.
+_Models_ are basically the representation of databases in Django. Models can be used to define database schema, as well as to add, delete, or modify entries in a database. In this example, we will be creating a model for the profile information of users.
 
 1. Inside the _accounts_ app directory (`twitterclone/accounts`), open the file `models.py`.
 2. Simply add the following lines of code after the `# Create your models here.` comment. This will create a new table dedicated for the Profile of the users.
@@ -541,6 +547,8 @@ _Models_ are basically the representation of databases in Django. Models can be 
    ```bash
    (twtclone)$ python manage.py runserver
    ```
+
+   _Note: You may use third-party tools as well such as SQLite Studio to view the contents and observer the changes of the database from the `db.sqlite3` file, found in the root project directory (`twitterclone/db.sqlite3`)._
 
    <br>
 
@@ -590,7 +598,7 @@ Templates are basically the frontend component of a basic **Django** project. It
    |__ manage.py
    ```
 
-3. One great feature of **Django** is the ability to set a base template which can be inherited by other HTML files. This way, particular HTML code can be reused (i.e. for headers, navbar, footers, etc.). For now, we will create a `base.html` as template for all the HTML files in our _accounts_ app. Create a `base.html` file inside the `twitterclone/accounts/templates/accounts` directory. We may import within it an external CSS library as well like bootstrap. In the mean time, add the following contents inside:
+3. One great feature of **Django** is the ability to set a base template which can be inherited by other HTML files. This way, particular HTML code can be reused (i.e. for headers, navbar, footers, etc.). For now, we will create a `base.html` as template for all the HTML files in our _accounts_ app. Create a `base.html` file inside the `twitterclone/accounts/templates/accounts` directory. We may import within it an external CSS library as well like bootstrap. For the mean time, add the following contents inside:
 
    ```html
    <!DOCTYPE html>
@@ -613,7 +621,7 @@ Templates are basically the frontend component of a basic **Django** project. It
    </html>
    ```
 
-4. Along with the external CSS refrences, we can also setup our local CSS on a dedicated stylesheet/s and serving them as static files. In the root project directory (`twitterclone/`) create `static` directory and place another set of directories for `css`, `img`, and `js`. This is where we will serve our CSS, static images, and separate Javascript files.
+4. Along with the external CSS refrences, we can also setup our local CSS on a dedicated stylesheet/s by serving them as static files. In the root project directory (`twitterclone/`) create `static` directory and place another set of directories for `css`, `img`, and `js`. This is where we will serve our own CSS, static images, and separate Javascript file/s if needed.
 
    Your updated local directory structure should look similar to this.
 
@@ -658,7 +666,9 @@ Templates are basically the frontend component of a basic **Django** project. It
    |__ manage.py
    ```
 
-5. For now add `index.css` file inside the `css` directory and add the following contents below. This will be our dedicated stylesheet for the project.
+5. For now add `index.css` file inside the `css` directory and add the following contents below. This will be our dedicated stylesheet for the project.<br>
+
+   _twitterclone/static/css/index.css_
 
    ```css
    body {
@@ -798,13 +808,13 @@ Templates are basically the frontend component of a basic **Django** project. It
 
     class Login(View):
        def get(self, request, *args, **kwargs):
-          return render(request, template_name='accounts/login.html', context={}) # This is the updated line.
+          return render(request, template_name='accounts/login.html', context={}) # Render the HTML page upon get request by updating the return value to this line.
 
        def post(self, request, *args, **kwargs):
           pass
     ```
 
-11. Try running the project again and visit the _Login_ page at http://127.0.0.1:8000/. We will update this page and other views for the _accounts_ app towards the latter part of the project.
+11. Try running the project again and visit the _Login_ page at http://127.0.0.1:8000/. We will update this page and other views for the _accounts_ app later.
 
     ```bash
     (twtclone)$ python manage.py runserver
@@ -818,7 +828,7 @@ Templates are basically the frontend component of a basic **Django** project. It
 
 This app is dedicated for viewing and posting tweets. For now, we will be adding the functionality to dynamically view the latest "tweets" based on the entry from the database.
 
-1. Start by creating a templates directory and adding a `base.html` file with the following content below. We will be placing a basic navbar in the base template as well. Placing the navbar on the base template will allow it to appear on the rest of _tweets_ app templates as long as the _extends_ block is indicated. Update the contents of `index.css` as well to correspond with the changes.<br>
+1. Start by creating a templates directory and adding a `base.html` file with the following contents below. We will be placing a basic navbar in the base template as well. Placing the navbar on the base template will allow it to appear in the rest of the _tweets_ app templates (or templates from other apps as well) as long as the _extends_ block is indicated. Update the contents of `index.css` as well to correspond with the changes.<br>
 
    _twitterclone/tweets/templates/tweets/base.html_
 
@@ -955,7 +965,7 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
    }
    ```
 
-2. Create another HTML named `all-tweets.html`. Add the following content below for now. This will be binded to the _AllTweets_ view.<br>
+2. Create another HTML file named `all-tweets.html`. Add the following content below for now. This will be binded to the _AllTweets_ view.<br>
 
    _twitterclone/tweets/templates/tweets/all-tweets.html_
 
@@ -1195,7 +1205,7 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
    admin.site.register(Tweet)
    ```
 
-8. You may now check that a new table was added by visiting the Admin Panel at http://127.0.0.1:8000/admin.
+8. You may now check if the new table was added successfully by visiting the Admin Panel at http://127.0.0.1:8000/admin.
 
    ```bash
    (twtclone)$ python manage.py runserver
@@ -1211,7 +1221,7 @@ This app is dedicated for viewing and posting tweets. For now, we will be adding
       return render(request, template_name='tweets/all-tweets.html', context={'tweets':tweets})
     ```
 
-11. To make our template dynamic we will have to modify its content. This can be done using **Jinja** templates to render the output of our _Python_ code inside the HTML file. Using a for loop, all entries from the _tweets_ object will be displayed. You may update the contents of your `all-tweets.html` to the one below ().
+11. To make our template dynamic, we will have to modify its content. This can be done using **Jinja** templates to render the output of our _Python_ code inside the HTML file. Using a for loop, all entries from the _tweets_ object will be displayed. You may update the contents of your `all-tweets.html` to the one below.
 
     ```html
     {% extends 'tweets/base.html' %} {% load static %} {% block title %} Twitter
@@ -1404,7 +1414,7 @@ In **Django**, we have the option to manually handle theregistration of accounts
     {% endblock %}
     ```
 
-2.  Proceed on creating a `forms.py` inside the _accounts_ app directory (`twitterclone/accounts/`). This will create a form that we can use as inputs for our frontend. You may simply copy the code below.<br>
+2.  Proceed on creating a `forms.py` file inside the _accounts_ app directory (`twitterclone/accounts/`). This will create a form that we can use as inputs for our frontend. You may simply copy the code below.<br>
 
     ```python
      from django.forms import ModelForm
@@ -1801,7 +1811,7 @@ In **Django**, we have the option to manually handle theregistration of accounts
     }
     ```
 
-7.  This time, we will create a dedicated page for to confirm successful registration. Proceed on adding a view, URL path, and creating template for this page named `registration-success.html` by following the code below.<br>
+7.  This time, we will create a dedicated page to confirm successful registration. Proceed on adding a view, URL path, and creating template for this page named `registration-success.html` by following the code below.<br>
 
     _twitterclone/accounts/views.py_
 
@@ -1917,9 +1927,9 @@ In **Django**, we have the option to manually handle theregistration of accounts
 
     <br>
 
-# Creating a functional login page with proper redirection and decorators.
+# Creating a functional login page with proper redirection and decorators
 
-Now that user registration has been created, it is time to discuss how these users will be able to access the pages of the application through login. In this section, we will implement the use of serializers as well to restrict access to certain pages inline with the the use of _Jinja_ templates to dynamically make changes to the page based on user authentication.
+Now that the user registration page has been created, it is time to discuss how these users will be able to access the pages of the application through logging in. In this section, we will implement the use of decorators as well to restrict access to certain pages, inline with the the use of _Jinja_ templates to dynamically make changes to the page based on user authentication.
 
 1. Proceed on modifying the post method of the _Login_ view from the _accounts_ app. Firstly, import the **Django** authentication library and import the built in `login` function. We will create the view in such a way that if the user that login is a superuser, he/she will be redirected to the page of the admin panel (`/admin`). Otherwise, regular users will be redirected to the all tweets page (`tweets/all-tweets`). You may follow the updated code below. <br>
 
@@ -1949,7 +1959,7 @@ Now that user registration has been created, it is time to discuss how these use
           return render(request, template_name='accounts/login.html', context={})
    ```
 
-2. We will now proceed on binding functionalities set in this view to the login template. To do so, you may follow the updated code below. This login page shares the same _CSS_ code with the register page along with a couple of intext and inline styling. Hence all you need is to update the `login.html` file and the `base/html` file from the _accounts_ app templates .<br>
+2. We will now proceed on binding the functionalities set in this view to the login template. To do so, you may follow the updated code below. This login page shares the same _CSS_ code with the register page along with a couple of intext and inline styling. Hence all you need is to update the `login.html` file and the `base/html` file from the _accounts_ app templates .<br>
 
    _twitterclone/accounts/templates/accounts/login.html_
 
@@ -2388,9 +2398,9 @@ Now that user registration has been created, it is time to discuss how these use
 
 # Fully functional _AllTweets_ view
 
-In this section, we will go back on building the functionalities of the _AllTweets_ view. We are now going to implement proper form submission to "post a tweet" and add the other functionalities as well such as the option to edit or delete a user-owned 'tweet'. This will now be a fully functional (create, read, update, delete) CRUD page.
+In this section, we will go back to building the functionalities of the _AllTweets_ view. We are now going to implement proper form submission to "post a tweet" and add the other functionalities as well such as the option to edit or delete a user-owned 'tweet'. This will now be a fully functional (create, read, update, delete) CRUD page.
 
-1. Start by updating the _AllTweets_ view. This time around, we will be grabbing the information from the post request without the aid of using forms. We are going to get the current user profile associated to the tweet by extracting it with the request from the currently logged in user. Moreover, the field for the tweet will be added by capturing the field specified by its `name` attribute after submit (notice the `<textarea>` has an attribute `name` with a value of `tweet` in `all-tweets.html`). You may simply copy the code below. You may run the project and check the functionality afterwards.<br>
+1. Start by updating the _AllTweets_ view. This time around, we will be grabbing the information from the post request without the aid of using _Django's_ built-on forms. We are going to get the current user profile associated to the tweet by extracting it with the request from the currently logged in user. Moreover, the field for the tweet will be added by capturing the field specified by its `name` attribute after submit (notice the `<textarea>` has an attribute `name` with a value of `tweet` in `all-tweets.html`). You may simply copy the code below. You may run the project and check the functionality afterwards.<br>
 
    _twitterclone/tweets/views.py_
 
@@ -2440,7 +2450,7 @@ In this section, we will go back on building the functionalities of the _AllTwee
    </form>
    ```
 
-2. Next is setting up when the edit and delete button should appear in the page. The user must only be able to edit and delete the tweet he/she created. As such, we have to modify the part of the code in `all-tweets.html` template (check the part with a comment indicating `User only`) with a condition that checks if the assigned user profile to the tweet is the same user that is currently logged in. Do this by simply adding the conditions via _Jinja_ tempaltes. You may simply follow the code below. <br>
+2. Next is setting up when the edit and delete button should appear in the page. The user must only be able to edit and delete the tweet he/she created. As such, we have to modify the part of the code in `all-tweets.html` template (check the part with a comment indicating `User only`) with a condition that checks if the assigned user profile to the tweet is the same user that is currently logged in. Do this by simply adding the conditions via _Jinja_ templates. You may simply follow the code below. <br>
 
    ```html
    <!-- User only -->
@@ -2483,7 +2493,7 @@ In this section, we will go back on building the functionalities of the _AllTwee
        return redirect('/tweets/all-tweets')
    ```
 
-   _Note: This view does is not part of any class. This is a simple functional view._<br>
+   _Note: This view is not part of any class. This is a simple view defined using a function._<br>
 
    _twitterclone/tweets/views.py_
 
@@ -2514,7 +2524,7 @@ In this section, we will go back on building the functionalities of the _AllTwee
    <!-- End Delete -->
    ```
 
-4. While the delete functionality is working properly now, it is not ideal to allow users do such operations with any warning. We can use the `onsubmit` attribute of forms to display a simple alert message using an inline _Javascript_. To do this, simply update the opening tag of the form for delete button, the same as the code below.<br>
+4. While the delete functionality is working properly now, it is not ideal to allow users do such operation without any warning. We can use the `onsubmit` attribute of forms to display a simple alert message using an inline _Javascript_. To do this, simply update the opening tag of the form for delete button, the same as the code below.<br>
 
    _twitterclone/tweets/templates/all-tweets.html_
 
@@ -2575,7 +2585,7 @@ In this section, we will go back on building the functionalities of the _AllTwee
     ]
    ```
 
-6. We can now create our `update-tweet.html` template and bind it to our previously created view. In this template we will specify the name of the `<textarea>` according to the context we have assigned. We will also utilize the _Jinja_ templates to display an error message in case non-tweet owner users try to access the unique page. You may simply copy the code below:<br>
+6. We can now create our `update-tweet.html` template and bind it to our previously created view. We will also utilize _Jinja_ templates to display an error message in case non-tweet owner users try to access the unique page. You may simply copy the code below:<br>
 
    _twitterclone/tweets/templates/tweets/update-tweet.html_
 
@@ -2757,7 +2767,7 @@ Now that the main features of our project has been taken care of, we can now pro
     ]
    ```
 
-2. The next thing to do is to configure `settings.py` with SMTP configuration. To accomplish this functionality, we are going to need a dedicated _Gmail_ account with _Less secured apps_ enabled. For now, we will add the necessary configuration inside the `settings.py` file and assign the values to environmental variables (since this will be containing credentials). Open the `settings.py` file and add the following lines of code at the bottom part.
+2. The next thing to do is to configure `settings.py` with SMTP configuration. To accomplish this functionality, we need a dedicated _Gmail_ account with _Less secured apps_ setting enabled. For now, we will add the necessary configuration inside the `settings.py` file and assign the values to environmental variables (since this will be containing credentials). Open the `settings.py` file and add the following lines of code at the bottom part.
 
    _twitterclone/twitterclone/settings.py_
 
@@ -2785,15 +2795,15 @@ Now that the main features of our project has been taken care of, we can now pro
 
    _Note: Make sure that there are no spaces in between the equal signs of each variable and value._
 
-4. This feature will not work unless you allow access from secure apps in the _Gmail_ you have used. Login to the gmail account you have configured to `settings.py` and head over to enable "Less secure app access". This setting can be found in this [link](https://myaccount.google.com/lesssecureapps).<br>
+4. This feature will not work unless you allow access for less secure apps in the _Gmail_ account you have used. Login to the gmail account you have configured inside `settings.py` and proceed on enabling "Less secure app access". This setting can be found in this [link](https://myaccount.google.com/lesssecureapps).<br>
 
-   _Note: If you are using multiple Gmail accounts in your computer, be sure that your are configuring the Gmail account you use for this project. The ideal way is to log in your account in a private tab (incognito) to ensure that it is the only account logged in in the browser's instance._
+   _Note: If you are using multiple Gmail accounts in your computer, be sure that your are configuring the Gmail account you use for this project. The ideal way is to login to your account in a private tab (incognito) to ensure that it is the only account logged in in the browser's instance._
 
 5. You may now check if the functionality is working by heading over to http://127.0.0.1:8000/reset-password to try and reset an account password with valid email. The email sent should contain the account username and a link to change password.<br>
 
    _Note: Be sure to check the spam folder for email as the email might be recognized as a spam._
 
-6. The password reset feature is now functional but there are still alot to improve. For instance, the _login_ link at the end password reset success page does not link properly to our set login URL path (`/`). Furthermore, its design is very generic to _Django_'s styling and does not look like the style of our web application. To solve this issue, we will be creating our own templates, and bind each of them to the views. Create an HTML file for each view inside the _accounts_ app templates directory (`twitterclone/accounts/templates/accounts/`). You may follow the code below for each HTML file and their respective content.<br>
+6. The password reset feature is now functional but there are still alot to improve. For instance, the _login_ link at the end password reset success page does not link properly to our set login URL path (`/`). Furthermore, its design is very generic to _Django_'s styling and does not look like the overall style of our web application, which might confuse users. To solve this issue, we will be creating our own templates, and bind each of them to the views. Create an HTML file for each view inside the _accounts_ app templates directory (`twitterclone/accounts/templates/accounts/`). You may follow the code below for each HTML file and their respective contents.<br>
 
    _twitterclone/accounts/templates/accounts/reset-password.html_
 
@@ -3082,7 +3092,7 @@ Now that the main features of our project has been taken care of, we can now pro
    {% endblock %}
    ```
 
-7. To be able to use the templates we created, we need to update our URL paths for each view by specifiying the names of the corresponding template for each using the `template_name` parameter inside the `as_view()` method:<br>
+7. To be able to use the templates we created, we need to update the URL paths for each view by specifiying the names of the corresponding template for each using the `template_name` parameter inside the `as_view()` method:<br>
 
    _twitterclone/accounts/urls.py_
 
@@ -3098,7 +3108,7 @@ Now that the main features of our project has been taken care of, we can now pro
     ]
    ```
 
-8. In order for users to easily locate this feature, update `login.html` template and add a hyperlink that redirects to the password reset page. Add a _"Forgot you password?"_ link just above the sign up instruction.<br>
+8. In order for users to easily locate this feature, update the `login.html` template and add a hyperlink that redirects to the password reset page. Add a _"Forgot you password?"_ link just above the sign up instruction.<br>
 
    _twitterclone/accounts/templates/accounts/login.html_
 
@@ -3112,7 +3122,7 @@ Now that the main features of our project has been taken care of, we can now pro
 
    <br>
 
-9. You may now check the password reset functionality again with the new templates have been applied.
+9. You may now check the password reset functionality again with the new templates applied.
 
    ```bash
    (twtclone)$ python manage.py runserver
@@ -3148,14 +3158,14 @@ For better user experience, the user profile may be modified by adding a profile
           return self.email
    ```
 
-3. Since a model has been changed again, run the commands again for migration.
+3. Since a model has been changed again, run the commands for migration again.
 
    ```bash
    (twtclone)$ python manage.py makemigrations
    (twtclone)$ python manage.py migrate
    ```
 
-4. Running the server again, you will notice upon loging in to Admin Panel that an image upload field has been added to the _Profile_ model. This however is still not useable since we still need to configure our media folder to store the uploaded images.
+4. Running the server again, you will notice upon logging in to the Admin Panel that an image upload field has been added to the _Profile_ model. This however is still not useable since we still need to configure our media folder to store the uploaded images.
 
 5. Open `settings.py` and add the following declarations at the end of the file for the root media directory and path. You may follow the code below.<br>
 
@@ -3180,6 +3190,7 @@ For better user experience, the user profile may be modified by adding a profile
 
     ...
 
+    # Add this code at the last line of the file
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
    ```
 
@@ -3234,7 +3245,7 @@ For better user experience, the user profile may be modified by adding a profile
     ]
    ```
 
-10. Next is to create a form for for our profile model. This will allow us to better handle our forms with the requests and error checking rather than manually implementing them. Open `forms.py` file from the _accounts_ app subdirectory and follow the code below:<br>
+10. Next is to create a form for our profile model. This will allow us to better handle our forms with the requests and error checking rather than manually implementing them. Open `forms.py` file from the _accounts_ app subdirectory and follow the code below:<br>
 
     _twitterclone/accounts/forms.py_
 
@@ -3271,7 +3282,7 @@ For better user experience, the user profile may be modified by adding a profile
     ...
 
     from .forms import CreateUserForm, ProfileForm # Add Profie form among the form inputs
-    from .models import Profile as ProfileModel # To cope with the naming conflict, you may upload the Profile model with a different name or you may change the name of the view completely.
+    from .models import Profile as ProfileModel # To cope with the naming conflict, you may import the Profile model with a different name or you may change the name of the view completely.
 
     ...
 
@@ -3991,7 +4002,7 @@ In this section, we will be discussing some of the modifications to be made insi
 
     _Note: Make sure that there are no spaces in between the variable name, equal sign, and the value itself._
 
-3.  Since we will be deploying to `Heroku`, there are a few conifgurations to be made with regards to the static and media files since _Django_ does not support serving static files in production. _Heroku_ however has a project called _Whitenoise_ which we will incorporating to allow static files serving with our _Heroku_ app. Firstly, install _whitenoise_ using `pip.
+3.  Since we will be deploying to `Heroku`, there are a few conifgurations to be made with regards to the static and media files since _Django_ does not support serving static files in production. _Heroku_ however has a project called _Whitenoise_ which we will incorporating to allow static files serving with our _Heroku_ app. Firstly, install _whitenoise_ using `pip`.
 
     ```bash
     (twtclone)$ pip install whitenoise
@@ -4028,14 +4039,14 @@ In this section, we will be discussing some of the modifications to be made insi
 
     ```python
     # Comment this out for production. Uncomment these lines in case you need to go back in development.
-    """
-    DATABASES = {
-         'default': {
-             'ENGINE': 'django.db.backends.sqlite3',
-             'NAME': BASE_DIR / 'db.sqlite3',
-         }
-     }
-     """
+
+    # DATABASES = {
+    #     'default': {
+    #        'ENGINE': 'django.db.backends.sqlite3',
+    #        'NAME': BASE_DIR / 'db.sqlite3',
+    #    }
+    # }
+
     ```
 
 7.  Afterwards, proceed on adding the necessary declaration for _PostgreSQL_ database. We will be setting our database credentials as environmental variables. You may connect your empty (but initialized) _PostgreSQL_ as well in your local machine, then declare the values for credentials using your `.env` file. Simply follow the code below:<br>
@@ -4068,21 +4079,21 @@ In this section, we will be discussing some of the modifications to be made insi
 
     _Note: Make sure that there are no spaces in between the variable name, equal sign, and the value itself. You may leave these variables as blank during development if you are using SQLite._
 
-8.  To allow connection to PostgreSQL however, another dependency needs to be installed. Proceed on installing _psycopg2_ via `pip`. Proceed on installing the package _gunicorn_ as well since we will be needing it during production (_gunicorn_ will allow the application to run on multiple threads).
+8.  To allow connection to _PostgreSQL_ however, another dependency needs to be installed. Proceed on installing _psycopg2_ via `pip`. Proceed on installing the package _gunicorn_ as well since we will be needing it during production (_gunicorn_ will allow the application to run on multiple threads).
 
     ```bash
     (twtclone)$ pip install psycopg2
     (twtclone)$ pip install gunicorn
     ```
 
-9.  Afterwards, we will be installing another set of dependencies that will be used to store our media files. This is because _Heroku_ is not a suitable platform for media files. However, it has an add-on that connects to _Cloudinary_ which will grant us a free platform with certain limitations. for now, install `cloudinary` and `django-cloudinary-storage` via `pip`.
+9.  Afterwards, we will be installing another set of dependencies that will be used to store our media files. This is because _Heroku_ is not a suitable platform for media files. However, it has an add-on that connects to _Cloudinary_ which will grant us a free platform with certain limitations. For now, install `cloudinary` and `django-cloudinary-storage` via `pip`.
 
     ```bash
     (twtclone)$ pip install cloudinary
     (twtclone)$ pip install django-cloudinary-storage
     ```
 
-10. Next is to add `'cloudinary_storage'` and `'cloudinary'` in the list of `INSTALLED_APPS` in `settings.py`.<br>
+10. Next is to add `'cloudinary_storage'` and `'cloudinary'` in the list of `INSTALLED_APPS` in `settings.py`. Follow the code below for proper placement.<br>
 
     _twitterclone/twitterclone/settings.py_
 
@@ -4097,7 +4108,7 @@ In this section, we will be discussing some of the modifications to be made insi
         'django.contrib.messages',
         'django.contrib.staticfiles',
         'cloudinary_storage', # Add this line here
-        'cloudinary', # Add this line here as well. Be sure that these lines are above below the staticfiles app.
+        'cloudinary', # Add this line here as well. Be sure that these lines are below the staticfiles app.
         'accounts',
         'tweets',
     ]
@@ -4111,7 +4122,7 @@ In this section, we will be discussing some of the modifications to be made insi
 
     ```python
     ...
-
+    # Make sure these lines are above the declarations of variables for static directory
     # Cloudinary
     CLOUDINARY_STORAGE = {
         'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
@@ -4127,13 +4138,13 @@ In this section, we will be discussing some of the modifications to be made insi
     _twitterclone/twitterclone/.env_
 
     ```
-    CLOUDINARY_CLOUD_NAME=
-    CLOUDINARY_API_KEY=
-    CLOUDINARY_API_SECRET=
-    CLOUDINARY_URL=
+    CLOUDINARY_CLOUD_NAME=cloud_name_indicated_in_the_account
+    CLOUDINARY_API_KEY=api_key_indicated_in_the_account
+    CLOUDINARY_API_SECRET=api_secret_indicated_in_the_account
+    CLOUDINARY_URL=cloudinary_url_indicated_in_the_account
     ```
 
-    _Note: Make sure that there are no spaces in between the variable name, equal sign, and the value itself. You may leave these variables as blank during development if you are using your local storage_
+    _Note: Make sure that there are no spaces in between the variable name, equal sign, and the value itself. You may leave these variables as blank during development if you are using your local storage. For proper values, refer to the instructions at the latter part of the tutorial._
 
 12. Next is to create text files containing our dependencies. These are the packages we have installed using `pip` for our _Django_ project. Luckily, we have been using a virtual environment. We can easily store these dependencies inside `requirements.txt` by issuing the command below.
 
@@ -4163,7 +4174,7 @@ In this section, we will be discussing some of the modifications to be made insi
     whitenoise==5.3.0
     ```
 
-13. Create a file on the root of your project directory (`twitterclone/`) as well named `runtime.txt`. This is used to specify the specific _Python_ version used for the development of the project. This is a great practice to ensure maximum compatibility with dependencies as we had during development using our local machine. In your terminal, issue the command `python --version` to check which specific version of _Python_ is installed.
+13. Create a file in the root of your project directory (`twitterclone/`) as well named `runtime.txt`. This is used to specify the specific _Python_ version used for the development of the project. This is a great practice to ensure maximum compatibility with dependencies as we had during development using our local machine. In your terminal, issue the command `python --version` to check which specific version of _Python_ is installed.
 
     ```bash
     (twtclone)$ python --version
@@ -4191,7 +4202,7 @@ _Note: Make sure to specify the project name in the last line before the extensi
 
 13. We are now ready with the necessary configurations. Your updated local directory should look similar to this:
 
-    ````
+    ```
     twitter-clone/
     |__ accounts/
     |   |__ __pycache__/
@@ -4254,7 +4265,6 @@ _Note: Make sure to specify the project name in the last line before the extensi
     |__ requirements.txt
     |__ runtime.txt
     ```
-    ````
 
    <br>
 
@@ -4263,7 +4273,7 @@ _Note: Make sure to specify the project name in the last line before the extensi
 1. Head over to [Heroku](https://www.heroku.com) to create a new application. If you have not created an account yet, head over [here](https://signup.heroku.com/).<br>
    ![1.png](./instructions/1.PNG)
 
-2. In your dashboard click on New > Create new app.<br>
+2. In your dashboard click on _New > Create new app_.<br>
    ![2.png](./instructions/2.PNG)
 
 3. Specify an app name. Make sure it is not already taken.<br>
@@ -4272,7 +4282,7 @@ _Note: Make sure to specify the project name in the last line before the extensi
 4. You will be greeted with the _Deployment_ section after creating the app.<br>
    ![4.png](./instructions/4.PNG)
 
-5. Leave the deployment section for now and head over to the _Resources_ section.<br>
+5. Leave the _Deployment_ section for now and head over to the _Resources_ section.<br>
    ![5.png](./instructions/5.PNG)
 
 6. In the _Add-ons_ search bar, go ahead and search _Heroku Postgres_, then click it.<br>
@@ -4326,7 +4336,7 @@ _Note: Make sure to specify the project name in the last line before the extensi
 20. Now, save make sure to check your code once more and push it to your **Github** repository.<br>
     ![18.png](./instructions/18.PNG)
 
-21. If you are using another branch (like me in the previous instruction), issue a pull request in your **Github** repository and merge the changes.
+21. If you are using another branch (like me as stated in the earlier instructions), issue a pull request in your **Github** repository and merge the changes.
     ![19-1.png](./instructions/19-1.png)
     <br>
 
@@ -4336,7 +4346,7 @@ _Note: Make sure to specify the project name in the last line before the extensi
     ![19-3.png](./instructions/19-3.png)
     <br>
 
-    Otherwise, if your code already resides in the _main_ branch, you scroll down and select the _main_ branch and the **Deploy Branch** button.<br>
+    Otherwise, if your code already resides in the _main_ branch, scroll down and select the _main_ branch as the branch to deploy, then click the **Deploy Branch** button.<br>
     ![19-4.png](./instructions/19-4.png)
     <br>
 
@@ -4352,7 +4362,7 @@ _Note: Make sure to specify the project name in the last line before the extensi
     ![22.png](./instructions/22.PNG)
     <br>
 
-25. Before we fully check the deployed application, we should proceed on creating a superuser first for our administrator management. Head over to your _Heroku_ app page and select _More > Run console_. Type `bash` then click **Run**.<br>
+25. Type `bash` then click **Run**.<br>
     ![23.png](./instructions/23.PNG)
     <br>
 
@@ -4362,9 +4372,9 @@ _Note: Make sure to specify the project name in the last line before the extensi
 
 ### Some of the problems you might encounter
 
-1. The free tier _Heroku Postgres_ database has a storage capacity of 1GB and a limit of 10,000 row entries across all tables. You may need to adapt to another database provider or use paid plans if you need a bigger capacity.
+1. The free tier _Heroku Postgres_ database has a storage capacity of only 1GB and a limit of 10,000 row entries across all tables. You may need to adapt to another database provider or use paid plans if you need a bigger capacity.
 2. The free tier _Cloudinary_ account on the other hand can only store up to 10GB of files. You may need to adapt to another cloud provider as well or use their paid plans for bigger capacity.
-3. _Heroku Whitenoise_ is not the best solution. You may notice occassionally that files are being served slow or not at all. It is as reliable as serving your static and media files in other cloud providers' platform.
+3. _Heroku Whitenoise_ is not the best solution. You may notice occassionally that files are being served slow or not at all. It is not as reliable as serving your static and media files in other cloud providers' platform.
 
 Nonetheless, this is a great step in learning which technology applies best for each use case.
 <br>
@@ -4374,7 +4384,3 @@ Nonetheless, this is a great step in learning which technology applies best for 
 You have successfully developed and deployed your own Twitter**Clone**.<br>
 
 ![end-1.png](./instructions/end-1.PNG) ![end-2.png](./instructions/end-2.PNG) ![end-1.png](./instructions/end-3.PNG)
-
-```
-
-```
