@@ -63,8 +63,8 @@ This tutorial tackles the development of a _Django_ web application up to its de
    The directory of your project should now look similar to one below:
 
    ```
-   twitter-clone/
-   |__ twitter-clone/
+   twitterclone/
+   |__ twitterclone/
    |   |__ __pycache__/
    |   |__ __init__.py
    |   |__ asgi.py
@@ -141,8 +141,8 @@ This tutorial tackles the development of a _Django_ web application up to its de
    The updated path of your project should look similar to one below:
 
    ```
-   twitter-clone/
-   |__ twitter-clone/
+   twitterclone/
+   |__ twitterclone/
    |   |__ __pycache__/
    |   |__ __init__.py
    |   |__ .env
@@ -185,8 +185,8 @@ This tutorial tackles the development of a _Django_ web application up to its de
    The updated path of your project locally should look similar to one below:
 
    ```
-   twitter-clone/
-   |__ twitter-clone/
+   twitterclone/
+   |__ twitterclone/
    |   |__ __pycache__/
    |   |__ __init__.py
    |   |__ .env
@@ -215,8 +215,8 @@ This tutorial tackles the development of a _Django_ web application up to its de
    ```
    Since some files are included in `.gitignore`, the updated path to your remote project repository should look similar to the one below instead:
    ```
-   twitter-clone/
-   |__ twitter-clone/
+   twitterclone/
+   |__ twitterclone/
    |   |__ __init__.py
    |   |__ asgi.py
    |   |__ settings.py
@@ -276,7 +276,7 @@ In **Django**, _apps_ can be used to manage multiple pages with specific feature
 5. Your local directory structure should now look similar to the one below:
 
    ```
-   twitter-clone/
+   twitterclone/
    |__ accounts/
    |   |__ __pycache__/
    |   |__ migrations/
@@ -295,7 +295,7 @@ In **Django**, _apps_ can be used to manage multiple pages with specific feature
    |   |__ models.py
    |   |__ tests.py
    |   |__ views.py
-   |__ twitter-clone/
+   |__ twitterclone/
    |   |__ __pycache__/
    |   |__ __init__.py
    |   |__ .env
@@ -339,7 +339,7 @@ URL patterns set the paths to which each _app_ or specific functionality can be 
    Your local directory structure should now look similar to the one below:
 
    ```
-   twitter-clone/
+   twitterclone/
    |__ accounts/
    |   |__ __pycache__/
    |   |__ migrations/
@@ -359,7 +359,7 @@ URL patterns set the paths to which each _app_ or specific functionality can be 
    |   |__ models.py
    |   |__ tests.py
    |   |__ views.py
-   |__ twitter-clone/
+   |__ twitterclone/
    |   |__ __pycache__/
    |   |__ __init__.py
    |   |__ .env
@@ -469,7 +469,7 @@ URL patterns set the paths to which each _app_ or specific functionality can be 
    Your updated local directory structure should look similar to this.
 
    ```
-   twitter-clone/
+   twitterclone/
    |__ accounts/
    |   |__ __pycache__/
    |   |__ migrations/
@@ -490,7 +490,7 @@ URL patterns set the paths to which each _app_ or specific functionality can be 
    |   |__ tests.py
    |   |__ urls.py
    |   |__ views.py
-   |__ twitter-clone/
+   |__ twitterclone/
    |   |__ __pycache__/
    |   |__ __init__.py
    |   |__ .env
@@ -562,7 +562,7 @@ Templates are basically the frontend component of a basic **Django** project. It
    Your updated local directory structure should look similar to this.
 
    ```
-   twitter-clone/
+   twitterclone/
    |__ accounts/
    |   |__ __pycache__/
    |   |__ migrations/
@@ -585,7 +585,7 @@ Templates are basically the frontend component of a basic **Django** project. It
    |   |__ tests.py
    |   |__ urls.py
    |   |__ views.py
-   |__ twitter-clone/
+   |__ twitterclone/
    |   |__ __pycache__/
    |   |__ __init__.py
    |   |__ .env
@@ -626,7 +626,7 @@ Templates are basically the frontend component of a basic **Django** project. It
    Your updated local directory structure should look similar to this.
 
    ```
-   twitter-clone/
+   twitterclone/
    |__ accounts/
    |   |__ __pycache__/
    |   |__ migrations/
@@ -653,7 +653,7 @@ Templates are basically the frontend component of a basic **Django** project. It
    |   |__ tests.py
    |   |__ urls.py
    |   |__ views.py
-   |__ twitter-clone/
+   |__ twitterclone/
    |   |__ __pycache__/
    |   |__ __init__.py
    |   |__ .env
@@ -683,7 +683,7 @@ Templates are basically the frontend component of a basic **Django** project. It
    Your updated local directory structure should look similar to this.
 
    ```
-   twitter-clone/
+   twitterclone/
    |__ accounts/
    |   |__ __pycache__/
    |   |__ migrations/
@@ -711,7 +711,7 @@ Templates are basically the frontend component of a basic **Django** project. It
    |   |__ tests.py
    |   |__ urls.py
    |   |__ views.py
-   |__ twitter-clone/
+   |__ twitterclone/
    |   |__ __pycache__/
    |   |__ __init__.py
    |   |__ .env
@@ -1448,7 +1448,7 @@ In **Django**, we have the option to manually handle theregistration of accounts
     Your updated local directory structure should look similar to this.
 
     ```
-    twitter-clone/
+    twitterclone/
     |__ accounts/
     |   |__ __pycache__/
     |   |__ migrations/
@@ -1484,7 +1484,7 @@ In **Django**, we have the option to manually handle theregistration of accounts
     |   |__ tests.py
     |   |__ urls.py
     |   |__ views.py
-    |__ twitter-clone/
+    |__ twitterclone/
     |   |__ __pycache__/
     |   |__ __init__.py
     |   |__ .env
@@ -1869,7 +1869,7 @@ In **Django**, we have the option to manually handle theregistration of accounts
     Your updated local directory should look similar to this:
 
     ```
-    twitter-clone/
+    twitterclone/
     |__ accounts/
     |   |__ __pycache__/
     |   |__ migrations/
@@ -1906,7 +1906,7 @@ In **Django**, we have the option to manually handle theregistration of accounts
     |   |__ tests.py
     |   |__ urls.py
     |   |__ views.py
-    |__ twitter-clone/
+    |__ twitterclone/
     |   |__ __pycache__/
     |   |__ __init__.py
     |   |__ .env
@@ -2261,7 +2261,7 @@ Now that the user registration page has been created, it is time to discuss how 
    Your updated local directory should look similar to this:
 
    ```
-   twitter-clone/
+   twitterclone/
    |__ accounts/
    |   |__ __pycache__/
    |   |__ migrations/
@@ -2299,7 +2299,7 @@ Now that the user registration page has been created, it is time to discuss how 
    |   |__ tests.py
    |   |__ urls.py
    |   |__ views.py
-   |__ twitter-clone/
+   |__ twitterclone/
    |   |__ __pycache__/
    |   |__ __init__.py
    |   |__ .env
@@ -2672,7 +2672,7 @@ In this section, we will go back to building the functionalities of the _AllTwee
    Your updated local directory should look similar to this:
 
    ```
-   twitter-clone/
+   twitterclone/
    |__ accounts/
    |   |__ __pycache__/
    |   |__ migrations/
@@ -2711,7 +2711,7 @@ In this section, we will go back to building the functionalities of the _AllTwee
    |   |__ tests.py
    |   |__ urls.py
    |   |__ views.py
-   |__ twitter-clone/
+   |__ twitterclone/
    |   |__ __pycache__/
    |   |__ __init__.py
    |   |__ .env
@@ -3518,7 +3518,7 @@ For better user experience, the user profile may be modified by adding a profile
     Your updated local directory should look similar to this:
 
     ```
-    twitter-clone/
+    twitterclone/
     |__ accounts/
     |   |__ __pycache__/
     |   |__ migrations/
@@ -3562,7 +3562,7 @@ For better user experience, the user profile may be modified by adding a profile
     |   |__ tests.py
     |   |__ urls.py
     |   |__ views.py
-    |__ twitter-clone/
+    |__ twitterclone/
     |   |__ __pycache__/
     |   |__ __init__.py
     |   |__ .env
@@ -3918,7 +3918,7 @@ Another feature to finish of the project is to assign a specific _timeline_ page
    Your updated local directory should look similar to this:
 
    ```
-   twitter-clone/
+   twitterclone/
    |__ accounts/
    |   |__ __pycache__/
    |   |__ migrations/
@@ -3965,7 +3965,7 @@ Another feature to finish of the project is to assign a specific _timeline_ page
    |   |__ tests.py
    |   |__ urls.py
    |   |__ views.py
-   |__ twitter-clone/
+   |__ twitterclone/
    |   |__ __pycache__/
    |   |__ __init__.py
    |   |__ .env
@@ -4203,7 +4203,7 @@ _Note: Make sure to specify the project name in the last line before the extensi
 13. We are now ready with the necessary configurations. Your updated local directory should look similar to this:
 
     ```
-    twitter-clone/
+    twitterclone/
     |__ accounts/
     |   |__ __pycache__/
     |   |__ migrations/
@@ -4250,7 +4250,7 @@ _Note: Make sure to specify the project name in the last line before the extensi
     |   |__ tests.py
     |   |__ urls.py
     |   |__ views.py
-    |__ twitter-clone/
+    |__ twitterclone/
     |   |__ __pycache__/
     |   |__ __init__.py
     |   |__ .env
